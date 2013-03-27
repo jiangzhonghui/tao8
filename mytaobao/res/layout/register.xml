@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/register_tv_head_prompt"
+        android:layout_width="wrap_content"
+        android:autoLink="web"
+        android:layout_height="wrap_content"
+        android:text="@string/register_tv_head_prompt_info" />
+
+    <TextView
+        android:layout_gravity="left"
+        android:id="@+id/register_tv_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="用户名:" />
+
+    <EditText
+        android:id="@+id/register_et_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:hint="3-12个字符"
+        android:inputType="textPersonName" >
+    </EditText>
+
+    <TextView
+        android:id="@+id/register_tv_username_prompt"
+        android:layout_gravity="left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_edittext"
+        android:text="字母、数字、中文、下划线、中划线" />
+
+    <TextView
+        android:layout_gravity="left"
+        android:id="@+id/register_tv_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="邮箱" />
+
+    <EditText
+        android:lines="1"
+        android:id="@+id/register_et_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress" >
+    </EditText>
+
+    <TextView
+        android:layout_gravity="left"
+        android:id="@+id/register_tv_email_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="用于找回密码，请正确填写!" />
+
+    <TextView
+        android:id="@+id/register_tv_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:text="密码" />
+
+    <EditText
+        android:id="@+id/register_et_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="6-16位英文字母或数字"
+        android:lines="1"
+        android:inputType="textPassword" >
+    </EditText>
+
+    <TextView
+        android:layout_gravity="left"
+        android:id="@+id/register_tv_repassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="确认密码" />
+    <EditText
+        android:id="@+id/register_et_repassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:inputType="textPassword" >
+    </EditText>
+
+    <LinearLayout
+        android:id="@+id/register_ll_protocol"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/register_cb_protocol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我已阅读并接受" />
+
+        <TextView
+            android:id="@+id/register_tv_protocol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:linksClickable="true"
+            android:text="《易购网服务协议》"
+            android:textColor="#0000FF"
+            android:textStyle="italic" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/register_btn_regist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="注册" />
+
+    <Button
+        android:id="@+id/register_btn_had_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="已有易购帐号" />
+
+</LinearLayout>

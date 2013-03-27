@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="popuback">#ff000000</color>
+    <color name="text_bg_press">#ffffff</color>
+    <color name="text_bg_normal">#000000</color>
+    <color name="head_bg_press">#EE7600</color>
+    <color name="white">#ffffffff</color>
+    <color name="black">#ff000000</color>
+    <color name="blue">#ff005473</color>
+    <color name="red">#ffa92719</color>
+    <color name="light_red">#ffff6846</color>
+    <color name="light_gray">#ff999999</color>
+</resources>

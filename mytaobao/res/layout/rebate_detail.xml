@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <include layout="@layout/head" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:text="温馨提示详细：已返现金以易币形式存放在易购网账户。更详细信息，请登陆 www.egou.com 查询。" />
+
+    <TableLayout
+        android:id="@+id/rebate_detail_tablel_rebates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        android:stretchColumns="*" >
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_marginLeft="1dip"
+                android:layout_marginTop="1dip"
+                android:layout_weight="1"
+                android:background="#CCCCCC"
+                android:lines="2"
+                android:text="订单号"
+                android:textColor="#292929"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_marginLeft="1dip"
+                android:layout_marginTop="1dip"
+                android:layout_weight="1"
+                android:background="#CCCCCC"
+                android:lines="2"
+                android:text="下单日期"
+                android:textColor="#292929"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_marginLeft="1dip"
+                android:layout_marginTop="1dip"
+                android:layout_weight="1"
+                android:background="#CCCCCC"
+                android:lines="2"
+                android:text="金额"
+                android:textColor="#292929"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_marginLeft="1dip"
+                android:layout_marginTop="1dip"
+                android:layout_weight="1"
+                android:background="#CCCCCC"
+                android:lines="2"
+                android:text="返利"
+                android:textColor="#292929"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_marginLeft="1dip"
+                android:layout_marginTop="1dip"
+                android:layout_marginRight="1dip"
+                android:layout_weight="1"
+                android:background="#CCCCCC"
+                android:lines="2"
+                android:text="状态"
+                android:textColor="#292929"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <include layout="@layout/rebate_detail_tablerow" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#000000" />
+    </TableLayout>
+
+</LinearLayout>

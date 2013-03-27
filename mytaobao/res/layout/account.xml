@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/account_ll_restone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dip"
+        android:layout_below="@+id/account_head_rl"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/account_tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="用户名:"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/account_tv_this_month_restore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="本月返还: 20元"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/account_tv_total_restore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="累计返还: 100元"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/account_v_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/account_ll_restone"
+        android:background="#004500" />
+
+    <ListView
+        android:id="@+id/account_lv_account_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/account_v_line" >
+    </ListView>
+
+    <RelativeLayout
+        android:id="@+id/account_head_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/bg_head_normal_mode" >
+
+        <ImageButton
+            android:id="@+id/account_head_imbtn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+             android:layout_centerVertical="true"
+            android:layout_below="@+id/account_head_rl"
+            android:background="@drawable/bg_head_back"
+            android:src="@drawable/head_back" />
+
+        <ImageView
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+             android:layout_centerVertical="true"
+             android:visibility="gone"
+            android:layout_toRightOf="@+id/account_head_imbtn_back"
+            android:src="@drawable/icon_head_account_normal" />
+
+        <TextView
+            android:id="@+id/account_head_tv_lable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/button2"
+            android:text="账户信息"
+            android:textColor="#ffffff"
+            android:layout_centerVertical="true"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

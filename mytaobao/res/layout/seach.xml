@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/seach_ll_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_head_normal_mode"
+        android:gravity="center_vertical"
+        android:paddingTop="3dip" >
+
+        <ImageButton
+            android:id="@+id/seach_head_imbtn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dip"
+            android:background="@drawable/bg_head_back"
+            android:src="@drawable/head_back" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true" >
+
+            <EditText
+                android:id="@+id/seach_head_actv_content"
+                android:layout_width="160dip"
+                android:lines="1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip" />
+
+            <ImageView
+                android:id="@+id/seach_iv_content_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/seach_head_actv_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="1dip"
+                android:src="@drawable/seach_head_delect" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/seach_head_btn_seach"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dip"
+            android:text="搜索"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/seach_rg_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seach_ll_head"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/seach_rb_history"
+            android:layout_width="0dip"
+            android:layout_height="30dip"
+            android:layout_weight="1"
+            android:background="@drawable/bg_seach_radiobutton"
+            android:button="@null"
+            android:gravity="center"
+            android:text="搜索历史" />
+        <RadioButton
+            android:id="@+id/seach_rb_class"
+            android:layout_width="0dip"
+            android:layout_height="30dip"
+            android:layout_weight="1"
+            android:background="@drawable/bg_seach_radiobutton"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:text="搜索分类" />
+    </RadioGroup>
+
+    <ListView
+        android:id="@+id/seach_lv_seach_item_class"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/seach_rg_title"
+        android:background="#ffffff"
+        android:cacheColorHint="#00000000"
+        android:listSelector="@null" >
+    </ListView>
+
+    <ListView
+        android:id="@+id/seach_lv_seach_item_history"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/seach_rg_title"
+        android:background="#ffffff"
+        android:cacheColorHint="#00000000"
+        android:visibility="gone" >
+    </ListView>
+
+</RelativeLayout>

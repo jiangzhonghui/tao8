@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageButton
+            android:id="@+id/register_head_back"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:src="@android:color/darker_gray" />
+        <TextView
+            android:gravity="center"
+            android:layout_marginLeft="50dip"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="注册" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/register_login_sv_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+	<include layout="@layout/register"/>
+    </ScrollView>
+
+</LinearLayout>

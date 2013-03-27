@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginBottom="1dip" >
+    <TextView
+        android:id="@+id/rebate_detail_row_tv_order_no"
+        android:layout_width="0dip"
+        android:layout_marginLeft="1dip"
+        android:layout_marginTop="1dip"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:lines="2"
+        android:text="22222222222222"
+        android:textColor="#292929"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/rebate_detail_row_tv_order_time"
+        android:layout_width="0dip"
+        android:layout_marginLeft="1dip"
+        android:layout_marginTop="1dip"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:lines="2"
+        android:text="2013.11.11"
+        android:textColor="#292929"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/rebate_detail_row_tv_order_price"
+        android:layout_width="0dip"
+        android:layout_marginLeft="1dip"
+        android:layout_marginTop="1dip"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:lines="2"
+        android:text="111.10元"
+        android:textColor="#292929"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/rebate_detail_row_tv_order_rebate"
+        android:layout_width="0dip"
+        android:layout_marginLeft="1dip"
+        android:layout_marginTop="1dip"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:lines="2"
+        android:text="2.09元"
+        android:textColor="#292929"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/rebate_detail_row_tv_order_state"
+        android:layout_width="0dip"
+        android:layout_marginLeft="1dip"
+        android:layout_marginRight="1dip"
+        android:layout_marginTop="1dip"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:lines="2"
+        android:text="已返"
+        android:textColor="#292929"
+        android:textStyle="bold" />
+</TableRow>
