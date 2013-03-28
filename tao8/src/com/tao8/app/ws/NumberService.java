@@ -12,6 +12,7 @@ public class NumberService {
 
 	public String getLocation(String number) throws Exception {
 		// 读取本地准备好的文件, 用输入的号码替换原来的占位符
+		
 				InputStream in = NumberService.class.getClassLoader().getResourceAsStream("send.xml");
 				byte[] data = StreamUtil.load(in);
 				String content = new String(data);

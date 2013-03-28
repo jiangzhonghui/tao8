@@ -15,7 +15,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 
 
-public class ViewPagerActivity extends BaseActivity {
+public class ViewPagerActivity extends BaseFragmentActivity {
 
 	public static  ViewPager vp;
 
