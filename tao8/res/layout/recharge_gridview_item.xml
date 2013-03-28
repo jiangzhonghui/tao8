@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="80dp"
+    android:background="#ffffff"
+    android:layout_height="40dip" >
+
+    <TextView
+        android:id="@+id/recharge_gridview_item_tv"
+        android:layout_width="80dp"
+        android:layout_height="40dip"
+        android:gravity="center"
+        android:text="20元"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/recharge_gridview_item_im_selected"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/recharge_number_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
