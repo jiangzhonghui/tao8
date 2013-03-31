@@ -21,13 +21,13 @@ public class CouponAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return 0;
+		return taokeItems==null?0:taokeItems.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		return null;
+		return taokeItems==null?null:taokeItems.get(position);
 	}
 
 	@Override

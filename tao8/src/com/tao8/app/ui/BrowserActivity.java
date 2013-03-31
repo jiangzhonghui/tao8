@@ -21,8 +21,8 @@ import android.widget.Toast;
 import com.tao8.app.R;
 import com.tao8.app.util.CommonUtil;
 
-public class BrowserActivity extends BaseActivity implements OnClickListener {
-	public static final String BROWSERACTIVITY_ACTION = "com.emar.egou.browser";
+public class BrowserActivity extends BaseFragmentActivity implements OnClickListener {
+	public static final String BROWSERACTIVITY_ACTION = "com.tao8.app";
 	public static final String BROWSERACTIVITY_URI = "uri";
 	private WebView webview;
 	private String uri;

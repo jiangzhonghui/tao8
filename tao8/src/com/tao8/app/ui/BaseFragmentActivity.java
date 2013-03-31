@@ -1,41 +1,90 @@
 package com.tao8.app.ui;
 
-import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import java.util.Date;
 
-import com.slidingmenu.lib.SlidingMenu;
-import com.slidingmenu.lib.app.SlidingFragmentActivity;
-import com.tao8.app.R;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.util.Log;
+import android.widget.Toast;
 
-public class BaseFragmentActivity extends SlidingFragmentActivity {
+import com.tao8.app.TopConfig;
+import com.tao8.app.util.LogUtil;
+import com.taobao.top.android.TopAndroidClient;
+import com.taobao.top.android.auth.AccessToken;
+import com.taobao.top.android.auth.AuthError;
+import com.taobao.top.android.auth.AuthException;
+import com.taobao.top.android.auth.AuthorizeListener;
+
+public class BaseFragmentActivity extends AbsAuthorSlidingFragmentActivity {
 
 	private int mTitleRes;
 	protected BehindMenuFragment mFrag;
-
-	public BaseFragmentActivity(int titleRes) {
+	protected static final String TAG = "BaseActivity";
+	protected long userId;
+	public TopAndroidClient client = TopConfig.client;
+	protected AccessToken accessToken;
+	/*public BaseFragmentActivity(int titleRes) {
+		super(titleRes);
 		mTitleRes = titleRes;
+	}*/
+
+	@Override
+	protected TopAndroidClient getTopAndroidClient() {
+		// TODO Auto-generated method stub
+		return client;
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected AuthorizeListener getAuthorizeListener() {
+		// TODO Auto-generated method stub
+		return new AuthorizeListener() {
+			private String nick;
+			private SharedPreferences sharedPreferences;
+			
+			@Override
+			public void onComplete(AccessToken accessToken) {
+				BaseFragmentActivity.this.accessToken = accessToken;
+				Log.d(TAG, "callback");
+				Toast.makeText(BaseFragmentActivity.this, "accessToken", 0).show();
+				
+				String id = accessToken.getAdditionalInformation().get(
+						AccessToken.KEY_SUB_TAOBAO_USER_ID);
+				if (id == null) {
+					id = accessToken.getAdditionalInformation().get(
+							AccessToken.KEY_TAOBAO_USER_ID);
+					System.out.println("topResult id " + id);
+				}
+				
+				TopConfig.userId = BaseFragmentActivity.this.userId = Long.parseLong(id);
+				sharedPreferences = getSharedPreferences("config", Context.MODE_PRIVATE);
+				Editor edit = sharedPreferences.edit();
+				edit.putLong("userId", userId);
+				edit.commit();
+				
+				nick = accessToken.getAdditionalInformation().get(
+						AccessToken.KEY_SUB_TAOBAO_USER_NICK);
+				if (nick == null) {
+					nick = accessToken.getAdditionalInformation().get(
+							AccessToken.KEY_TAOBAO_USER_NICK);
+				}
+				String r2_expires = accessToken.getAdditionalInformation().get(
+						AccessToken.KEY_R2_EXPIRES_IN);
+				Date start = accessToken.getStartDate();
+				Date end = new Date(start.getTime()
+						+ Long.parseLong(r2_expires) * 1000L);
+			
+			}
 
-		setTitle(mTitleRes);
+			@Override
+			public void onError(AuthError e) {
+				LogUtil.e(TAG, e.getErrorDescription());
+			}
 
-		// set the Behind View
-		setBehindContentView(R.layout.menu_frame);
-		FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
-		mFrag = new BehindMenuFragment();
-		t.replace(R.id.menu_frame, mFrag);
-		t.commit();
-
-		// customize the SlidingMenu
-		SlidingMenu sm = getSlidingMenu();
-		sm.setShadowWidthRes(R.dimen.shadow_width);
-		sm.setShadowDrawable(R.drawable.shadow);
-		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-		sm.setFadeDegree(0.35f);
-		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-
+			@Override
+			public void onAuthException(AuthException e) {
+				LogUtil.e(TAG, e.getMessage());
+			}
+		};
 	}
 }

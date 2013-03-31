@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -15,12 +16,16 @@ import com.tao8.app.R;
 public class BehindMenuFragment extends Fragment implements OnClickListener{
 	
 	
+	private ImageView loginImageView;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.behind_menu, null);
 		RelativeLayout czzxRelativeLayout = (RelativeLayout) v.findViewById(R.id.behind_menu_rl_czzx);
 		czzxRelativeLayout.setOnClickListener(this);
+		loginImageView = (ImageView) v.findViewById(R.id.behind_menu_iv_login);
+		loginImageView.setOnClickListener(this);
 		return v;
 	}
 

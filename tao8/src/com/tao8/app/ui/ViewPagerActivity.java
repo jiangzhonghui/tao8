@@ -6,6 +6,8 @@ import com.slidingmenu.lib.SlidingMenu;
 import com.tao8.app.R;
 import com.tao8.app.R.color;
 import com.tao8.app.R.string;
+import com.taobao.top.android.TopAndroidClient;
+import com.taobao.top.android.auth.AuthorizeListener;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,9 +21,9 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 
 	public static  ViewPager vp;
 
-	public ViewPagerActivity() {
-		super(R.string.viewpager);
-	}
+	/*public ViewPagerActivity() {
+		//super(R.string.viewpager);
+	}*/
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,7 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 			mFragments = new ArrayList<Fragment>();
 			for (int color : COLORS)
 				mFragments.add(new ColorFragment(color));
+			mFragments.add(new CouponFragment());
 			mFragments.add(new RechargeFragment());
 		}
 
@@ -94,6 +97,18 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 			return mFragments.get(position);
 		}
 
+	}
+
+	@Override
+	protected TopAndroidClient getTopAndroidClient() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected AuthorizeListener getAuthorizeListener() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

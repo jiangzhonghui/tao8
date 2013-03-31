@@ -29,8 +29,9 @@ public class CouponFragment extends Fragment{
 		TextView lableTextView = (TextView) linearLayout.findViewById(R.id.head_tv_lable);
 		lableTextView.setText("淘宝折扣");
 		List<TaobaokeCouponItem> taokeItems = new ArrayList<TaobaokeCouponItem>();
+		
 		imgsListView.setAdapter(new CouponAdapter(getActivity(),taokeItems));
 		
-		return super.onCreateView(inflater, container, savedInstanceState);
+		return linearLayout;
 	}
 }
