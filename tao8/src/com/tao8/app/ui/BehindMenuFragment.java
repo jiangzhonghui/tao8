@@ -31,8 +31,22 @@ public class BehindMenuFragment extends Fragment implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
-		Toast.makeText(getActivity(),"充值", 0).show();
-		switchFragment(new ColorFragment(Color.CYAN));
+		switch (v.getId()) {
+		case R.id.behind_menu_iv_login:
+			if (getActivity() == null)
+				return;
+			if (getActivity() instanceof ViewPagerActivity) {
+				ViewPagerActivity fca = (ViewPagerActivity) getActivity();
+				fca.client.authorize(fca);
+			} 
+			break;
+		case R.id.behind_menu_rl_czzx:
+			Toast.makeText(getActivity(),"充值", 0).show();
+			switchFragment(new RechargeFragment());
+			break;
+		default:
+			break;
+		}
 	}
 	
 	// the meat of switching the above fragment

@@ -5,9 +5,12 @@ import java.util.Date;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
 import android.widget.Toast;
 
+import com.tao8.app.AppManager;
 import com.tao8.app.TopConfig;
 import com.tao8.app.util.LogUtil;
 import com.taobao.top.android.TopAndroidClient;
@@ -28,10 +31,26 @@ public class BaseFragmentActivity extends AbsAuthorSlidingFragmentActivity {
 		super(titleRes);
 		mTitleRes = titleRes;
 	}*/
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE); 
+		super.onCreate(savedInstanceState);
+		// 添加Activity到堆栈
+		AppManager.getAppManager().addActivity(this);
+	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		// 结束Activity&从堆栈中移除
+		AppManager.getAppManager().finishActivity(this);
+	}
 	@Override
 	protected TopAndroidClient getTopAndroidClient() {
 		// TODO Auto-generated method stub
+		System.out.println("............................................"+client);
 		return client;
 	}
 

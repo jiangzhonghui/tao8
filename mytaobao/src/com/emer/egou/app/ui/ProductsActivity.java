@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -340,13 +341,13 @@ public class ProductsActivity extends BaseActivity implements
 		fields.add("item_id");
 		Map<String, String> params = new HashMap<String, String>();
 		//params.put("q", "%e6%89%8b%e6%9c%ba");
-		if (q != null) {
+		if (!TextUtils.isEmpty(q)) {
 			params.put("q", Uri.encode(q));
 		}
-		if (cat != null) {
+		if (!TextUtils.isEmpty(cat)) {
 			params.put("cat", cat);
 		}
-		if (q == null && cat == null) {
+		if (TextUtils.isEmpty(q)&&TextUtils.isEmpty(cat)) {
 			throw new RuntimeException("关键字q和前台类目不能同时为空！");
 		}
 		int start = pageNo * pageSize;

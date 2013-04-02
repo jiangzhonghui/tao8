@@ -33,12 +33,18 @@
             android:layout_marginLeft="8dip"
             android:text="归属地 ：" />
 
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/recharge_progressBar"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        
         <TextView
             android:id="@+id/recharge_tv_phone_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dip"
-            android:text="上海 电信"
             android:textColor="#000fff" />
     </LinearLayout>
 
@@ -67,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dip"
-            android:text="10.3元"
+            android:text="00.0元"
             android:textColor="#ff0000" />
     </LinearLayout>
 
@@ -79,7 +85,7 @@
         android:layout_marginTop="20dip"
         android:background="@drawable/bg_recharge_button"
         android:gravity="center"
-        android:text="确认购买"
+        android:text="便宜斗价"
         android:textSize="20sp" />
 
 </LinearLayout>

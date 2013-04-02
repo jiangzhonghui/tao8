@@ -36,15 +36,13 @@ public abstract class AbsAuthorSlidingFragmentActivity extends SlidingFragmentAc
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
-		// 添加Activity到堆栈
-				AppManager.getAppManager().addActivity(this);
 		///////////////////////////////
 		Intent intent = getIntent();
 		Uri uri = intent.getData();
 
 		final TopAndroidClient client = getTopAndroidClient();
+		 System.out.println("............."+client);
 		Uri u = Uri.parse(client.getRedirectURI());
 		if (uri != null && uri.getScheme().equals(u.getScheme())
 				&& uri.getHost().equals(u.getHost())
@@ -100,11 +98,6 @@ public abstract class AbsAuthorSlidingFragmentActivity extends SlidingFragmentAc
 		}
 		///////////////////////////////////////
 		
-		
-		
-		
-		setTitle(mTitleRes);
-
 		// set the Behind View
 		setBehindContentView(R.layout.menu_frame);
 		FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
@@ -133,13 +126,5 @@ public abstract class AbsAuthorSlidingFragmentActivity extends SlidingFragmentAc
 	 */
 	protected abstract AuthorizeListener getAuthorizeListener();
 	
-	
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		// 结束Activity&从堆栈中移除
-		AppManager.getAppManager().finishActivity(this);
-	}
 
 }

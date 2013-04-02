@@ -81,12 +81,12 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 		public ColorPagerAdapter(FragmentManager fm) {
 			super(fm);
 			mFragments = new ArrayList<Fragment>();
-			for (int color : COLORS)
+		/*	for (int color : COLORS)
 				mFragments.add(new ColorFragment(color));
-			mFragments.add(new CouponFragment());
-			mFragments.add(new RechargeFragment());
+		}*/
+		mFragments.add(new CouponFragment());
+		mFragments.add(new RechargeFragment());
 		}
-
 		@Override
 		public int getCount() {
 			return mFragments.size();
@@ -96,19 +96,5 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 		public Fragment getItem(int position) {
 			return mFragments.get(position);
 		}
-
 	}
-
-	@Override
-	protected TopAndroidClient getTopAndroidClient() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected AuthorizeListener getAuthorizeListener() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

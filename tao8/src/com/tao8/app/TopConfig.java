@@ -6,7 +6,7 @@ public class TopConfig {
 
 	public static final String APPKEY = "21362041";
 	public static final String APPSECRET = "9f3da7f0eeff0528fd372d1cea22ca8e";
-	public static final String redirectURI = "com.emar.egou://authorize";
+	public static final String redirectURI = "com.tao8.app://authorize";
 	public static TopAndroidClient client = TopAndroidClient
 			.getAndroidClientByAppKey(TopConfig.APPKEY);
 	public static Long userId;

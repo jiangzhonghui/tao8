@@ -1,8 +1,5 @@
 package com.emer.egou.app.ui;
 
-import com.emar.escore.recommendwall.RecommendSDK;
-import com.emar.escore.sdk.YjfSDK;
-import com.emar.escore.sdk.widget.UpdateScordNotifier;
 import com.emer.egou.app.R;
 
 import android.content.Context;
@@ -15,7 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-public class MainActivity extends BaseActivity implements OnClickListener, UpdateScordNotifier{
+public class MainActivity extends BaseActivity implements OnClickListener{
 
 	private ImageView accountImageView;
 	private ImageView seachImageView;
@@ -37,7 +34,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, Updat
 
 	private void getData() {
 		// TODO Auto-generated method stub
-		  YjfSDK.getInstance(this, this).initInstance("","","","");
 		if (getSharedPreferences("config", Context.MODE_PRIVATE).getLong("userId", 0L)==0L) {
 			goRebateImageButton.setVisibility(View.VISIBLE);
 			headLayout.setBackgroundResource(R.drawable.bg_head_normal_mode);
@@ -89,12 +85,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, Updat
 			
 			break;
 		case R.id.main_iv_tmall:
-			RecommendSDK.getInstance(MainActivity.this).showAdlist();
 			
 			
-			/*intent.setClass(getApplicationContext(), ProductsActivity.class);
+			intent.setClass(getApplicationContext(), ProductsActivity.class);
 			intent.putExtra("isTmallCompetitive", true);
-			startActivity(intent);*/
+			startActivity(intent);
 			break;
 
 		default:
@@ -103,15 +98,4 @@ public class MainActivity extends BaseActivity implements OnClickListener, Updat
 		
 	}
 
-	@Override
-	public void updateScoreFailed(int arg0, int arg1, String arg2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void updateScoreSuccess(int arg0, int arg1, int arg2, String arg3) {
-		// TODO Auto-generated method stub
-		
-	}
 }

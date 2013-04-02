@@ -4,10 +4,9 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk
-        android:minSdkVersion="7"
-        />
-  <uses-permission android:name="android.permission.INTERNET" />
+    <uses-sdk android:minSdkVersion="7" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -44,7 +43,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="com.emar.egou" />
+                <data android:scheme="com.tao8.app" />
             </intent-filter>
         </activity>
         <activity android:name="com.emer.egou.app.ui.BrowserActivity" >
@@ -74,20 +73,20 @@
         </activity>
         <activity android:name=".ui.AboutActivity" >
         </activity>
-         <!-- 注册墙Activity -->
+        <!-- 注册墙Activity -->
         <activity
             android:name="com.emar.escore.scorewall.ShowWallActivity"
             android:configChanges="keyboardHidden|orientation" />
-         <!-- 注册墙Activity推荐墙 -->
+        <!-- 注册墙Activity推荐墙 -->
         <activity
             android:name="com.emar.escore.recommendwall.ShowWallRecommendActivity"
             android:configChanges="keyboardHidden|orientation" />
-         <!-- 注册墙Activity 九宫格-->
+        <!-- 注册墙Activity 九宫格 -->
         <activity
             android:name="com.emar.escore.ninewall.ShowWallNineActivity"
             android:configChanges="keyboardHidden|orientation" />
-      
-          <!-- 注册详情Activity -->
+
+        <!-- 注册详情Activity -->
         <activity
             android:name="com.emar.escore.sdk.view.DetailActivity"
             android:configChanges="keyboardHidden|orientation" />
@@ -95,8 +94,7 @@
         <activity
             android:name="com.emar.escore.sdk.view.WebActivity"
             android:configChanges="keyboardHidden|orientation" />
-        
-	
+
         <!-- 应用编号  由易积分平台添加 应用时自动生成 查看详情可见 777 -->
         <meta-data
             android:name="YJF_APP_ID"
@@ -113,7 +111,6 @@
         <meta-data
             android:name="YJF_APP_CHANNEL"
             android:value="sdk 3.1.1" />
-        
     </application>
 
 </manifest>

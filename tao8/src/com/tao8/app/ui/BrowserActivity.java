@@ -90,7 +90,7 @@ public class BrowserActivity extends BaseFragmentActivity implements OnClickList
 				public boolean shouldOverrideUrlLoading(WebView view, String url) {
 					System.out.println("url " + url);
 					//Toast.makeText(getApplicationContext(), url+"", 0).show();
-					if (url.startsWith("com.emar.egou://authorize#")&&url.contains("mobile_token")) {
+					if (url.startsWith("com.tao8.app://authorize#")&&url.contains("mobile_token")) {
 						Intent intent = new Intent();
 						intent.setAction(Intent.ACTION_VIEW);
 						intent.addCategory("android.intent.category.BROWSABLE");

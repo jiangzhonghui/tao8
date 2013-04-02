@@ -17,6 +17,7 @@
             android:background="@drawable/bg_head" >
 
             <ImageView
+                android:id="@+id/behind_menu_iv_login"
                 style="@style/behind_menu_img_style"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"

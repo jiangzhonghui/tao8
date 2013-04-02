@@ -15,7 +15,6 @@ public class MyApplication extends Application {
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		TopAndroidClient.registerAndroidClient(getApplicationContext(),TopConfig.APPKEY, TopConfig.APPSECRET, TopConfig.redirectURI);
-		
 		super.onCreate();
 	}
 
