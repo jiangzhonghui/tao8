@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.huewu.pla.R;
 import com.huewu.pla.lib.MultiColumnListView;
 import com.huewu.pla.lib.MultiColumnListView.OnLoadMoreListener;
 import com.huewu.pla.sample.internal.ImageWrapper;

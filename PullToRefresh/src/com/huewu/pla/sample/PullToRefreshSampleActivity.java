@@ -3,6 +3,7 @@ package com.huewu.pla.sample;
 import android.os.Handler;
 import android.view.Menu;
 
+import com.huewu.pla.R;
 import com.huewu.pla.lib.MultiColumnPullToRefreshListView;
 import com.huewu.pla.lib.MultiColumnPullToRefreshListView.OnRefreshListener;
 import com.huewu.pla.sample.internal.ImgResource;

@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.huewu.pla.sample.R;
+import com.huewu.pla.R;
 import com.lurencun.android.adapter.ViewBuilder;
 
 /**

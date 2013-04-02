@@ -24,9 +24,9 @@ import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.View;
 
+import com.huewu.pla.R;
 import com.huewu.pla.lib.internal.PLA_AbsListView;
 import com.huewu.pla.lib.internal.PLA_ListView;
-import com.huewu.pla.sample.R;
 
 /**
  * @author huewu.ynag
