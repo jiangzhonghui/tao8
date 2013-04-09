@@ -1,6 +1,6 @@
 package com.tao8.app.ui;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.tao8.app.BuildConfig;
 import com.tao8.app.R;
 
 public class BehindMenuFragment extends Fragment implements OnClickListener{
@@ -23,7 +24,11 @@ public class BehindMenuFragment extends Fragment implements OnClickListener{
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.behind_menu, null);
 		RelativeLayout czzxRelativeLayout = (RelativeLayout) v.findViewById(R.id.behind_menu_rl_czzx);
+		RelativeLayout lmllRelativeLayout = (RelativeLayout) v.findViewById(R.id.behind_menu_rl_lmll);
+		RelativeLayout tttjRelativeLayout = (RelativeLayout) v.findViewById(R.id.behind_menu_rl_tttj);
+		lmllRelativeLayout.setOnClickListener(this);
 		czzxRelativeLayout.setOnClickListener(this);
+		tttjRelativeLayout.setOnClickListener(this);
 		loginImageView = (ImageView) v.findViewById(R.id.behind_menu_iv_login);
 		loginImageView.setOnClickListener(this);
 		return v;
@@ -41,8 +46,23 @@ public class BehindMenuFragment extends Fragment implements OnClickListener{
 			} 
 			break;
 		case R.id.behind_menu_rl_czzx:
-			Toast.makeText(getActivity(),"充值", 0).show();
+			if (BuildConfig.DEBUG) {
+				Toast.makeText(getActivity(),"充值中心", 0).show();
+			}
 			switchFragment(new RechargeFragment());
+			break;
+		case R.id.behind_menu_rl_lmll:
+			if (BuildConfig.DEBUG) {
+				Toast.makeText(getActivity(),"类目浏览", 0).show();
+			}
+//			Intent intent = new Intent(getActivity(), PullToRefreshActivity.class);
+//			getActivity().startActivity(intent);
+			break;
+		case R.id.behind_menu_rl_tttj:
+			if (BuildConfig.DEBUG) {
+				Toast.makeText(getActivity(),"天天特价", 0).show();
+			}
+			switchFragment(new CouponEveryDayFragment());
 			break;
 		default:
 			break;

@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -93,6 +95,7 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 		};
 	};
 	private long userId;
+	private ImageView moreImageView;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -113,19 +116,23 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-
-		View view = inflater.inflate(R.layout.recharge, null);
+		sharedPreferences = getActivity().getSharedPreferences("config",
+				Context.MODE_PRIVATE);
+		View view = inflater.inflate(R.layout.recharge_fragment, null);
 		rechargeItmes = (GridView) view
 				.findViewById(R.id.recharge_gv_money_to_recharge);
 		numEditText = (EditText) view.findViewById(R.id.recharge_et_phoneNum);
 		numEditText.setOnClickListener(this);
 		numEditText.setOnFocusChangeListener(this);
+		numEditText.setText(sharedPreferences.getString("phoneNum", ""));
 		buyButton = (Button) view.findViewById(R.id.recharge_btm_buy);
 		buyButton.setOnClickListener(this);
 		phoneAddressTextView = (TextView) view
 				.findViewById(R.id.recharge_tv_phone_address);
 		pb = (ProgressBar) view.findViewById(R.id.recharge_progressBar);
 		priceTextView = (TextView) view.findViewById(R.id.recharge_tv_price);
+		moreImageView = (ImageView) view.findViewById(R.id.head_iv_more);
+		moreImageView.setVisibility(View.GONE);
 		ArrayList<String> moneyItems = new ArrayList<String>();
 		moneyItems.add("10");
 		moneyItems.add("20");
@@ -133,8 +140,7 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 		moneyItems.add("50");
 		moneyItems.add("100");
 		moneyItems.add("200");
-		rechargeItmes
-				.setAdapter(new RechargeAdapter(getActivity(), moneyItems));
+		rechargeItmes.setAdapter(new RechargeAdapter(getActivity(), moneyItems));
 		rechargeItmes.setOnItemClickListener(this);
 		return view;
 	}
@@ -145,6 +151,13 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 		numEditText.setCursorVisible(false);
 		numEditText.setFocusableInTouchMode(false);
 		numEditText.clearFocus();
+		String num = numEditText.getText().toString();
+		if (TextUtils.isEmpty(num.trim())) {
+			Toast.makeText(getActivity(), "号码不能为空", 0).show();
+		}
+		if (!checkNumber(num)) {
+			Toast.makeText(getActivity(), "号码格式不正确！", 0).show();
+		}
 		if (address == null) {
 			Toast.makeText(getActivity(), "稍等,正在获取号码归属地......", 0).show();
 			return;
@@ -201,6 +214,9 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 			if (TextUtils.isEmpty(address)) {
 				Toast.makeText(getActivity(), "请重新输入号码或重新选择", 0).show();
 			}
+			Editor edit = sharedPreferences.edit();
+			edit.putString("phoneNum", phoneNum);
+			edit.commit();
 			if (resultMap!=null) {
 				SearchItem searchItem = resultMap.get(q);
 				if (searchItem!=null) {
@@ -289,8 +305,7 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 	 */
 	private void getFromTmallByKeyWords(String q, String sort, String cat,
 			final int pageNo) {
-		sharedPreferences = getActivity().getSharedPreferences("config",
-				Context.MODE_PRIVATE);
+		
 		long userId = sharedPreferences.getLong("userId", 10000);
 		AccessToken accessToken = TopConfig.client.getAccessToken(userId);
 		String tql = "";

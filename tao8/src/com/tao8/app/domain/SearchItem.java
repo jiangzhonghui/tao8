@@ -9,7 +9,7 @@ public class SearchItem implements Serializable{
 /**
 	 * 
 	 */
-	private static final long serialVersionUID = 903907914676661343L;
+	public static final long serialVersionUID = 903907914676661343L;
 @Override
 	public String toString() {
 		return "SearchItem [num_iid=" + num_iid + ", title=" + title
@@ -28,33 +28,33 @@ public class SearchItem implements Serializable{
  * commission_volume,shop_click_url,seller_credit_score,item_location,volume
  */
 	/**淘宝客商品数字id*/
-	private String num_iid;
+	public String num_iid;
 	/**商品title 宝贝名称*/
-	private String title;
+	public String title;
 	/**卖家昵称*/
-	private String nick;
+	public String nick;
 	/**图片url*/
-	private String pic_url;
+	public String pic_url;
 	/**商品价格*/
-	private String price;
+	public String price;
 	/**推广点击url*/
-	private String click_url;
+	public String click_url;
 	/**淘宝客佣金*/
-	private String commission;
+	public String commission;
 	/**淘宝客佣金比率，比如：1234.00代表12.34%*/
-	private String commission_rate;
+	public String commission_rate;
 	/**累计成交量.注：返回的数据是30天内累计推广量*/
-	private String commission_num;
+	public String commission_num;
 	/**累计总支出佣金量*/
-	private String commission_volume;
+	public String commission_volume;
 	/**商品所在店铺的推广点击url*/
-	private String shop_click_url;
+	public String shop_click_url;
 	/**卖家信用等级*/
-	private String seller_credit_score;
+	public String seller_credit_score;
 	/**商品所在地*/
-	private String item_location;
+	public String item_location;
 	/**30天内交易量*/
-	private String volume;
+	public String volume;
 	public String getNum_iid() {
 		return num_iid;
 	}

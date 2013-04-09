@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/head_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_head" >
+
+        <TextView
+            android:id="@+id/head_tv_go_menu"
+            android:layout_width="60dip"
+            android:layout_height="48dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dip"
+            android:background="@drawable/bg_head_more"
+            android:gravity="center"
+            android:text="菜单"
+            android:textColor="#ffffffff"
+            android:textSize="20dip" />
+
+        <LinearLayout
+            android:id="@+id/coupon_everyday_ll_lable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/head_tv_lable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="天天特价"
+                android:textColor="#ffffffff"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/coupon_everyday_tv_lable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                android:text="特价精选"
+                android:textColor="#FF3030" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/coupon_everyday_ll_catgory"
+            android:layout_width="wrap_content"
+            android:layout_height="40dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_head_more"
+            android:gravity="center_vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="2dip"
+                android:text="类目"
+                android:textColor="#ffffffff"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/coupon_everyday_head_iv_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
+                android:layout_marginRight="5dip"
+                android:scaleType="center"
+                android:src="@drawable/icon_arrow_close" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <GridView
+        android:id="@+id/coupon_everyday_gv_catory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:choiceMode="singleChoice"
+        android:gravity="center"
+        android:horizontalSpacing="10dip"
+        android:numColumns="3"
+        android:visibility="gone"
+        android:verticalSpacing="10dip" />
+
+    <LinearLayout
+        android:id="@+id/coupon_everyday_ll_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#80111111"
+        android:orientation="horizontal" >
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:text="数据正在疯狂加载中,请稍候......."
+            android:textColor="#ffffff" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/coupon_everyday_fl_content_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ListView
+            android:id="@+id/coupon_everyday_lv_content_imgs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#D9D9D9"
+            android:cacheColorHint="#D9D9D9" />
+
+        <LinearLayout
+            android:id="@+id/coupon_everyday_ll_to_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <ImageView
+                android:layout_width="120dip"
+                android:layout_height="120dip"
+                android:src="@drawable/refresh_button" >
+            </ImageView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="各种不给力,请刷新重试" />
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>

@@ -15,13 +15,16 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tao8.app.R;
 import com.tao8.app.util.CommonUtil;
 
-public class BrowserActivity extends BaseFragmentActivity implements OnClickListener {
+public class BrowserActivity extends BaseFragmentActivity implements
+		OnClickListener {
+	public static final String BROWSERACTIVITY_TITLE = "title";
 	public static final String BROWSERACTIVITY_ACTION = "com.tao8.app";
 	public static final String BROWSERACTIVITY_URI = "uri";
 	private WebView webview;
@@ -29,40 +32,45 @@ public class BrowserActivity extends BaseFragmentActivity implements OnClickList
 	private ProgressDialog pd;
 	private ImageButton backButton;
 	private TextView lableTextView;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		//requestWindowFeature(Window.FEATURE_PROGRESS);// 让进度条显示在标题栏上
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE); 
+		// requestWindowFeature(Window.FEATURE_PROGRESS);// 让进度条显示在标题栏上
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.browser);
-		//找到view
+		// 找到view
 		lableTextView = (TextView) findViewById(R.id.head_tv_lable);
-		webview = (WebView)findViewById(R.id.webview);
+		TextView goMenuTextView = (TextView) findViewById(R.id.head_tv_go_menu);
+		goMenuTextView.setVisibility(View.GONE);
 		
-		String title = getIntent().getStringExtra("title");
-		if (title!=null) {
+		ImageView moreImageView = (ImageView) findViewById(R.id.head_iv_more);
+		moreImageView.setVisibility(View.GONE);
+		
+		webview = (WebView) findViewById(R.id.webview);
+
+		String title = getIntent().getStringExtra(BROWSERACTIVITY_TITLE);
+		if (title != null) {
 			lableTextView.setText(Html.fromHtml(title));
 		}
-		if (pd==null) {
-			pd = new ProgressDialog(BrowserActivity.this);
-			pd.setMessage("数据加载中......");
-		}
+		pd = new ProgressDialog(BrowserActivity.this);
+		pd.setMessage("数据加载中......");
 		String action = getIntent().getAction();
 		uri = getIntent().getStringExtra(BROWSERACTIVITY_URI);
 		if (action.equalsIgnoreCase(BROWSERACTIVITY_ACTION)) {
-			//Toast.makeText(this, uri, 0).show();
+			// Toast.makeText(this, uri, 0).show();
 			WebSettings webSettings = webview.getSettings();
 			webSettings.setJavaScriptEnabled(true);
 			webview.setWebChromeClient(new WebChromeClient() {
 				public void onProgressChanged(WebView view, int progress) {
 					System.out.println(System.currentTimeMillis());
-					//BrowserActivity.this.setProgress(progress * 1000);
+					// BrowserActivity.this.setProgress(progress * 1000);
 					System.out.println("view.getUrl() " + view.getUrl());
 					System.out.println(progress);
 				}
 			});
-			
+
 			webview.setWebViewClient(new WebViewClient() {
 				@Override
 				public void onReceivedError(WebView view, int errorCode,
@@ -70,7 +78,7 @@ public class BrowserActivity extends BaseFragmentActivity implements OnClickList
 					Toast.makeText(BrowserActivity.this,
 							"Oh no! " + description, Toast.LENGTH_SHORT).show();
 				}
-				
+
 				@Override
 				public void onPageStarted(WebView view, String url,
 						Bitmap favicon) {
@@ -79,18 +87,22 @@ public class BrowserActivity extends BaseFragmentActivity implements OnClickList
 					}
 					super.onPageStarted(view, url, favicon);
 				}
+
 				@Override
 				public void onPageFinished(WebView view, String url) {
-					if (pd!=null&&pd.isShowing()) {
+					if (pd != null && pd.isShowing()) {
 						pd.dismiss();
 					}
 					super.onPageFinished(view, url);
 				}
+
 				@Override
 				public boolean shouldOverrideUrlLoading(WebView view, String url) {
 					System.out.println("url " + url);
-					//Toast.makeText(getApplicationContext(), url+"", 0).show();
-					if (url.startsWith("com.tao8.app://authorize#")&&url.contains("mobile_token")) {
+					// Toast.makeText(getApplicationContext(), url+"",
+					// 0).show();
+					if (url.startsWith("com.tao8.app://authorize#")
+							&& url.contains("mobile_token")) {
 						Intent intent = new Intent();
 						intent.setAction(Intent.ACTION_VIEW);
 						intent.addCategory("android.intent.category.BROWSABLE");
@@ -98,7 +110,7 @@ public class BrowserActivity extends BaseFragmentActivity implements OnClickList
 						BrowserActivity.this.startActivity(intent);
 						BrowserActivity.this.finish();
 						return true;
-					}else {
+					} else {
 						view.loadUrl(url);
 					}
 					return false;
@@ -106,11 +118,13 @@ public class BrowserActivity extends BaseFragmentActivity implements OnClickList
 			});
 			if (CommonUtil.checkNetState(getApplicationContext())) {
 				webview.loadUrl(uri);
-			}else {
-				Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络", 0).show();
+			} else {
+				Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络", 0)
+						.show();
 			}
 		}
 	}
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -122,14 +136,23 @@ public class BrowserActivity extends BaseFragmentActivity implements OnClickList
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
-		if (keyCode==KeyEvent.KEYCODE_BACK) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (webview.canGoBack()) {
 				webview.goBack();
 				return true;
-			}else {
+			} else {
 				return super.onKeyDown(keyCode, event);
 			}
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	protected void onDestroy() {
+		webview.clearDisappearingChildren();
+		webview.clearFormData();
+		webview.clearView();
+		webview = null;
+		super.onDestroy();
 	}
 }

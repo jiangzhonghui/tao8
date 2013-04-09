@@ -52,4 +52,14 @@
         <item name="android:background">@drawable/bg_menu_lable</item>
     </style>
 
+    <style name="productLableText">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">@drawable/bg_product_lable_item</item>
+        <item name="android:padding">8dip</item>
+    </style>
+        <declare-styleable name="RoundAngleImageView">
+        <attr name="roundWidth" format="dimension" />
+        <attr name="roundHeight" format="dimension" />
+    </declare-styleable>
 </resources>

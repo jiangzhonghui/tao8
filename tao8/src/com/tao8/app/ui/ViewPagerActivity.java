@@ -84,8 +84,11 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 		/*	for (int color : COLORS)
 				mFragments.add(new ColorFragment(color));
 		}*/
-		mFragments.add(new CouponFragment());
+		mFragments.add(new TryoutFragment());
 		mFragments.add(new RechargeFragment());
+		mFragments.add(new CouponEveryDayFragment());
+		mFragments.add(new CouponFragment());
+		
 		}
 		@Override
 		public int getCount() {

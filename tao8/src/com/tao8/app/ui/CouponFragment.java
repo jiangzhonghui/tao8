@@ -1,63 +1,365 @@
 package com.tao8.app.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.GradientDrawable.Orientation;
+import android.opengl.Visibility;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.EventLog.Event;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.huewu.pla.lib.MultiColumnListView;
-import com.huewu.pla.lib.MultiColumnListView.OnLoadMoreListener;
-import com.huewu.pla.sample.internal.ImageWrapper;
-import com.huewu.pla.sample.internal.ImgResource;
-import com.huewu.pla.sample.internal.SimpleViewBuilder;
-import com.lurencun.android.adapter.CommonAdapter;
-import com.lurencun.android.system.ActivityUtil;
+import com.tao8.app.AppException;
+import com.tao8.app.BuildConfig;
 import com.tao8.app.R;
+import com.tao8.app.TopConfig;
 import com.tao8.app.adapter.CouponAdapter;
+import com.tao8.app.api.GetTopData;
+import com.tao8.app.api.MyTqlListener;
 import com.tao8.app.domain.TaobaokeCouponItem;
+import com.tao8.app.parser.TaoBaoKeCouponItemParser;
+import com.tao8.app.util.CommonUtil;
+import com.tao8.app.util.TqlHelper;
+import com.taobao.top.android.api.ApiError;
+import com.taobao.top.android.auth.AccessToken;
 
-public class CouponFragment extends Fragment{
+public class CouponFragment extends Fragment implements OnClickListener,
+		OnScrollListener, OnItemClickListener {
 
+	protected static final String TAG = "CouponFragment";
 	private LinearLayout linearLayout;
-	private MultiColumnListView mWaterfallView;
-	private CommonAdapter<ImageWrapper> mAdapter;
+	private SharedPreferences sharedPreferences;
+	private int pageSize = 20;
+	private TextView menuTextView;
+	private ImageView moreImageView;
+	private PopupWindow popupWindow;
+	private RelativeLayout rl;
+	private int page_no = 1;
+	private String sort = "volume_desc";// 成交量从高到低
+	private ListView imgsListView;
+	private List<TaobaokeCouponItem> taobaokeCouponItems;
+	private CouponAdapter couponAdapter;
+	private TextView lableTextView;
+	private String keyword;
+	// private ProgressDialog progressDialog;
+	private LinearLayout toFreshLayout;// 中间加载失败的显示
+	private LinearLayout toplLayout;// 最上面的加载中指示的
+	private int scrollState;
+	private int firstVisibleItem;
+	private int visibleItemCount;
+	private int totalItemCount;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		linearLayout = (LinearLayout) inflater.inflate(R.layout.coupon, null);
-		mWaterfallView = (MultiColumnListView) linearLayout.findViewById(R.id.coupon_lv_content_imgs);
-		mAdapter = new CommonAdapter<ImageWrapper>(getActivity().getLayoutInflater(), new SimpleViewBuilder());
-		mWaterfallView.setAdapter(mAdapter);
-		mAdapter.update(ImgResource.genData());
-		mWaterfallView.setOnLoadMoreListener(new OnLoadMoreListener() {
-			@Override
-			public void onLoadMore() {
-				mAdapter.add(ImgResource.genData());
-				mAdapter.notifyDataSetChanged();
-				ActivityUtil.show(getActivity(), "到List底部自动加载更多数据");
-				//5秒后完成
-				new Handler().postDelayed(new Runnable(){
-					@Override
-					public void run() {
-						mWaterfallView.onLoadMoreComplete();
-					}
-				}, 5000);
-			}
-		});
-		TextView lableTextView = (TextView) linearLayout.findViewById(R.id.head_tv_lable);
-		lableTextView.setText("淘宝折扣");
-		List<TaobaokeCouponItem> taokeItems = new ArrayList<TaobaokeCouponItem>();
-		
-		//imgsListView.setAdapter(new CouponAdapter(getActivity(),taokeItems));
-		
+		linearLayout = (LinearLayout) inflater.inflate(R.layout.coupon_fragment, null);
+		findView(linearLayout);
+		setLintener();
+		setData();
 		return linearLayout;
+	}
+	
+	@Override
+	public void onStart() {
+		//
+		System.out.println("onStart");
+		super.onStart();
+	} 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		//setData();
+		super.onCreate(savedInstanceState);
+	}
+	private void setData() {
+		// progressDialog = new
+		// ProgressDialog(getActivity(),android.R.style.Theme_Black_NoTitleBar);
+		// progressDialog.setMessage("数据正在疯狂加载中,请稍后.......");
+		keyword = "0";
+		seachTaobaokeCouponFromKeyWord(keyword, sort, false, true, 1);
+		taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
+		if (couponAdapter == null) {
+			couponAdapter = new CouponAdapter(getActivity(),
+					taobaokeCouponItems);
+		}
+		// 设置ListView每个Item间的间隔线的颜色渐变
+		GradientDrawable divider_gradient = new GradientDrawable(
+				Orientation.TOP_BOTTOM, new int[] {
+						Color.parseColor("#cccccc"),
+						Color.parseColor("#ffffff"),
+						Color.parseColor("#cccccc") });
+		imgsListView.setDivider(divider_gradient);
+		imgsListView.setDividerHeight(3);
+		imgsListView.setAdapter(couponAdapter);
+		lableTextView.setText("淘宝折扣");
+	}
+
+	private void setLintener() {
+		menuTextView.setOnClickListener(this);
+		moreImageView.setOnClickListener(this);
+		imgsListView.setOnScrollListener(this);
+		toFreshLayout.setOnClickListener(this);
+		imgsListView.setOnItemClickListener(this);
+
+	}
+
+	private void findView(View view) {
+		imgsListView = (ListView) view
+				.findViewById(R.id.coupon_lv_content_imgs);
+		moreImageView = (ImageView) view.findViewById(R.id.head_iv_more);
+		rl = (RelativeLayout) view.findViewById(R.id.head_rl);
+		menuTextView = (TextView) view.findViewById(R.id.head_tv_go_menu);
+		lableTextView = (TextView) view.findViewById(R.id.head_tv_lable);
+		toFreshLayout = (LinearLayout) view
+				.findViewById(R.id.coupon_ll_to_refresh);
+		toplLayout = (LinearLayout) view.findViewById(R.id.coupon_ll_top);
+
+	}
+
+	/**
+	 * 淘客折扣请求的方法
+	 * 
+	 * @param keyword
+	 *            关键字 (如果是全部,则为cid = 0);
+	 * @param sort
+	 *            default(默认排序), price_desc(折扣价格从高到低), price_asc(折扣价格从低到高),
+	 *            credit_desc(信用等级从高到低), credit_asc(信用等级从低到高),
+	 *            commissionRate_desc(佣金比率从高到低), commissionRate_asc(佣金比率从低到高),
+	 *            volume_desc(成交量成高到低), volume_asc(成交量从低到高)
+	 * @param isFromTmall
+	 *            是否请求天猫的数据
+	 * @param isAll
+	 *            是否请求的全部数据
+	 * @param page_no
+	 *            请求的页数
+	 */
+	private void seachTaobaokeCouponFromKeyWord(String keyword, String sort,
+			boolean isFromTmall, boolean isAll, final int page_no) {
+		if (sharedPreferences == null) {
+			sharedPreferences = getActivity().getSharedPreferences("config",
+					Context.MODE_PRIVATE);
+		}
+		long userId = sharedPreferences.getLong("userId", 10000);
+		AccessToken accessToken = TopConfig.client.getAccessToken(userId);
+		String tql = "";
+		Map<String, String> params = new HashMap<String, String>();
+		if (isAll) {
+			params.put("cid", keyword);
+		} else {
+			params.put("keyword", keyword);
+		}
+		params.put("page_size", Integer.toString(pageSize));// 最大40个,
+		params.put("page_no", Integer.toString(page_no));// 最多10页
+		params.put("mall_item", isFromTmall + "");
+		params.put("sort", sort);
+		tql = TqlHelper.generateTaoBaoKeCouponTql(TaobaokeCouponItem.class,
+				params);
+		System.out.println(tql);
+		toplLayout.setVisibility(View.VISIBLE);
+		GetTopData.getDataFromTop(tql, new TaoBaoKeCouponItemParser(), userId,
+				new MyTqlListener() {
+					@Override
+					public void onComplete(Object result) {
+						toFreshLayout.setVisibility(View.GONE);
+						toplLayout.setVisibility(View.GONE);
+						imgsListView.setVisibility(View.VISIBLE);
+						ArrayList<TaobaokeCouponItem> results = (ArrayList) result;
+						if (BuildConfig.DEBUG) {
+							Toast.makeText(getActivity(),results.size() + "  总共", 1).show();
+						}
+						if (results != null && results.size() > 0) {
+
+							if (page_no == 1) {
+								taobaokeCouponItems.clear();
+							}
+							if (imgsListView.getAdapter()==null||imgsListView.getAdapter().getCount()<=0) {
+								imgsListView.setAdapter(couponAdapter);
+							}
+							taobaokeCouponItems.addAll(results);
+							couponAdapter.notifyDataSetChanged();
+							toFreshLayout.setVisibility(View.GONE);
+							imgsListView.setVisibility(View.VISIBLE);
+						}
+						if (BuildConfig.DEBUG) {
+							if (results != null) {
+								Log.i(TAG, Integer.toString(results.size()));
+							}
+						}
+					}
+
+					@Override
+					public void onException(Exception e) {
+						toplLayout.setVisibility(View.GONE);
+						toFreshLayout.setVisibility(View.VISIBLE);
+						imgsListView.setVisibility(View.GONE);
+						AppException.network(e).makeToast(getActivity());
+					}
+
+					@Override
+					public void onResponseException(Object apiError) {
+						toplLayout.setVisibility(View.GONE);
+						toFreshLayout.setVisibility(View.VISIBLE);
+						imgsListView.setVisibility(View.GONE);
+						Toast.makeText(getActivity(),
+								((ApiError) apiError).getMsg(), 0).show();
+						if (BuildConfig.DEBUG) {
+							Log.i(TAG, apiError.toString());
+						}
+					}
+				});
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.head_iv_more:
+			popupWindow = new PopupWindow(getActivity());
+			View view = View.inflate(getActivity(), R.layout.popup_lable, null);
+			RadioButton radioButton_0 = (RadioButton) view
+					.findViewById(R.id.products_lable_rbtn_0);
+			RadioButton radioButton_1 = (RadioButton) view
+					.findViewById(R.id.products_lable_rbtn_1);
+			RadioButton radioButton_2 = (RadioButton) view
+					.findViewById(R.id.products_lable_rbtn_2);
+			RadioButton radioButton_3 = (RadioButton) view
+					.findViewById(R.id.products_lable_rbtn_3);
+			RadioButton radioButton_4 = (RadioButton) view
+					.findViewById(R.id.products_lable_rbtn_4);
+			RadioButton radioButton_5 = (RadioButton) view
+					.findViewById(R.id.products_lable_rbtn_5);
+			RadioButton radioButton_6 = (RadioButton) view
+					.findViewById(R.id.products_lable_rbtn_6);
+			RadioButton radioButton_7 = (RadioButton) view
+					.findViewById(R.id.products_lable_rbtn_7);
+			RadioButton radioButton_8 = (RadioButton) view
+					.findViewById(R.id.products_lable_rbtn_8);
+			RadioButton radioButton_9 = (RadioButton) view
+					.findViewById(R.id.products_lable_rbtn_9);
+			radioButton_0.setOnClickListener(this);
+			radioButton_1.setOnClickListener(this);
+			radioButton_2.setOnClickListener(this);
+			radioButton_3.setOnClickListener(this);
+			radioButton_4.setOnClickListener(this);
+			radioButton_5.setOnClickListener(this);
+			radioButton_6.setOnClickListener(this);
+			radioButton_7.setOnClickListener(this);
+			radioButton_8.setOnClickListener(this);
+			radioButton_9.setOnClickListener(this);
+			popupWindow.setContentView(view);
+			popupWindow.setBackgroundDrawable(new ColorDrawable(
+					Color.TRANSPARENT));
+			popupWindow.setOutsideTouchable(true);
+			popupWindow.setHeight(80);
+			popupWindow.setWidth(getActivity().getWindowManager()
+					.getDefaultDisplay().getWidth());
+			popupWindow.showAsDropDown(rl);
+			break;
+		case R.id.head_tv_go_menu:
+			if (getActivity() instanceof ViewPagerActivity) {
+				ViewPagerActivity viewPagerActivity = (ViewPagerActivity) getActivity();
+				viewPagerActivity.showMenu();
+			}
+			break;
+		case R.id.products_lable_rbtn_0:
+			seachTaobaokeCouponFromKeyWord("0", sort , false, true, page_no);
+			break;
+		case R.id.products_lable_rbtn_1:
+		case R.id.products_lable_rbtn_2:
+		case R.id.products_lable_rbtn_3:
+		case R.id.products_lable_rbtn_4:
+		case R.id.products_lable_rbtn_5:
+		case R.id.products_lable_rbtn_6:
+		case R.id.products_lable_rbtn_7:
+		case R.id.products_lable_rbtn_8:
+		case R.id.products_lable_rbtn_9:
+			popupWindow.dismiss();
+			RadioButton radioButton = (RadioButton) v;
+			keyword = radioButton.getText().toString().trim();
+			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
+			break;
+		case R.id.coupon_ll_to_refresh:
+			if (keyword == null) {
+				keyword = "0";
+				seachTaobaokeCouponFromKeyWord(keyword, sort, false, true, 1);
+			} else {
+				seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
+			}
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		if ((totalItemCount - firstVisibleItem) == visibleItemCount
+				&& scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+			page_no = (taobaokeCouponItems.size() / pageSize) + 1;
+			if (keyword.equalsIgnoreCase("0")) {
+				seachTaobaokeCouponFromKeyWord(keyword, sort, false, true, page_no);
+			}else {
+				seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no);
+			}
+			Toast.makeText(getActivity(), "滑倒底部了", 1).show();
+		}
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+		this.firstVisibleItem = firstVisibleItem;
+		this.visibleItemCount = visibleItemCount;
+		this.totalItemCount = totalItemCount;
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+			Adapter adapter = parent.getAdapter();
+			TaobaokeCouponItem item = (TaobaokeCouponItem) adapter.getItem(position);
+			if (item!=null) {
+				Intent intent = new Intent();
+				intent.setAction(BrowserActivity.BROWSERACTIVITY_ACTION);
+				if (sharedPreferences == null) {
+					sharedPreferences = getActivity().getSharedPreferences("config",
+							Context.MODE_PRIVATE);
+				}
+				long userId = sharedPreferences.getLong("userId", 10000);
+				AccessToken accessToken = TopConfig.client.getAccessToken(userId);
+				String uri = CommonUtil.generateTopClickUri(item.getClick_url(), getActivity(), accessToken);
+				intent.putExtra(BrowserActivity.BROWSERACTIVITY_URI, uri);
+				intent.putExtra(BrowserActivity.BROWSERACTIVITY_TITLE, item.getTitle());
+				getActivity().startActivity(intent);
+			}
+		
 	}
 }

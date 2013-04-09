@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/products_lable_hs"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:scrollbars="none" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <RadioGroup
+            android:id="@+id/products_rg_lables"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_lable_mormal"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="visible" >
+            <RadioButton
+                android:id="@+id/products_lable_rbtn_0"
+                style="@style/productLableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:checked="true"
+                android:text="全部" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="44dip"
+                android:background="#C4C4C4" />
+
+            <RadioButton
+                android:id="@+id/products_lable_rbtn_1"
+                style="@style/productLableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:text="零食" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="44dip"
+                android:background="#C4C4C4" />
+
+            <RadioButton
+                android:id="@+id/products_lable_rbtn_2"
+                style="@style/productLableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:text="牛仔裤" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="44dip"
+                android:background="#C4C4C4" />
+
+            <RadioButton
+                android:id="@+id/products_lable_rbtn_3"
+                style="@style/productLableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:text="小样" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="44dip"
+                android:background="#C4C4C4" />
+
+            <RadioButton
+                android:id="@+id/products_lable_rbtn_4"
+                style="@style/productLableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:text="母婴" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="44dip"
+                android:background="#C4C4C4" />
+
+            <RadioButton
+                android:id="@+id/products_lable_rbtn_5"
+                style="@style/productLableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:text="运动" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="44dip"
+                android:background="#C4C4C4" />
+
+            <RadioButton
+                android:id="@+id/products_lable_rbtn_6"
+                style="@style/productLableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:text="连衣裙" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="44dip"
+                android:background="#C4C4C4" />
+
+            <RadioButton
+                android:id="@+id/products_lable_rbtn_7"
+                style="@style/productLableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:text="女包" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="44dip"
+                android:background="#C4C4C4" />
+
+            <RadioButton
+                android:id="@+id/products_lable_rbtn_8"
+                style="@style/productLableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:text="汽车" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="44dip"
+                android:background="#C4C4C4" />
+
+            <RadioButton
+                android:id="@+id/products_lable_rbtn_9"
+                style="@style/productLableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:text="成人用品" />
+        </RadioGroup>
+    </LinearLayout>
+
+</HorizontalScrollView>

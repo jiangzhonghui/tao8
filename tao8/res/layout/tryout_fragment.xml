@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/head" />
+
+    <LinearLayout
+        android:id="@+id/tryout_ll_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#80111111"
+        android:orientation="horizontal" >
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:text="数据正在疯狂加载中,请稍候......."
+            android:textColor="#ffffff" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/tryout_fl_content_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.tao8.app.widget.PullToRefreshListView
+            android:id="@+id/tryout_plv_content_imgs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#D9D9D9"
+            android:cacheColorHint="#D9D9D9" />
+
+        <LinearLayout
+            android:id="@+id/tryout_ll_to_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <ImageView
+                android:layout_width="120dip"
+                android:layout_height="120dip"
+                android:src="@drawable/refresh_button" >
+            </ImageView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="各种不给力,请刷新重试" />
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>
