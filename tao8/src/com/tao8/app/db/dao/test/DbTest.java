@@ -1,5 +1,7 @@
 package com.tao8.app.db.dao.test;
 
+import java.util.List;
+
 import android.test.AndroidTestCase;
 
 import com.tao8.app.db.dao.TaoBaokeCouponDao;
@@ -34,5 +36,12 @@ public class DbTest extends AndroidTestCase{
 		TaoBaokeCouponDao taoBaokeCouponDao = new TaoBaokeCouponDao(getContext());
 		taoBaokeCouponDao.delAll();
 		//assertEquals("0", taoBaokeCouponDao.queryCount());
+	}
+	
+	public void testQueryAll(){
+		TaoBaokeCouponDao taoBaokeCouponDao = new TaoBaokeCouponDao(getContext());
+		List<TaobaokeCouponItem> queryAll = taoBaokeCouponDao.queryAll();
+		System.out.println(queryAll.size());
+//		assertEquals(expected, actual);
 	}
 }

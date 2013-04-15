@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:id="@+id/seach_content_item_tv"
+    android:background="@drawable/bg_seach_content_text"
+    android:paddingBottom="8dip"
+    android:paddingTop="8dip"
+    android:text="手机"
+    android:textColor="#ff000000"
+    android:textSize="18sp" >
+
+</TextView>

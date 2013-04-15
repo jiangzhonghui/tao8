@@ -2,18 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CDC5BF"
-    android:orientation="vertical" >
+    android:background="@drawable/title_bg" >
+
+    <TextView
+        android:id="@+id/tryout_coupon_tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_lyric_pressed"
+        android:gravity="center"
+        android:text="友情提醒"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/try_popu_tv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dip"
-        android:textStyle="bold"
+        android:layout_below="@id/tryout_coupon_tv_title"
         android:lineSpacingExtra="3dip"
+        android:padding="10dip"
         android:text="@string/tryout_popu_content_ditail_coupon"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/try_popu_iv_close"
@@ -21,5 +32,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:src="@drawable/icon_popu_close" />
+
+    <RelativeLayout
+        android:id="@+id/tryout_popu_ll_ad_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+    </RelativeLayout>
 
 </RelativeLayout>

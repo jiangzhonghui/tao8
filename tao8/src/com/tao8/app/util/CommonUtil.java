@@ -98,9 +98,9 @@ public class CommonUtil {
 		StringBuilder sb = new StringBuilder();
 		sb.append(click_uri);
 		sb.append("&unid=");
-		sb.append(Installation.id(context));
+		sb.append(TopStatParmUtil.getDefaultSid(context));
 		sb.append("&ttid=");
-		sb.append(getTTID(context));
+		sb.append(TopStatParmUtil.getTTID(context));
 		sb.append("&sid=");
 		sb.append(accessToken == null ? "" : accessToken
 				.getAdditionalInformation().get(AccessToken.KEY_MOBILE_TOKEN));
@@ -115,23 +115,23 @@ public class CommonUtil {
 		return sb.toString();
 	}
 
-	public static String getTTID(Context context) {
-		// ttid=400000_12450255@taofen8_android_2.2.1111
-		PackageManager packageManager = context.getPackageManager();
-		// getPackageName()是你当前类的包名，0代表是获取版本信息
-		PackageInfo packInfo;
-		String ttid = "";
-		try {
-			packInfo = packageManager.getPackageInfo(context.getPackageName(),
-					0);
-			String version = packInfo.versionName;
-			ttid = "400000" + "_" + TopConfig.APPKEY + "@淘8" + "_" + "android"
-					+ "_" + packInfo.versionName;
-			return ttid;
-		} catch (NameNotFoundException e) {
-			LogUtil.e("NameNotFoundException", e.getLocalizedMessage(), e);
-		}
-		return ttid;
-
-	}
+//	public static String getTTID(Context context) {
+//		// ttid=400000_12450255@taofen8_android_2.2.1111
+//		PackageManager packageManager = context.getPackageManager();
+//		// getPackageName()是你当前类的包名，0代表是获取版本信息
+//		PackageInfo packInfo;
+//		String ttid = "";
+//		try {
+//			packInfo = packageManager.getPackageInfo(context.getPackageName(),
+//					0);
+//			String version = packInfo.versionName;
+//			ttid = "400000" + "_" + TopConfig.APPKEY + "@淘8" + "_" + "android"
+//					+ "_" + packInfo.versionName;
+//			return ttid;
+//		} catch (NameNotFoundException e) {
+//			LogUtil.e("NameNotFoundException", e.getLocalizedMessage(), e);
+//		}
+//		return ttid;
+//
+//	}
 }

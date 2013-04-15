@@ -8,6 +8,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.tao8.app.AppException;
+import com.tao8.app.BuildConfig;
 import com.tao8.app.TopConfig;
 import com.tao8.app.domain.ApiResponseVo;
 import com.tao8.app.parser.ApiErrorParser;
@@ -63,7 +64,9 @@ public class GetTopData {
 		ApiErrorParser apiErrorParser = new ApiErrorParser();
 		ApiError error = apiErrorParser.parserJson(jsonStr);
 		if (error != null) {// failed
-			Log.e(LOG_TAG, jsonStr);
+			if (BuildConfig.DEBUG) {
+				Log.e(LOG_TAG, jsonStr);
+			}
 			Message obtainMessage = dataHandler.obtainMessage();
 			obtainMessage.what = GET_DATA_RESPONSE_EXCEPTION_CODE;
 			ApiResponseVo vo = new ApiResponseVo();

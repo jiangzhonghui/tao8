@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <include layout="@layout/head" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dip" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:lineSpacingExtra="10dip"
+                android:text="      淘8致力于精选每日优质的淘品, 聚合由淘宝商家提供专供淘8用户独享优惠超划算网购商品信息,并且每天推出多款9块9付邮超值的商品.我们有专业的编辑为您挑选并点评,汇集职业的买手为您砍价. 淘8每天为您精选, 每天使用您都会发现不一样的付邮试用.\n      在这里您能方便为您手机的充值,可以为将要购买的商品进行比价,可以浏览每天为您精选的折扣商品等等...\n     每天使用淘8每天都有新的发现."
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dip"
+                android:layout_marginTop="20dip"
+                android:text="客服QQ : lishenshan@foxmail.com"
+                android:textColor="#000" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginBottom="5dip"
+                android:layout_marginTop="5dip"
+                android:background="#CDC5BF" />
+
+            <TextView
+                android:id="@+id/about_tv_updata"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_head_back"
+                android:padding="10dip"
+                android:text="检查更新"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginBottom="5dip"
+                android:layout_marginTop="5dip"
+                android:background="#CDC5BF" />
+
+            <TextView
+                android:id="@+id/about_tv_share"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_head_back"
+                android:padding="10dip"
+                android:visibility="gone"
+                android:text="将淘吧分享给大家"
+                android:textColor="#000"
+                android:drawableRight="@drawable/weibo"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                 android:visibility="gone"
+                android:layout_marginBottom="5dip"
+                android:layout_marginTop="5dip"
+                android:background="#CDC5BF" />
+
+            <TextView
+                android:id="@+id/about_tv_weibo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_head_back"
+                android:padding="10dip"
+                android:text="非常感谢您的使用,如果您有什么好的想法和改进意见,请在菜单里面点击这里到反馈页面,进行留言. 我们将尽快改进."
+                android:textColor="#000" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginBottom="5dip"
+                android:layout_marginTop="5dip"
+                android:background="#CDC5BF" />
+
+            <TextView
+                android:id="@+id/about_tv_weibo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_head_back"
+                android:padding="10dip"
+                android:text="     淘8 是淘宝开放平台合作伙伴，完全信任淘宝登录。\n       您使用淘宝账户登录实际上是在淘宝完成的，淘8 只是从淘宝得知您已经登录了。可以看看淘宝论坛的安全秘籍确认您的登录是安全的。您的交易流程走的是淘宝的支付体系,请您放心购买."
+                android:textColor="#000" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginBottom="5dip"
+                android:layout_marginTop="5dip"
+                android:background="#CDC5BF" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -21,4 +21,7 @@ public static final String TAO_CAR = "http://cart.m.taobao.com/my_cart.htm?sid="
 public static final String TAO_LOGISTICS = "http://tm.m.taobao.com/order_list.htm?statusId=5&sid=";//加上statusId=5的时候就引导到物流信息
 /**最近三个月的订单列表*/
 public static final String TAO_ORDER_RECENTLY_THREE_MONTH = "http://tm.m.taobao.com/order_list.htm?sid=";//到了最近三个月的订单列表
+//http://wwc.taobaocdn.com/avatar/get_avatar.do?userId=362114751&width=100&height=100&type=sns//头像
+//http://a.tbcdn.cn/mw/s/hi/tbtouch/icons/rank/b_3_3.gif//星级
+//http://a.tbcdn.cn/mw/base/styles/component/icon/images/c_1.png
 }

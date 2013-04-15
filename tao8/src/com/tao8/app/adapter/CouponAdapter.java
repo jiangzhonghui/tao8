@@ -2,6 +2,7 @@ package com.tao8.app.adapter;
 
 import java.util.List;
 
+import com.tao8.app.BuildConfig;
 import com.tao8.app.R;
 import com.tao8.app.adapter.ProductsAdapter.ViewHolder;
 import com.tao8.app.cache.util.ImageLoader;
@@ -11,6 +12,7 @@ import com.tao8.app.cache.util.ImageLoader.PhotoToLoad;
 import com.tao8.app.domain.SearchItem;
 import com.tao8.app.domain.TaobaokeCouponItem;
 import com.tao8.app.util.AsyncImageLoader;
+import com.tao8.app.util.LogUtil;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -96,7 +98,9 @@ public class CouponAdapter extends BaseAdapter {
 			
 			@Override
 			public void imageLoadedError(PhotoToLoad photoToLoad) {
-				System.out.println("PhotoToLoad     "+photoToLoad);
+				if (BuildConfig.DEBUG) {
+					LogUtil.e("PhotoToLoad", photoToLoad.toString()+"load error");
+				}
 			}
 			@Override
 			public void imageLoaded(BitmapDisplayer bd) {

@@ -24,7 +24,7 @@
 
         <LinearLayout
             android:id="@+id/coupon_everyday_ll_lable"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
@@ -48,6 +48,12 @@
                 android:gravity="center"
                 android:text="特价精选"
                 android:textColor="#FF3030" />
+
+            <ProgressBar
+                android:id="@+id/coupon_every_pb_head"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
@@ -87,8 +93,8 @@
         android:gravity="center"
         android:horizontalSpacing="10dip"
         android:numColumns="3"
-        android:visibility="gone"
-        android:verticalSpacing="10dip" />
+        android:verticalSpacing="10dip"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/coupon_everyday_ll_top"

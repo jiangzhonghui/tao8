@@ -9,26 +9,26 @@
         android:id="@+id/head_tv_go_menu"
         android:layout_width="60dip"
         android:layout_height="48dip"
-        android:gravity="center"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dip"
-        android:text="菜单"
         android:background="@drawable/bg_head_more"
+        android:gravity="center"
+        android:text="菜单"
         android:textColor="#ffffffff"
-        android:textSize="20dip" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/head_tv_lable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:ellipsize="end"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
         android:text="充值中心"
-        android:textColor="#ffffffff" />
+        android:textColor="#ffffffff"
+        android:textSize="16sp" />
 
     <ImageView
         android:id="@+id/head_iv_more"
@@ -39,6 +39,17 @@
         android:layout_marginRight="5dip"
         android:background="@drawable/bg_head_more"
         android:scaleType="center"
+         android:visibility="visible"
         android:src="@drawable/icon_head_more" />
+
+    <ProgressBar
+        android:id="@+id/head_progressBar"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dip"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
 </RelativeLayout>

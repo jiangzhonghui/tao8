@@ -7,12 +7,14 @@ import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.text.Html;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tao8.app.BuildConfig;
 import com.tao8.app.R;
 import com.tao8.app.cache.util.ImageLoader;
 import com.tao8.app.cache.util.ImageLoader.BitmapDisplayer;
@@ -20,6 +22,7 @@ import com.tao8.app.cache.util.ImageLoader.ImageLoaderCallBack;
 import com.tao8.app.cache.util.ImageLoader.PhotoToLoad;
 import com.tao8.app.domain.TaobaokeCouponItem;
 import com.tao8.app.util.AsyncImageLoader;
+import com.tao8.app.util.LogUtil;
 
 public class TryoutAdapter extends BaseAdapter {
 
@@ -86,14 +89,18 @@ public class TryoutAdapter extends BaseAdapter {
 		holder = (ViewHolder) view.getTag();
 
 		TaobaokeCouponItem item = (TaobaokeCouponItem) getItem(position);
-		System.out.println(item);
-		System.out.println(position);
-		holder.proNameTextView.setText(Html.fromHtml(item.getTitle()));
+		if (BuildConfig.DEBUG) {
+			System.out.println(item);
+			System.out.println(position);
+		}
+		try {holder.proNameTextView.setText(Html.fromHtml(item.getTitle()==null?"":item.getTitle()));
 		holder.priceTextView.setText("￥" + item.getCoupon_price());
 		TextPaint paint = holder.originalPriceTextView.getPaint();
 		paint.setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 		holder.originalPriceTextView.setText("￥" + item.getPrice());
-
+		
+			
+		
 		holder.couponTextView.setText(String.format("%.1f",
 				(Float.parseFloat(item.getCoupon_rate()) / 1000))
 				+ "折");// 折扣
@@ -122,7 +129,9 @@ public class TryoutAdapter extends BaseAdapter {
 		} else {
 			holder.proPicImageView.setImageBitmap(cachedImage);
 		}
-
+		} catch (Exception e) {
+			LogUtil.e("tryoutadapter", e.getLocalizedMessage(), e);
+		}
 		/*
 		 * Drawable cachedImage =
 		 * asyncImageLoader.loadDrawable(item.getPic_url()+"_80x80.jpg", new

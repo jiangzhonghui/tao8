@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.R.integer;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -69,7 +71,7 @@ public class CouponFragment extends Fragment implements OnClickListener,
 	private List<TaobaokeCouponItem> taobaokeCouponItems;
 	private CouponAdapter couponAdapter;
 	private TextView lableTextView;
-	private String keyword;
+	private String keyword = "0";
 	// private ProgressDialog progressDialog;
 	private LinearLayout toFreshLayout;// 中间加载失败的显示
 	private LinearLayout toplLayout;// 最上面的加载中指示的
@@ -77,6 +79,7 @@ public class CouponFragment extends Fragment implements OnClickListener,
 	private int firstVisibleItem;
 	private int visibleItemCount;
 	private int totalItemCount;
+	private int i = 0;//popu显示的控制
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,8 +93,10 @@ public class CouponFragment extends Fragment implements OnClickListener,
 	
 	@Override
 	public void onStart() {
-		//
-		System.out.println("onStart");
+		
+		if (BuildConfig.DEBUG) {
+			System.out.println("onStart"); 
+		}
 		super.onStart();
 	} 
 	@Override
@@ -103,6 +108,7 @@ public class CouponFragment extends Fragment implements OnClickListener,
 		// progressDialog = new
 		// ProgressDialog(getActivity(),android.R.style.Theme_Black_NoTitleBar);
 		// progressDialog.setMessage("数据正在疯狂加载中,请稍后.......");
+		popupWindow = createPopuWindow();
 		keyword = "0";
 		seachTaobaokeCouponFromKeyWord(keyword, sort, false, true, 1);
 		taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
@@ -241,46 +247,15 @@ public class CouponFragment extends Fragment implements OnClickListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.head_iv_more:
-			popupWindow = new PopupWindow(getActivity());
-			View view = View.inflate(getActivity(), R.layout.popup_lable, null);
-			RadioButton radioButton_0 = (RadioButton) view
-					.findViewById(R.id.products_lable_rbtn_0);
-			RadioButton radioButton_1 = (RadioButton) view
-					.findViewById(R.id.products_lable_rbtn_1);
-			RadioButton radioButton_2 = (RadioButton) view
-					.findViewById(R.id.products_lable_rbtn_2);
-			RadioButton radioButton_3 = (RadioButton) view
-					.findViewById(R.id.products_lable_rbtn_3);
-			RadioButton radioButton_4 = (RadioButton) view
-					.findViewById(R.id.products_lable_rbtn_4);
-			RadioButton radioButton_5 = (RadioButton) view
-					.findViewById(R.id.products_lable_rbtn_5);
-			RadioButton radioButton_6 = (RadioButton) view
-					.findViewById(R.id.products_lable_rbtn_6);
-			RadioButton radioButton_7 = (RadioButton) view
-					.findViewById(R.id.products_lable_rbtn_7);
-			RadioButton radioButton_8 = (RadioButton) view
-					.findViewById(R.id.products_lable_rbtn_8);
-			RadioButton radioButton_9 = (RadioButton) view
-					.findViewById(R.id.products_lable_rbtn_9);
-			radioButton_0.setOnClickListener(this);
-			radioButton_1.setOnClickListener(this);
-			radioButton_2.setOnClickListener(this);
-			radioButton_3.setOnClickListener(this);
-			radioButton_4.setOnClickListener(this);
-			radioButton_5.setOnClickListener(this);
-			radioButton_6.setOnClickListener(this);
-			radioButton_7.setOnClickListener(this);
-			radioButton_8.setOnClickListener(this);
-			radioButton_9.setOnClickListener(this);
-			popupWindow.setContentView(view);
-			popupWindow.setBackgroundDrawable(new ColorDrawable(
-					Color.TRANSPARENT));
-			popupWindow.setOutsideTouchable(true);
-			popupWindow.setHeight(80);
-			popupWindow.setWidth(getActivity().getWindowManager()
-					.getDefaultDisplay().getWidth());
-			popupWindow.showAsDropDown(rl);
+			if (BuildConfig.DEBUG) {
+				Toast.makeText(getActivity(), "more", 0).show();
+			}
+			if (i%2==0) {
+				if (!popupWindow.isShowing()) {
+					popupWindow.showAsDropDown(rl);
+				}
+			}
+			i++;
 			break;
 		case R.id.head_tv_go_menu:
 			if (getActivity() instanceof ViewPagerActivity) {
@@ -289,8 +264,6 @@ public class CouponFragment extends Fragment implements OnClickListener,
 			}
 			break;
 		case R.id.products_lable_rbtn_0:
-			seachTaobaokeCouponFromKeyWord("0", sort , false, true, page_no);
-			break;
 		case R.id.products_lable_rbtn_1:
 		case R.id.products_lable_rbtn_2:
 		case R.id.products_lable_rbtn_3:
@@ -303,20 +276,76 @@ public class CouponFragment extends Fragment implements OnClickListener,
 			popupWindow.dismiss();
 			RadioButton radioButton = (RadioButton) v;
 			keyword = radioButton.getText().toString().trim();
-			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
+			if ("全部".equalsIgnoreCase(keyword)) {
+				keyword = "0";
+				seachTaobaokeCouponFromKeyWord("0", sort , false, true, page_no);
+			}else {
+				seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
+			}
+			if (BuildConfig.DEBUG) {
+				Toast.makeText(getActivity(), keyword, 0).show();
+			}
 			break;
 		case R.id.coupon_ll_to_refresh:
-			if (keyword == null) {
-				keyword = "0";
-				seachTaobaokeCouponFromKeyWord(keyword, sort, false, true, 1);
-			} else {
-				seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
+			if (!CommonUtil.checkNetState(getActivity())) {
+				toFreshLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake));
+				Toast.makeText(getActivity(), "网络不给力,检查网络", 0).show();
+			}else {
+				if ("0".equalsIgnoreCase(keyword)) {
+					seachTaobaokeCouponFromKeyWord(keyword, sort, false, true, 1);
+				} else {
+					seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
+				}
 			}
 			break;
 		default:
 			break;
 		}
 
+	}
+
+	private PopupWindow createPopuWindow() {
+			popupWindow = new PopupWindow(getActivity());
+		View view = View.inflate(getActivity(), R.layout.popup_lable, null);
+		RadioButton radioButton_0 = (RadioButton) view
+				.findViewById(R.id.products_lable_rbtn_0);
+		RadioButton radioButton_1 = (RadioButton) view
+				.findViewById(R.id.products_lable_rbtn_1);
+		RadioButton radioButton_2 = (RadioButton) view
+				.findViewById(R.id.products_lable_rbtn_2);
+		RadioButton radioButton_3 = (RadioButton) view
+				.findViewById(R.id.products_lable_rbtn_3);
+		RadioButton radioButton_4 = (RadioButton) view
+				.findViewById(R.id.products_lable_rbtn_4);
+		RadioButton radioButton_5 = (RadioButton) view
+				.findViewById(R.id.products_lable_rbtn_5);
+		RadioButton radioButton_6 = (RadioButton) view
+				.findViewById(R.id.products_lable_rbtn_6);
+		RadioButton radioButton_7 = (RadioButton) view
+				.findViewById(R.id.products_lable_rbtn_7);
+		RadioButton radioButton_8 = (RadioButton) view
+				.findViewById(R.id.products_lable_rbtn_8);
+		RadioButton radioButton_9 = (RadioButton) view
+				.findViewById(R.id.products_lable_rbtn_9);
+		radioButton_0.setOnClickListener(this);
+		radioButton_1.setOnClickListener(this);
+		radioButton_2.setOnClickListener(this);
+		radioButton_3.setOnClickListener(this);
+		radioButton_4.setOnClickListener(this);
+		radioButton_5.setOnClickListener(this);
+		radioButton_6.setOnClickListener(this);
+		radioButton_7.setOnClickListener(this);
+		radioButton_8.setOnClickListener(this);
+		radioButton_9.setOnClickListener(this);
+		popupWindow.setContentView(view);
+		popupWindow.setBackgroundDrawable(new ColorDrawable(
+				Color.TRANSPARENT));
+		popupWindow.setOutsideTouchable(true);
+		popupWindow.setHeight(80);
+		popupWindow.setWidth(getActivity().getWindowManager()
+				.getDefaultDisplay().getWidth());
+		return popupWindow;
+		
 	}
 
 	@Override
@@ -329,7 +358,9 @@ public class CouponFragment extends Fragment implements OnClickListener,
 			}else {
 				seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no);
 			}
-			Toast.makeText(getActivity(), "滑倒底部了", 1).show();
+			if (BuildConfig.DEBUG) {
+				Toast.makeText(getActivity(), "滑倒底部了", 1).show();
+			}
 		}
 	}
 

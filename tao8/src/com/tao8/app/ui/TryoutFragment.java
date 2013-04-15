@@ -1,17 +1,20 @@
 package com.tao8.app.ui;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract.CommonDataKinds.Im;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,12 +22,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.domob.android.ads.DomobAdView;
+import cn.waps.AdView;
 
 import com.tao8.app.AppException;
 import com.tao8.app.BuildConfig;
@@ -33,9 +42,11 @@ import com.tao8.app.TopConfig;
 import com.tao8.app.adapter.TryoutAdapter;
 import com.tao8.app.api.GetTopData;
 import com.tao8.app.api.MyTqlListener;
+import com.tao8.app.db.dao.TaoBaokeCouponDao;
 import com.tao8.app.domain.TaobaokeCouponItem;
 import com.tao8.app.parser.TaoBaoKeCouponItemParser;
 import com.tao8.app.util.CommonUtil;
+import com.tao8.app.util.LogUtil;
 import com.tao8.app.util.TqlHelper;
 import com.tao8.app.widget.PullToRefreshListView;
 import com.tao8.app.widget.PullToRefreshListView.OnRefreshListener;
@@ -43,7 +54,7 @@ import com.taobao.top.android.api.ApiError;
 import com.taobao.top.android.auth.AccessToken;
 
 public class TryoutFragment extends Fragment implements OnClickListener,
-		OnRefreshListener {
+		OnRefreshListener, OnItemClickListener {
 
 	protected static final String TAG = "TryoutFragment";
 	private PullToRefreshListView imgsListView;
@@ -53,6 +64,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 	private TextView lableTextView;
 	private LinearLayout toFreshLayout;
 	private String keyword = "手机付邮";
+	// private long getDataTime=0l;
 	private ArrayList<TaobaokeCouponItem> taobaokeCouponItems;
 	private String sort = "volume_desc";// 成交量从高到低
 	private TryoutAdapter tryoutAdapter;
@@ -60,6 +72,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 	private int pageSize = 100;
 	private PopupWindow popupWindow;
 	private LinearLayout topLayout;
+	private long getDataTime;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,36 +80,53 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 		LinearLayout linearLayout = (LinearLayout) inflater.inflate(
 				R.layout.tryout_fragment, null);
 		findView(linearLayout);
-		Toast.makeText(getActivity(), "onCreateView", 0).show();
+		if (BuildConfig.DEBUG) {
+			Toast.makeText(getActivity(), "onCreateView", 0).show();
+		}
+		initData();
 		setData();
 		setListener();
 		return linearLayout;
 	}
+
+	private void initData() {
+		if (sharedPreferences == null) {
+			sharedPreferences = getActivity().getSharedPreferences("config",
+					Context.MODE_PRIVATE);
+		}
+		getDataTime = sharedPreferences.getLong("getDataTime", 0l);
+	}
+
 	@Override
 	public void onDestroyView() {
-		//Toast.makeText(getActivity(), "onDestroyView", 0).show();
+		if (BuildConfig.DEBUG) {
+			Toast.makeText(getActivity(), "onDestroyView", 0).show();
+		}
 		super.onDestroyView();
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		//setData();
+		// setData();
 		super.onCreate(savedInstanceState);
 	}
-	
+
 	private void setListener() {
 		menuTextView.setOnClickListener(this);
 		imgsListView.setOnRefreshListener(this);
 		moreImageView.setOnClickListener(this);
+		imgsListView.setOnItemClickListener(this);
+		toFreshLayout.setOnClickListener(this);
 	}
 
 	private void setData() {
-		
+
 		moreImageView.setImageResource(R.drawable.icon_notice);
-		topLayout.setVisibility(View.VISIBLE);
+		
 		taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
 		if (tryoutAdapter == null) {
-			tryoutAdapter = new TryoutAdapter(getActivity(),taobaokeCouponItems);
+			tryoutAdapter = new TryoutAdapter(getActivity(),
+					taobaokeCouponItems);
 		}
 		// 设置ListView每个Item间的间隔线的颜色渐变
 		GradientDrawable divider_gradient = new GradientDrawable(
@@ -107,10 +137,18 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 		imgsListView.setDivider(divider_gradient);
 		imgsListView.setDividerHeight(3);
 		lableTextView.setText("付费试用");
-		if (taobaokeCouponItems!=null&&taobaokeCouponItems.size()>0) {
-			return;
+//		if (taobaokeCouponItems != null && taobaokeCouponItems.size() > 0) {
+//			return;
+//		}
+		if ((new Date().getTime() - getDataTime) > 30 * 1000 * 60) {
+			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
+		} else {
+			getDataFromBb();
 		}
-		seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
+	}
+
+	private void getDataFromBb() {
+		new CouponBDTask().execute();
 	}
 
 	private void findView(View view) {
@@ -144,10 +182,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 	 */
 	private void seachTaobaokeCouponFromKeyWord(String keyword, String sort,
 			boolean isFromTmall, boolean isAll, final int page_no) {
-		if (sharedPreferences == null) {
-			sharedPreferences = getActivity().getSharedPreferences("config",
-					Context.MODE_PRIVATE);
-		}
+	
 		long userId = sharedPreferences.getLong("userId", 10000);
 		AccessToken accessToken = TopConfig.client.getAccessToken(userId);
 		String tql = "";
@@ -163,24 +198,29 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 		params.put("sort", sort);
 		tql = TqlHelper.generateTaoBaoKeCouponTql(TaobaokeCouponItem.class,
 				params);
-		System.out.println(tql);
+		if (BuildConfig.DEBUG) {
+			System.out.println(tql);
+		}
+		topLayout.setVisibility(View.VISIBLE);
 		GetTopData.getDataFromTop(tql, new TaoBaoKeCouponItemParser(), userId,
 				new MyTqlListener() {
 					@Override
 					public void onComplete(Object result) {
 						toFreshLayout.setVisibility(View.GONE);
 						topLayout.setVisibility(View.GONE);
-						ArrayList<TaobaokeCouponItem> results = (ArrayList) result;
+						final ArrayList<TaobaokeCouponItem> results = (ArrayList) result;
 						if (BuildConfig.DEBUG) {
 							Toast.makeText(getActivity(),
 									results.size() + "  总共", 1).show();
 						}
 						if (results != null && results.size() > 0) {
+
 							if (page_no == 1) {
 								taobaokeCouponItems.clear();
 							}
 							taobaokeCouponItems.addAll(results);
-							if (imgsListView.getAdapter() == null||imgsListView.getAdapter().getCount()<=0) {
+							if (imgsListView.getAdapter() == null
+									|| imgsListView.getAdapter().getCount() <= 0) {
 								imgsListView.setAdapter(tryoutAdapter);
 							}
 							tryoutAdapter.notifyDataSetChanged();
@@ -193,6 +233,28 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 								Log.i(TAG, Integer.toString(results.size()));
 							}
 						}
+
+						new Thread() {
+							public void run() {
+								TaoBaokeCouponDao dao = new TaoBaokeCouponDao(
+										getActivity());
+								if (results == null) {
+									return;
+								}
+								dao.delAll();
+								for (TaobaokeCouponItem taobaokeCouponItem : results) {
+									dao.insert(taobaokeCouponItem);
+									System.out.println("添加成功");
+								}
+								Editor edit = sharedPreferences.edit();
+								edit.putLong("getDataTime", new Date().getTime());
+								edit.commit();
+								int count = dao.queryCount();
+								if (BuildConfig.DEBUG) {
+									LogUtil.e(TAG, "总共数量    " + count);
+								}
+							};
+						}.start();
 					}
 
 					@Override
@@ -200,6 +262,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 						toFreshLayout.setVisibility(View.VISIBLE);
 						imgsListView.setVisibility(View.GONE);
 						topLayout.setVisibility(View.GONE);
+						imgsListView.onRefreshComplete();
 						AppException.network(e).makeToast(getActivity());
 					}
 
@@ -208,6 +271,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 						toFreshLayout.setVisibility(View.VISIBLE);
 						imgsListView.setVisibility(View.GONE);
 						topLayout.setVisibility(View.GONE);
+						imgsListView.onRefreshComplete();
 						Toast.makeText(getActivity(),
 								((ApiError) apiError).getMsg(), 0).show();
 						if (BuildConfig.DEBUG) {
@@ -224,8 +288,14 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 			popupWindow = new PopupWindow(getActivity());
 			View view = View.inflate(getActivity(),
 					R.layout.tryout_popu_content, null);
-			ImageView closeImageView = (ImageView) view
-					.findViewById(R.id.try_popu_iv_close);
+			ImageView closeImageView = (ImageView) view.findViewById(R.id.try_popu_iv_close);
+			////////////
+			// 互动广告调用方式
+			RelativeLayout container = (RelativeLayout) view.findViewById(R.id.tryout_popu_ll_ad_container);
+			DomobAdView mAdview320x50 = new DomobAdView(getActivity(), TopConfig.PUBLISHER_ID, DomobAdView.INLINE_SIZE_320X50);
+			//将广告View增加到视图中。
+			container.addView(mAdview320x50);
+			/////////////////////
 			closeImageView.setOnClickListener(this);
 			popupWindow.setContentView(view);
 			popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
@@ -233,9 +303,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 			popupWindow
 					.setHeight(CommonUtil.getScreenHeight(getActivity()) / 2);
 			popupWindow.setWidth(getActivity().getWindowManager()
-					.getDefaultDisplay().getWidth() / 2 + 40);
-			// popupWindow.showAsDropDown(rl);
-			// popupWindow.showAsDropDown(rl);
+					.getDefaultDisplay().getWidth()-18 );
 			// popupWindow.showAsDropDown(rl,
 			// CommonUtil.getScreenWidth(getActivity())/2,
 			// CommonUtil.getScreenHeight(getActivity())/2);
@@ -250,6 +318,14 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 		case R.id.try_popu_iv_close:
 			popupWindow.dismiss();
 			break;
+		case R.id.tryout_ll_to_refresh:
+			if (!CommonUtil.checkNetState(getActivity())) {
+				toFreshLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake));
+				Toast.makeText(getActivity(), "网络不给力,检查网络", 0).show();
+			}else {
+				seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
+			}
+			break;
 		default:
 			break;
 		}
@@ -258,7 +334,94 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 
 	@Override
 	public void onRefresh() {
-		seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
+		if ((new Date().getTime() - getDataTime) < 30 * 1000 * 60) {
+			Toast.makeText(getActivity(), "当前已经是最新数据,请稍后重试", 0).show();
+			// seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
+			tryoutAdapter.notifyDataSetChanged();
+			imgsListView.onRefreshComplete();
+		} else {
+			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
+		}
 	}
 
+	private final class CouponBDTask extends
+			AsyncTask<Void, Void, ArrayList<TaobaokeCouponItem>> {
+		@Override
+		protected void onPreExecute() {
+			topLayout.setVisibility(View.VISIBLE);
+			toFreshLayout.setVisibility(View.GONE);
+			imgsListView.setVisibility(View.GONE);
+
+			super.onPreExecute();
+		}
+
+		@Override
+		protected ArrayList<TaobaokeCouponItem> doInBackground(Void... params) {
+			TaoBaokeCouponDao couponDao = new TaoBaokeCouponDao(getActivity());
+			ArrayList<TaobaokeCouponItem> taobaokeCouponItems = couponDao.queryAll();
+			if (taobaokeCouponItems!=null&&taobaokeCouponItems.size() > 0) {
+				return taobaokeCouponItems;
+			} else {
+				seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
+				return null;
+			}
+
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<TaobaokeCouponItem> result) {
+			imgsListView.onRefreshComplete();
+			if (result != null) {
+				if (BuildConfig.DEBUG) {
+					Toast.makeText(getActivity(), "从数据库取数据", 0).show();
+				}
+				toFreshLayout.setVisibility(View.GONE);
+				topLayout.setVisibility(View.GONE);
+				imgsListView.setVisibility(View.VISIBLE);
+				taobaokeCouponItems = result;
+				if (imgsListView.getAdapter() != null) {
+					tryoutAdapter.notifyDataSetChanged();
+				} else {
+					imgsListView.setAdapter(new TryoutAdapter(getActivity(),
+							taobaokeCouponItems));
+				}
+			}else {
+				toFreshLayout.setVisibility(View.VISIBLE);
+				topLayout.setVisibility(View.GONE);
+				imgsListView.setVisibility(View.GONE);
+			}
+			imgsListView.onRefreshComplete();
+			super.onPostExecute(result);
+		}
+	}
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		if (BuildConfig.DEBUG) {
+			Toast.makeText(getActivity(), "onSaveInstanceState", 0).show();
+		}
+		super.onSaveInstanceState(outState);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		Adapter adapter = parent.getAdapter();
+		TaobaokeCouponItem item = (TaobaokeCouponItem) adapter.getItem(position);
+		if (item!=null) {
+			Intent intent = new Intent();
+			intent.setAction(BrowserActivity.BROWSERACTIVITY_ACTION);
+			if (sharedPreferences == null) {
+				sharedPreferences = getActivity().getSharedPreferences("config",
+						Context.MODE_PRIVATE);
+			}
+			long userId = sharedPreferences.getLong("userId", 0L);
+			AccessToken accessToken = TopConfig.client.getAccessToken(userId);
+			String uri = CommonUtil.generateTopClickUri(item.getClick_url(), getActivity(), accessToken);
+			intent.putExtra(BrowserActivity.BROWSERACTIVITY_URI, uri);
+			intent.putExtra(BrowserActivity.BROWSERACTIVITY_TITLE, item.getTitle());
+			getActivity().startActivity(intent);
+		}
+		
+	}
 }

@@ -10,7 +10,7 @@ import com.taobao.top.android.Installation;
 
 public class TopStatParmUtil {
 	public static String getTTID(Context context) {
-		// ttid=400000_12450255@taofen8_android_2.2.1111
+		// ttid=400000_12450255@taofen8_android_2.2.111//400000_21362041@tao8_Android_1.0
 		PackageManager packageManager = context.getPackageManager();
 		// getPackageName()是你当前类的包名，0代表是获取版本信息
 		PackageInfo packInfo;
@@ -19,13 +19,14 @@ public class TopStatParmUtil {
 			packInfo = packageManager.getPackageInfo(context.getPackageName(),
 					0);
 			String version = packInfo.versionName;
-			ttid = "400000" + "_" + TopConfig.APPKEY + "@淘8" + "_" + "android"
+			ttid = "400000" + "_" + TopConfig.APPKEY + "@tao8" + "_" + "Android"
 					+ "_" + packInfo.versionName;
 			return ttid;
 		} catch (NameNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		return ttid;
 	}
 	public static String getDefaultSid(Context context){

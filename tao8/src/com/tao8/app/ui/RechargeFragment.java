@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -77,9 +78,11 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 				Toast.makeText(getActivity(), "获取归属地失败！", 0).show();
 				phoneAddressTextView.setText("获取归属地失败");
 				pb.setVisibility(View.GONE);
+				headProgressBar.setVisibility(View.GONE);
 				break;
 			case GET_ADDRESS_SUCCESS:
 				pb.setVisibility(View.GONE);
+				headProgressBar.setVisibility(View.GONE);
 				String phoneAddress = msg.obj.toString();
 				address = phoneAddress.substring(phoneAddress.lastIndexOf(" "),
 						phoneAddress.length());
@@ -96,6 +99,7 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 	};
 	private long userId;
 	private ImageView moreImageView;
+	private ProgressBar headProgressBar;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -130,9 +134,15 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 		phoneAddressTextView = (TextView) view
 				.findViewById(R.id.recharge_tv_phone_address);
 		pb = (ProgressBar) view.findViewById(R.id.recharge_progressBar);
+		headProgressBar = (ProgressBar) view
+				.findViewById(R.id.head_progressBar);
 		priceTextView = (TextView) view.findViewById(R.id.recharge_tv_price);
 		moreImageView = (ImageView) view.findViewById(R.id.head_iv_more);
+		TextView goMenuTextView = (TextView) view
+				.findViewById(R.id.head_tv_go_menu);
+		goMenuTextView.setOnClickListener(this);
 		moreImageView.setVisibility(View.GONE);
+
 		ArrayList<String> moneyItems = new ArrayList<String>();
 		moneyItems.add("10");
 		moneyItems.add("20");
@@ -140,7 +150,8 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 		moneyItems.add("50");
 		moneyItems.add("100");
 		moneyItems.add("200");
-		rechargeItmes.setAdapter(new RechargeAdapter(getActivity(), moneyItems));
+		rechargeItmes
+				.setAdapter(new RechargeAdapter(getActivity(), moneyItems));
 		rechargeItmes.setOnItemClickListener(this);
 		return view;
 	}
@@ -154,11 +165,18 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 		String num = numEditText.getText().toString();
 		if (TextUtils.isEmpty(num.trim())) {
 			Toast.makeText(getActivity(), "号码不能为空", 0).show();
+			return;
 		}
 		if (!checkNumber(num)) {
 			Toast.makeText(getActivity(), "号码格式不正确！", 0).show();
+			return;
+		}
+		if (!CommonUtil.checkNetState(getActivity())) {
+			Toast.makeText(getActivity(), "对不起,您的网络不可用....", 0).show();
+			return;
 		}
 		if (address == null) {
+			getAddressFromServer(num.trim());
 			Toast.makeText(getActivity(), "稍等,正在获取号码归属地......", 0).show();
 			return;
 		}
@@ -192,6 +210,13 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case R.id.head_tv_go_menu:
+			if (getActivity() instanceof ViewPagerActivity) {
+				ViewPagerActivity viewPagerActivity = (ViewPagerActivity) getActivity();
+				viewPagerActivity.showMenu();
+			}
+
+			break;
 		case R.id.recharge_et_phoneNum:
 			numEditText.setCursorVisible(true);
 			numEditText.setFocusableInTouchMode(true);
@@ -200,7 +225,9 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 		case R.id.recharge_btm_buy:
 			String phoneNum = numEditText.getText().toString().trim();
 			if (!CommonUtil.checkNetState(getActivity())) {
-				Toast.makeText(getActivity(), "当前网络不可用！", 0).show();
+				v.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+						R.anim.shake));
+				Toast.makeText(getActivity(), "网络不给力,检查网络", 0).show();
 				return;
 			}
 			if (!checkNumber(phoneNum)) {
@@ -217,23 +244,28 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 			Editor edit = sharedPreferences.edit();
 			edit.putString("phoneNum", phoneNum);
 			edit.commit();
-			if (resultMap!=null) {
+			if (resultMap != null) {
 				SearchItem searchItem = resultMap.get(q);
-				if (searchItem!=null) {
+				if (searchItem != null) {
 					userId = sharedPreferences.getLong("userId", 0l);
-					AccessToken accessToken = TopConfig.client.getAccessToken(userId);
+					AccessToken accessToken = TopConfig.client
+							.getAccessToken(userId);
 					String tql = "";
-					if (accessToken==null||userId==0l) {
-						Toast t = Toast.makeText(getActivity(), "请先授权",Toast.LENGTH_SHORT);
+					if (accessToken == null || userId == 0l) {
+						Toast t = Toast.makeText(getActivity(), "请先授权",
+								Toast.LENGTH_SHORT);
 						t.show();
 						TopConfig.client.authorize(getActivity());
 						return;
 					}
 					Intent intent = new Intent();
-					if (searchItem.getClick_url()!=null) {
-						String uri = CommonUtil.generateTopClickUri(searchItem.getClick_url(), getActivity(), accessToken);
+					if (searchItem.getClick_url() != null) {
+						String uri = CommonUtil.generateTopClickUri(
+								searchItem.getClick_url(), getActivity(),
+								accessToken);
 						LogUtil.i(TAG, uri);
-						intent.putExtra(BrowserActivity.BROWSERACTIVITY_URI, uri);
+						intent.putExtra(BrowserActivity.BROWSERACTIVITY_URI,
+								uri);
 						intent.setAction(BrowserActivity.BROWSERACTIVITY_ACTION);
 						getActivity().startActivity(intent);
 					}
@@ -262,6 +294,7 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 
 	private void getAddressFromServer(final String num) {
 		pb.setVisibility(View.VISIBLE);
+		headProgressBar.setVisibility(View.VISIBLE);
 		new Thread() {
 			@Override
 			public void run() {
@@ -282,7 +315,6 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 		}.start();
 	}
 
-	
 	private boolean checkNumber(String num) {
 		String regex = "^1[3-8]+\\d{9}$";
 		return num.matches(regex);
@@ -305,7 +337,7 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 	 */
 	private void getFromTmallByKeyWords(String q, String sort, String cat,
 			final int pageNo) {
-		
+
 		long userId = sharedPreferences.getLong("userId", 10000);
 		AccessToken accessToken = TopConfig.client.getAccessToken(userId);
 		String tql = "";
@@ -340,10 +372,12 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 		tql = TqlHelper.generateTMallConvertToTaoKenestTql(SearchItem.class,
 				"num_iids", tmallTql);
 		System.out.println(tql);
+
 		GetTopData.getDataFromTop(tql, new TmallToTaokeItemParser(), userId,
 				new MyTqlListener() {
 					@Override
 					public void onResponseException(Object apiError) {
+
 						Toast.makeText(getActivity(),
 								((ApiError) apiError).getMsg(), 0).show();
 						if (BuildConfig.DEBUG) {
@@ -368,24 +402,37 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 								for (int i = 0; i < results.size(); i++) {
 									String reg = "\\d+";
 									Pattern pattern = Pattern.compile(reg);
-									String resultPrice = results.get(i).getPrice().replace("\\'", "");
-									Matcher matcher = pattern.matcher(resultPrice);
+									String resultPrice = results.get(i)
+											.getPrice().replace("\\'", "");
+									Matcher matcher = pattern
+											.matcher(resultPrice);
 									if (matcher.find()) {
 										resultPrice = matcher.group();
-										if ((mon-Float.parseFloat(resultPrice))<10) {
-											LogUtil.i(TAG, Float.parseFloat(resultPrice)+"  Float.parseFloat(resultPrice)");
-											LogUtil.i(TAG, mon-Float.parseFloat(resultPrice)+"  mon-Float.parseFloat(resultPrice)");
-											Toast.makeText(getActivity(), resultPrice, 1).show();
+										if ((mon - Float
+												.parseFloat(resultPrice)) < 10) {
+											LogUtil.i(
+													TAG,
+													Float.parseFloat(resultPrice)
+															+ "  Float.parseFloat(resultPrice)");
+											LogUtil.i(
+													TAG,
+													mon
+															- Float.parseFloat(resultPrice)
+															+ "  mon-Float.parseFloat(resultPrice)");
+											Toast.makeText(getActivity(),
+													resultPrice, 1).show();
 											resultMap = new HashMap<String, SearchItem>();
-											resultMap.put(RechargeFragment.this.q,
+											resultMap.put(
+													RechargeFragment.this.q,
 													results.get(i));
-											priceTextView.setText(resultPrice+" 元");
+											priceTextView.setText(resultPrice
+													+ " 元");
 											break;
 										}
 									}
 								}
 							}
-						} 
+						}
 						if (BuildConfig.DEBUG) {
 							if (results != null) {
 								Log.i(TAG, Integer.toString(results.size()));
@@ -434,11 +481,15 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 		params.put("mall_item", isFromTmall + "");
 		params.put("sort", sort);
 		tql = TqlHelper.generateTaoBaoKeTql(SearchItem.class, params);
-		System.out.println(tql);
+		if (BuildConfig.DEBUG) {
+			System.out.println(tql);
+		}
+		headProgressBar.setVisibility(View.VISIBLE);
 		GetTopData.getDataFromTop(tql, new SearchItemParser(), userId,
 				new MyTqlListener() {
 					@Override
 					public void onComplete(Object result) {
+						headProgressBar.setVisibility(View.GONE);
 						ArrayList<SearchItem> results = (ArrayList) result;
 						if (results != null && results.size() > 0) {
 							if (!TextUtils.isEmpty(card)) {
@@ -448,25 +499,39 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 								for (int i = 0; i < results.size(); i++) {
 									String reg = "\\d+\\.\\d+";
 									Pattern pattern = Pattern.compile(reg);
-									String resultPrice = results.get(i).getPrice().replace("\\'", "");
-									LogUtil.i(TAG, "price"+results.get(i).getPrice());
-									Matcher matcher = pattern.matcher(resultPrice);
+									String resultPrice = results.get(i)
+											.getPrice().replace("\\'", "");
+									LogUtil.i(TAG, "price"
+											+ results.get(i).getPrice());
+									Matcher matcher = pattern
+											.matcher(resultPrice);
 									if (matcher.find()) {
 										resultPrice = matcher.group();
-										if ((mon-Float.parseFloat(resultPrice))<10) {
-											LogUtil.i(TAG, Float.parseFloat(resultPrice)+"  Float.parseFloat(resultPrice)");
-											LogUtil.i(TAG, mon-Float.parseFloat(resultPrice)+"  mon-Float.parseFloat(resultPrice)");
-											Toast.makeText(getActivity(), resultPrice, 1).show();
+										if ((mon - Float
+												.parseFloat(resultPrice)) < 10) {
+											LogUtil.i(
+													TAG,
+													Float.parseFloat(resultPrice)
+															+ "  Float.parseFloat(resultPrice)");
+											LogUtil.i(
+													TAG,
+													mon
+															- Float.parseFloat(resultPrice)
+															+ "  mon-Float.parseFloat(resultPrice)");
+											Toast.makeText(getActivity(),
+													resultPrice, 1).show();
 											resultMap = new HashMap<String, SearchItem>();
-											resultMap.put(RechargeFragment.this.q,
+											resultMap.put(
+													RechargeFragment.this.q,
 													results.get(i));
-											priceTextView.setText(resultPrice+" 元");
+											priceTextView.setText(resultPrice
+													+ " 元");
 											break;
 										}
 									}
 								}
 							}
-						} 
+						}
 						if (BuildConfig.DEBUG) {
 							if (results != null) {
 								Log.i(TAG, Integer.toString(results.size()));
@@ -476,11 +541,13 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 
 					@Override
 					public void onException(Exception e) {
+						headProgressBar.setVisibility(View.GONE);
 						AppException.network(e).makeToast(getActivity());
 					}
 
 					@Override
 					public void onResponseException(Object apiError) {
+						headProgressBar.setVisibility(View.GONE);
 						Toast.makeText(getActivity(),
 								((ApiError) apiError).getMsg(), 0).show();
 						if (BuildConfig.DEBUG) {

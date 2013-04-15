@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/domob_next_off" android:state_enabled="false" ></item>
+	<item android:state_pressed="true" android:drawable="@drawable/domob_next_on"></item>
+	<item android:state_pressed="false" android:drawable="@drawable/domob_next"></item>
+</selector>
