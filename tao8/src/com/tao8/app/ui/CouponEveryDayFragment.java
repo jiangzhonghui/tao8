@@ -266,8 +266,7 @@ public class CouponEveryDayFragment extends Fragment implements
 							if (page_no == 1) {
 								taobaokeCouponItems.clear();
 							}
-							if (imgsListView.getAdapter() == null
-									|| imgsListView.getAdapter().getCount() <= 0) {
+							if (imgsListView.getAdapter() == null) {
 								imgsListView.setAdapter(tryoutAdapter);
 							}
 							taobaokeCouponItems.addAll(results);

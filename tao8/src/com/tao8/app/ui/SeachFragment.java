@@ -555,8 +555,7 @@ public class SeachFragment extends Fragment implements OnClickListener,
 							if (page_no == 1) {
 								taobaokeCouponItems.clear();
 							}
-							if (imgsListView.getAdapter() == null
-									|| imgsListView.getAdapter().getCount() <= 0) {
+							if (imgsListView.getAdapter() == null) {
 								imgsListView.setAdapter(couponAdapter);
 							}
 							taobaokeCouponItems.addAll(results);

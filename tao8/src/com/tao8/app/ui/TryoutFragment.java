@@ -220,8 +220,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 								taobaokeCouponItems.clear();
 							}
 							taobaokeCouponItems.addAll(results);
-							if (imgsListView.getAdapter() == null
-									|| imgsListView.getAdapter().getCount() <= 0) {
+							if (imgsListView.getAdapter() == null) {
 								imgsListView.setAdapter(tryoutAdapter);
 							}
 							tryoutAdapter.notifyDataSetChanged();
