@@ -18,6 +18,7 @@ import cn.waps.AppConnect;
 
 import com.emar.escore.banner.BannerSDK;
 import com.emar.escore.recommendwall.RecommendSDK;
+import com.emar.escore.sdk.YjfSDK;
 import com.emar.escore.sdk.view.bannerView;
 import com.tao8.app.BuildConfig;
 import com.tao8.app.R;
@@ -153,6 +154,12 @@ public class BehindMenuFragment extends Fragment implements OnClickListener {
 		 * ResponsiveUIActivity ra = (ResponsiveUIActivity) getActivity();
 		 * ra.switchContent(fragment); }
 		 */
+	}
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		YjfSDK.getInstance(getActivity(), null).recordAppClose();
+		super.onDestroy();
 	}
 	
 }

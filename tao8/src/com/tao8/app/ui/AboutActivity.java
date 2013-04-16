@@ -18,12 +18,12 @@ import com.tao8.app.BuildConfig;
 import com.tao8.app.R;
 import com.tao8.app.TopConfig;
 
-public class AboutActivity extends Activity implements OnClickListener{
+public class AboutActivity extends BaseFragmentActivity implements OnClickListener{
 
 //	private BaiduSocialShare socialShare;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 //		socialShare = BaiduSocialShare.getInstance(this,

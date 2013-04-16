@@ -32,8 +32,8 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		
+		super.onCreate(savedInstanceState);
 		/////////////////////////////
 		// 初始化统计器，并通过代码设置WAPS_ID, WAPS_PID
 		AppConnect.getInstance(TopConfig.WAPS_ID, "WAPS", this);
@@ -159,6 +159,7 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		vp = null;
 		AppConnect.getInstance(TopConfig.WAPS_ID, "WAPS", this).finalize();
 	}
 }

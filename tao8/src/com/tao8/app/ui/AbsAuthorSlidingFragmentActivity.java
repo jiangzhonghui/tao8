@@ -42,7 +42,9 @@ public abstract class AbsAuthorSlidingFragmentActivity extends SlidingFragmentAc
 		Uri uri = intent.getData();
 
 		final TopAndroidClient client = getTopAndroidClient();
-		 System.out.println("............."+client);
+		if (BuildConfig.DEBUG) {
+			System.out.println("............."+client);
+		}
 		Uri u = Uri.parse(client.getRedirectURI());
 		if (uri != null && uri.getScheme().equals(u.getScheme())
 				&& uri.getHost().equals(u.getHost())
@@ -112,6 +114,8 @@ public abstract class AbsAuthorSlidingFragmentActivity extends SlidingFragmentAc
 		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		sm.setFadeDegree(0.35f);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+		
+	
 	}
 	
 	/**

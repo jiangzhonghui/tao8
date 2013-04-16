@@ -1,8 +1,5 @@
 package com.tao8.app.ui;
 
-import javax.crypto.spec.PBEParameterSpec;
-
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;

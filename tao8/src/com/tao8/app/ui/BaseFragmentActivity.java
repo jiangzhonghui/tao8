@@ -11,6 +11,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.tao8.app.AppManager;
+import com.tao8.app.BuildConfig;
 import com.tao8.app.TopConfig;
 import com.tao8.app.util.LogUtil;
 import com.taobao.top.android.TopAndroidClient;
@@ -50,7 +51,9 @@ public class BaseFragmentActivity extends AbsAuthorSlidingFragmentActivity {
 	@Override
 	protected TopAndroidClient getTopAndroidClient() {
 		// TODO Auto-generated method stub
-		System.out.println("............................................"+client);
+		if (BuildConfig.DEBUG) {
+			System.out.println("............................................"+client);
+		}
 		return client;
 	}
 

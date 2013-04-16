@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.tao8.app.BuildConfig;
+
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -29,7 +31,9 @@ public class MemoryCache {
 
 	public void setLimit(long new_limit) {
 		limit = new_limit;
-		Log.i(TAG, "MemoryCache will use up to " + limit / 1024. / 1024. + "MB");
+		if (BuildConfig.DEBUG) {
+			Log.i(TAG, "MemoryCache will use up to " + limit / 1024. / 1024. + "MB");
+		}
 	}
 
 	public Bitmap get(String id) {

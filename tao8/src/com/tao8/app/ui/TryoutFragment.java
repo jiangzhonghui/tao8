@@ -73,6 +73,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 	private PopupWindow popupWindow;
 	private LinearLayout topLayout;
 	private long getDataTime;
+	private DomobAdView mAdview320x50;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -209,7 +210,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 						toFreshLayout.setVisibility(View.GONE);
 						topLayout.setVisibility(View.GONE);
 						final ArrayList<TaobaokeCouponItem> results = (ArrayList) result;
-						if (BuildConfig.DEBUG) {
+						if (BuildConfig.DEBUG&&result!=null) {
 							Toast.makeText(getActivity(),
 									results.size() + "  总共", 1).show();
 						}
@@ -292,7 +293,9 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 			////////////
 			// 互动广告调用方式
 			RelativeLayout container = (RelativeLayout) view.findViewById(R.id.tryout_popu_ll_ad_container);
-			DomobAdView mAdview320x50 = new DomobAdView(getActivity(), TopConfig.PUBLISHER_ID, DomobAdView.INLINE_SIZE_320X50);
+			if (mAdview320x50==null) {
+				mAdview320x50 = new DomobAdView(getActivity(), TopConfig.PUBLISHER_ID, DomobAdView.INLINE_SIZE_320X50);
+			}
 			//将广告View增加到视图中。
 			container.addView(mAdview320x50);
 			/////////////////////
@@ -423,5 +426,11 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 			getActivity().startActivity(intent);
 		}
 		
+	}
+	
+	@Override
+	public void onDestroy() {
+		mAdview320x50 = null;
+		super.onDestroy();
 	}
 }
