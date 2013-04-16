@@ -42,13 +42,13 @@ public class CouponAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return searchItems==null?0:searchItems.size();
+		return searchItems.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		return searchItems==null?null:searchItems.get(position);
+		return searchItems.get(position);
 	}
 
 	@Override
@@ -83,8 +83,11 @@ public class CouponAdapter extends BaseAdapter {
 		holder = (ViewHolder) view.getTag();
 		
 		TaobaokeCouponItem item = (TaobaokeCouponItem) getItem(position);
+		if (BuildConfig.DEBUG) {
 		System.out.println(item);
 		System.out.println(position);
+		}
+			
 		holder.proNameTextView.setText(Html.fromHtml(item.getTitle()));
 		holder.priceTextView.setText("￥"+item.getCoupon_price());
 		TextPaint paint = holder.originalPriceTextView.getPaint();
@@ -104,7 +107,9 @@ public class CouponAdapter extends BaseAdapter {
 			}
 			@Override
 			public void imageLoaded(BitmapDisplayer bd) {
-				System.out.println("BitmapDisplayer   "+bd);
+				if (BuildConfig.DEBUG) {
+					System.out.println("BitmapDisplayer   "+bd);
+				}
 				if (ImageLoader.imageViewReused(bd.photoToLoad)){
 					return;
 				}

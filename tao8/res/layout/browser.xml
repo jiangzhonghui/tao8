@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="4dip"
         android:layout_below="@+id/head_rl"
-        android:progressDrawable="@color/progressbar" />
+        android:progressDrawable="@drawable/progressbar" />
 
     <WebView
         android:id="@+id/webview"

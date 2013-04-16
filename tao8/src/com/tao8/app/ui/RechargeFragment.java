@@ -31,10 +31,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.domob.android.ads.DomobAdView;
 
 import com.tao8.app.AppException;
 import com.tao8.app.BuildConfig;
@@ -100,21 +101,7 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 	private long userId;
 	private ImageView moreImageView;
 	private ProgressBar headProgressBar;
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		if (getActivity() != null && getActivity() instanceof ViewPagerActivity) {
-			ViewPagerActivity fca = (ViewPagerActivity) getActivity();
-		}
-		super.onActivityCreated(savedInstanceState);
-	}
-
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onViewCreated(view, savedInstanceState);
-	}
+	private DomobAdView mAdview320x50;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -142,6 +129,17 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 				.findViewById(R.id.head_tv_go_menu);
 		goMenuTextView.setOnClickListener(this);
 		moreImageView.setVisibility(View.GONE);
+		// ///////
+		RelativeLayout adRelativeLayout = (RelativeLayout) view
+				.findViewById(R.id.recharge_rl_ad);
+
+		mAdview320x50 = new DomobAdView(getActivity(), TopConfig.PUBLISHER_ID,
+				DomobAdView.INLINE_SIZE_320X50);
+		// 将广告View增加到视图中。
+		adRelativeLayout.removeAllViews();
+		adRelativeLayout.addView(mAdview320x50);
+
+		// /////
 
 		ArrayList<String> moneyItems = new ArrayList<String>();
 		moneyItems.add("10");
@@ -228,6 +226,10 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 				v.startAnimation(AnimationUtils.loadAnimation(getActivity(),
 						R.anim.shake));
 				Toast.makeText(getActivity(), "网络不给力,检查网络", 0).show();
+				return;
+			}
+			if (TextUtils.isEmpty(phoneNum.trim())) {
+				Toast.makeText(getActivity(), "号码不能为空", 0).show();
 				return;
 			}
 			if (!checkNumber(phoneNum)) {
@@ -555,5 +557,12 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 						}
 					}
 				});
+	}
+
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		mAdview320x50 = null;
+		super.onDestroy();
 	}
 }

@@ -53,7 +53,7 @@ public class AboutActivity extends BaseFragmentActivity implements OnClickListen
 				Toast.makeText(this, "升级", 0).show();
 			}
 			//手动检查新版本
-			AppConnect.getInstance(TopConfig.WAPS_ID, "WAPS", this).checkUpdate(this);;
+			AppConnect.getInstance(this).checkUpdate(this);
 			break;
 		case R.id.about_tv_weibo:
 			//用户反馈

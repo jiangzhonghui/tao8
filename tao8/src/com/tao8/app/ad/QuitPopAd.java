@@ -1,6 +1,7 @@
 package com.tao8.app.ad;
 
 import com.tao8.app.AppManager;
+import com.tao8.app.TopConfig;
 
 import android.app.Activity;
 import android.app.AlertDialog;

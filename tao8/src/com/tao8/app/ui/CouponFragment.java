@@ -79,35 +79,42 @@ public class CouponFragment extends Fragment implements OnClickListener,
 	private int firstVisibleItem;
 	private int visibleItemCount;
 	private int totalItemCount;
-	private int i = 0;//popu显示的控制
+	private int i = 0;// popu显示的控制
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		linearLayout = (LinearLayout) inflater.inflate(R.layout.coupon_fragment, null);
+		linearLayout = (LinearLayout) inflater.inflate(
+				R.layout.coupon_fragment, null);
 		findView(linearLayout);
 		setLintener();
 		setData();
 		return linearLayout;
 	}
-	
+
 	@Override
 	public void onStart() {
-		
+
 		if (BuildConfig.DEBUG) {
-			System.out.println("onStart"); 
+			System.out.println("onStart");
 		}
 		super.onStart();
-	} 
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		//setData();
+		// setData();
 		super.onCreate(savedInstanceState);
 	}
+
 	private void setData() {
 		// progressDialog = new
 		// ProgressDialog(getActivity(),android.R.style.Theme_Black_NoTitleBar);
 		// progressDialog.setMessage("数据正在疯狂加载中,请稍后.......");
+		if (sharedPreferences == null) {
+			sharedPreferences = getActivity().getSharedPreferences("config",
+					Context.MODE_PRIVATE);
+		}
 		popupWindow = createPopuWindow();
 		keyword = "0";
 		seachTaobaokeCouponFromKeyWord(keyword, sort, false, true, 1);
@@ -169,12 +176,8 @@ public class CouponFragment extends Fragment implements OnClickListener,
 	 */
 	private void seachTaobaokeCouponFromKeyWord(String keyword, String sort,
 			boolean isFromTmall, boolean isAll, final int page_no) {
-		if (sharedPreferences == null) {
-			sharedPreferences = getActivity().getSharedPreferences("config",
-					Context.MODE_PRIVATE);
-		}
+
 		long userId = sharedPreferences.getLong("userId", 10000);
-		AccessToken accessToken = TopConfig.client.getAccessToken(userId);
 		String tql = "";
 		Map<String, String> params = new HashMap<String, String>();
 		if (isAll) {
@@ -188,7 +191,9 @@ public class CouponFragment extends Fragment implements OnClickListener,
 		params.put("sort", sort);
 		tql = TqlHelper.generateTaoBaoKeCouponTql(TaobaokeCouponItem.class,
 				params);
-		System.out.println(tql);
+		if (BuildConfig.DEBUG) {
+			System.out.println(tql); 
+		}
 		toplLayout.setVisibility(View.VISIBLE);
 		GetTopData.getDataFromTop(tql, new TaoBaoKeCouponItemParser(), userId,
 				new MyTqlListener() {
@@ -199,18 +204,22 @@ public class CouponFragment extends Fragment implements OnClickListener,
 						imgsListView.setVisibility(View.VISIBLE);
 						ArrayList<TaobaokeCouponItem> results = (ArrayList) result;
 						if (BuildConfig.DEBUG) {
-							Toast.makeText(getActivity(),results.size() + "  总共", 1).show();
+							Toast.makeText(getActivity(),
+									results.size() + "  总共", 1).show();
 						}
 						if (results != null && results.size() > 0) {
 
 							if (page_no == 1) {
 								taobaokeCouponItems.clear();
-							}
-							if (imgsListView.getAdapter()==null) {
+								taobaokeCouponItems.addAll(results);
+								imgsListView.setAdapter(new CouponAdapter(
+										getActivity(), results));
+							} else {
 								imgsListView.setAdapter(couponAdapter);
+								taobaokeCouponItems.addAll(results);
+								couponAdapter.notifyDataSetChanged();
+								imgsListView.setSelection(taobaokeCouponItems.size()-results.size());
 							}
-							taobaokeCouponItems.addAll(results);
-							couponAdapter.notifyDataSetChanged();
 							toFreshLayout.setVisibility(View.GONE);
 							imgsListView.setVisibility(View.VISIBLE);
 						}
@@ -247,15 +256,9 @@ public class CouponFragment extends Fragment implements OnClickListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.head_iv_more:
-			if (BuildConfig.DEBUG) {
-				Toast.makeText(getActivity(), "more", 0).show();
+			if (!popupWindow.isShowing()) {
+				popupWindow.showAsDropDown(rl);
 			}
-			if (i%2==0) {
-				if (!popupWindow.isShowing()) {
-					popupWindow.showAsDropDown(rl);
-				}
-			}
-			i++;
 			break;
 		case R.id.head_tv_go_menu:
 			if (getActivity() instanceof ViewPagerActivity) {
@@ -276,11 +279,14 @@ public class CouponFragment extends Fragment implements OnClickListener,
 			popupWindow.dismiss();
 			RadioButton radioButton = (RadioButton) v;
 			keyword = radioButton.getText().toString().trim();
+			page_no = 1;
 			if ("全部".equalsIgnoreCase(keyword)) {
 				keyword = "0";
-				seachTaobaokeCouponFromKeyWord("0", sort , false, true, page_no);
-			}else {
-				seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
+				seachTaobaokeCouponFromKeyWord(keyword, sort, false, true,
+						page_no);
+			} else {
+				seachTaobaokeCouponFromKeyWord(keyword, sort, false, false,
+						page_no);
 			}
 			if (BuildConfig.DEBUG) {
 				Toast.makeText(getActivity(), keyword, 0).show();
@@ -288,13 +294,16 @@ public class CouponFragment extends Fragment implements OnClickListener,
 			break;
 		case R.id.coupon_ll_to_refresh:
 			if (!CommonUtil.checkNetState(getActivity())) {
-				toFreshLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake));
+				toFreshLayout.startAnimation(AnimationUtils.loadAnimation(
+						getActivity(), R.anim.shake));
 				Toast.makeText(getActivity(), "网络不给力,检查网络", 0).show();
-			}else {
+			} else {
 				if ("0".equalsIgnoreCase(keyword)) {
-					seachTaobaokeCouponFromKeyWord(keyword, sort, false, true, 1);
+					seachTaobaokeCouponFromKeyWord(keyword, sort, false, true,
+							1);
 				} else {
-					seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
+					seachTaobaokeCouponFromKeyWord(keyword, sort, false, false,
+							1);
 				}
 			}
 			break;
@@ -305,7 +314,7 @@ public class CouponFragment extends Fragment implements OnClickListener,
 	}
 
 	private PopupWindow createPopuWindow() {
-			popupWindow = new PopupWindow(getActivity());
+		popupWindow = new PopupWindow(getActivity());
 		View view = View.inflate(getActivity(), R.layout.popup_lable, null);
 		RadioButton radioButton_0 = (RadioButton) view
 				.findViewById(R.id.products_lable_rbtn_0);
@@ -338,14 +347,13 @@ public class CouponFragment extends Fragment implements OnClickListener,
 		radioButton_8.setOnClickListener(this);
 		radioButton_9.setOnClickListener(this);
 		popupWindow.setContentView(view);
-		popupWindow.setBackgroundDrawable(new ColorDrawable(
-				Color.TRANSPARENT));
+		popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 		popupWindow.setOutsideTouchable(true);
 		popupWindow.setHeight(80);
 		popupWindow.setWidth(getActivity().getWindowManager()
 				.getDefaultDisplay().getWidth());
 		return popupWindow;
-		
+
 	}
 
 	@Override
@@ -354,9 +362,11 @@ public class CouponFragment extends Fragment implements OnClickListener,
 				&& scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
 			page_no = (taobaokeCouponItems.size() / pageSize) + 1;
 			if (keyword.equalsIgnoreCase("0")) {
-				seachTaobaokeCouponFromKeyWord(keyword, sort, false, true, page_no);
-			}else {
-				seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no);
+				seachTaobaokeCouponFromKeyWord(keyword, sort, false, true,
+						page_no);
+			} else {
+				seachTaobaokeCouponFromKeyWord(keyword, sort, false, false,
+						page_no);
 			}
 			if (BuildConfig.DEBUG) {
 				Toast.makeText(getActivity(), "滑倒底部了", 1).show();
@@ -375,22 +385,34 @@ public class CouponFragment extends Fragment implements OnClickListener,
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-			Adapter adapter = parent.getAdapter();
-			TaobaokeCouponItem item = (TaobaokeCouponItem) adapter.getItem(position);
-			if (item!=null) {
-				Intent intent = new Intent();
-				intent.setAction(BrowserActivity.BROWSERACTIVITY_ACTION);
-				if (sharedPreferences == null) {
-					sharedPreferences = getActivity().getSharedPreferences("config",
-							Context.MODE_PRIVATE);
-				}
-				long userId = sharedPreferences.getLong("userId", 10000);
-				AccessToken accessToken = TopConfig.client.getAccessToken(userId);
-				String uri = CommonUtil.generateTopClickUri(item.getClick_url(), getActivity(), accessToken);
-				intent.putExtra(BrowserActivity.BROWSERACTIVITY_URI, uri);
-				intent.putExtra(BrowserActivity.BROWSERACTIVITY_TITLE, item.getTitle());
-				getActivity().startActivity(intent);
+		Adapter adapter = parent.getAdapter();
+		TaobaokeCouponItem item = (TaobaokeCouponItem) adapter
+				.getItem(position);
+		if (item != null) {
+			Intent intent = new Intent();
+			intent.setAction(BrowserActivity.BROWSERACTIVITY_ACTION);
+			if (sharedPreferences == null) {
+				sharedPreferences = getActivity().getSharedPreferences(
+						"config", Context.MODE_PRIVATE);
 			}
-		
+			long userId = sharedPreferences.getLong("userId", 10000);
+			AccessToken accessToken = TopConfig.client.getAccessToken(userId);
+			String uri = CommonUtil.generateTopClickUri(item.getClick_url(),
+					getActivity(), accessToken);
+			intent.putExtra(BrowserActivity.BROWSERACTIVITY_URI, uri);
+			intent.putExtra(BrowserActivity.BROWSERACTIVITY_TITLE,
+					item.getTitle());
+			getActivity().startActivity(intent);
+		}
+
+	}
+
+	@Override
+	public void onDestroy() {
+		imgsListView = null;
+		taobaokeCouponItems.clear();
+		taobaokeCouponItems = null;
+
+		super.onDestroy();
 	}
 }

@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/bg"
     android:gravity="center" >
 
     <LinearLayout
@@ -13,11 +14,13 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#00ffffff"
             android:src="@drawable/ic_launcher" />
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip" >
 
             <ProgressBar
                 style="?android:attr/progressBarStyleSmall"
@@ -27,8 +30,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="正在为您疯狂的加载数据,请耐心等候....." />
+                android:text="正在启动,请稍后..." />
         </LinearLayout>
     </LinearLayout>
+
+    <!--
+         <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        
+        android:layout_height="wrap_content" />
+    -->
 
 </RelativeLayout>

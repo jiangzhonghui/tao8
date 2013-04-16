@@ -554,12 +554,14 @@ public class SeachFragment extends Fragment implements OnClickListener,
 
 							if (page_no == 1) {
 								taobaokeCouponItems.clear();
-							}
-							if (imgsListView.getAdapter() == null) {
+								taobaokeCouponItems.addAll(results);
+								imgsListView.setAdapter(new CouponAdapter(getActivity(), results));
+							}else {
 								imgsListView.setAdapter(couponAdapter);
+								taobaokeCouponItems.addAll(results);
+								couponAdapter.notifyDataSetChanged();
+								imgsListView.setSelection(taobaokeCouponItems.size()-results.size());
 							}
-							taobaokeCouponItems.addAll(results);
-							couponAdapter.notifyDataSetChanged();
 							toFreshLayout.setVisibility(View.GONE);
 							imgsListView.setVisibility(View.VISIBLE);
 						}
@@ -614,5 +616,12 @@ public class SeachFragment extends Fragment implements OnClickListener,
 		this.firstVisibleItem = firstVisibleItem;
 		this.visibleItemCount = visibleItemCount;
 		this.totalItemCount = totalItemCount;
+	}
+	
+	@Override
+	public void onDestroy() {
+		taobaokeCouponItems.clear();
+		taobaokeCouponItems = null;
+		super.onDestroy();
 	}
 }

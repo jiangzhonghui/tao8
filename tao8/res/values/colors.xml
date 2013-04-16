@@ -15,6 +15,7 @@
     <color name="red">#ffa92719</color>
     <color name="light_red">#ffff6846</color>
     <color name="light_gray">#ff999999</color>
-    <color name="progressbar">#76EE00</color>
+    <color name="progressbar_progress">#76EE00</color>
+    <color name="progressbar_secondaryProgress">#63B8FF</color>
 
 </resources>

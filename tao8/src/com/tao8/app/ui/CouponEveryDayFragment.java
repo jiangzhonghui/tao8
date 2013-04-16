@@ -47,6 +47,7 @@ import com.tao8.app.AppException;
 import com.tao8.app.BuildConfig;
 import com.tao8.app.R;
 import com.tao8.app.TopConfig;
+import com.tao8.app.adapter.CouponAdapter;
 import com.tao8.app.adapter.CouponEveryGridViewAdapter;
 import com.tao8.app.adapter.TryoutAdapter;
 import com.tao8.app.api.GetTopData;
@@ -87,7 +88,7 @@ public class CouponEveryDayFragment extends Fragment implements
 	private int totalItemCount;
 	private PopupWindow popupWindow;
 	private String cat;// 类目名称
-	private int radioId = 1;
+	private int radioId = 10000;
 	private LinkedHashMap<String, String> catoryMap;
 	private RadioGroup radioGroup;
 	private LinearLayout lableLayout;
@@ -147,6 +148,7 @@ public class CouponEveryDayFragment extends Fragment implements
 		imgsListView.setDivider(divider_gradient);
 		imgsListView.setDividerHeight(3);
 		lableTextView.setText("特价精选");
+		imgsListView.setAdapter(tryoutAdapter);
 		page_no = 1;
 		seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no,
 				null);
@@ -265,17 +267,17 @@ public class CouponEveryDayFragment extends Fragment implements
 						if (results != null && results.size() > 0) {
 							if (page_no == 1) {
 								taobaokeCouponItems.clear();
-							}
-							if (imgsListView.getAdapter() == null) {
+								taobaokeCouponItems.addAll(results);
+								imgsListView.setAdapter(new CouponAdapter(getActivity(), results));
+							}else {
 								imgsListView.setAdapter(tryoutAdapter);
+								taobaokeCouponItems.addAll(results);
+								tryoutAdapter.notifyDataSetChanged();
+								imgsListView.setSelection(taobaokeCouponItems.size()-results.size());
 							}
-							taobaokeCouponItems.addAll(results);
-							tryoutAdapter.notifyDataSetChanged();
 							toFreshLayout.setVisibility(View.GONE);
 							imgsListView.setVisibility(View.VISIBLE);
-
 						}
-
 						if (BuildConfig.DEBUG) {
 							if (results != null) {
 								Log.i(TAG, Integer.toString(results.size()));
@@ -328,7 +330,7 @@ public class CouponEveryDayFragment extends Fragment implements
 		case R.id.coupon_everyday_ll_lable:
 			if (popupWindow != null && popupWindow.getContentView() != null) {
 				System.out.println(i % 2);
-				if (i % 2 == 1 && !popupWindow.isShowing()) {
+				if (i % 2 == 0 && !popupWindow.isShowing()) {
 					popupWindow.showAsDropDown(rl);
 				}
 				i++;
@@ -351,26 +353,26 @@ public class CouponEveryDayFragment extends Fragment implements
 			}
 
 			break;
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-		case 7:
-		case 8:
-		case 9:
-		case 10:
-		case 11:
-		case 12:
-		case 13:
-		case 14:
-		case 15:
-		case 16:
-		case 18:
-		case 19:
-		case 20:
+		case 10000:
+		case 10001:
+		case 10002:
+		case 10003:
+		case 10004:
+		case 10005:
+		case 10006:
+		case 10007:
+		case 10008:
+		case 10009:
+		case 10010:
+		case 10011:
+		case 10012:
+		case 10013:
+		case 10014:
+		case 10015:
+		case 10016:
+		case 10018:
+		case 10019:
+		case 10020:
 			if (v instanceof RadioButton) {
 				RadioButton radioButton = (RadioButton) v;
 				keyword = BASEKEYWORD_STRING + " "
@@ -407,11 +409,10 @@ public class CouponEveryDayFragment extends Fragment implements
 			catTextView.setTextColor(Color.rgb(0xFF, 0x30, 0x30));
 			cat = catTextView.getText().toString().trim();
 			if ("限时精选".equals(cat)) {
-				cat = "";
-			} else {
-				lableTextView.setText(cat);
-			}
-			// keyword = BASEKEYWORD_STRING +" "+ cat;
+				keyword = BASEKEYWORD_STRING;
+			} 
+			lableTextView.setText(cat);
+			
 			moreImageView.setImageResource(R.drawable.icon_arrow_close);
 			String cats = catoryMap.get(cat);
 			if (popupWindow == null) {
@@ -454,7 +455,7 @@ public class CouponEveryDayFragment extends Fragment implements
 						radioGroup.addView(radioButton);
 					}
 				}
-
+				radioId = 10000;
 				horizontalScrollView.addView(radioGroup);
 				popupWindow.setContentView(horizontalScrollView);
 				popupWindow.setBackgroundDrawable(new ColorDrawable(
@@ -524,4 +525,11 @@ public class CouponEveryDayFragment extends Fragment implements
 		this.totalItemCount = totalItemCount;
 	}
 
+	@Override
+	public void onDestroy() {
+		imgsListView = null;
+		taobaokeCouponItems.clear();
+		taobaokeCouponItems = null;
+		super.onDestroy();
+	}
 }
