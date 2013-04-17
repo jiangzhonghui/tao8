@@ -1,5 +1,6 @@
 package com.tao8.app.db.dao.test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.test.AndroidTestCase;
@@ -43,5 +44,13 @@ public class DbTest extends AndroidTestCase{
 		List<TaobaokeCouponItem> queryAll = taoBaokeCouponDao.queryAll();
 		System.out.println(queryAll.size());
 //		assertEquals(expected, actual);
+	}
+	
+	public void testQueryByKeyword(){
+		TaoBaokeCouponDao taoBaokeCouponDao = new TaoBaokeCouponDao(getContext());
+		ArrayList<TaobaokeCouponItem> queryAllByKeyword = taoBaokeCouponDao.queryAllByKeywordFromTo("手机",1,20);
+		assertNotNull(queryAllByKeyword);
+		System.out.println(queryAllByKeyword.size());
+		assertEquals(queryAllByKeyword.size(), 20);
 	}
 }

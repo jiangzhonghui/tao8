@@ -263,6 +263,134 @@ public class TaoBaokeCouponDao {
 		}
 		return taobaokeCouponItems;
 	}
+	public ArrayList<TaobaokeCouponItem> queryAllByKeyword(String keyword) {
+		SQLiteDatabase db = null;
+		Cursor c = null;
+		ArrayList<TaobaokeCouponItem> taobaokeCouponItems = null;
+		try {
+			db = helper.getReadableDatabase();
+			Field[] declaredFields = TaobaokeCouponItem.class
+					.getDeclaredFields();
+			String[] strings = new String[declaredFields.length - 1];
+			int j = 0;
+			for (int i = 0; i < declaredFields.length; i++) {
+				if ("serialVersionUID".equalsIgnoreCase(declaredFields[i]
+						.getName())) {
+					continue;
+				}
+				strings[j] = declaredFields[i].getName();
+				j++;
+			}
+			if (BuildConfig.DEBUG) {
+				for (String string : strings) {
+					System.out.println(string);
+				}
+				
+			}
+			// 所有的查询
+			c = db.query(false, Tao8DBHelper.DICTIONARY_TABLE_NAME, strings, "title LIKE ?",
+					new String[]{"%"+keyword+"%"}, null, null, null, null);
+			taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
+			while (c.moveToNext()) {
+				TaobaokeCouponItem taobaokeCouponItem = new TaobaokeCouponItem();
+				String[] columnNames = c.getColumnNames();
+				for (String string : columnNames) {
+					if (string.equalsIgnoreCase("serialVersionUID")) {
+						continue;
+					}
+					
+					Field declaredField = taobaokeCouponItem.getClass()
+							.getDeclaredField(string);
+					if (declaredField != null) {
+						declaredField.setAccessible(true);
+						declaredField.set(taobaokeCouponItem,
+								c.getString(c.getColumnIndex(string)));
+					}
+				}
+				taobaokeCouponItems.add(taobaokeCouponItem);
+			}
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalArgumentException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+			if (db != null && db.isOpen()) {
+				db.close();
+			}
+		}
+		return taobaokeCouponItems;
+	}
+	public ArrayList<TaobaokeCouponItem> queryAllByKeywordFromTo(String keyword,int pageNo,int pageSize) {
+		SQLiteDatabase db = null;
+		Cursor c = null;
+		// 开始索引
+		String start = String.valueOf((pageNo - 1) * pageSize);
+				// 查询的个数
+		String length = String.valueOf(pageSize);
+		ArrayList<TaobaokeCouponItem> taobaokeCouponItems = null;
+		try {
+			db = helper.getReadableDatabase();
+			Field[] declaredFields = TaobaokeCouponItem.class
+					.getDeclaredFields();
+			String[] strings = new String[declaredFields.length - 1];
+			int j = 0;
+			for (int i = 0; i < declaredFields.length; i++) {
+				if ("serialVersionUID".equalsIgnoreCase(declaredFields[i]
+						.getName())) {
+					continue;
+				}
+				strings[j] = declaredFields[i].getName();
+				j++;
+			}
+			if (BuildConfig.DEBUG) {
+				for (String string : strings) {
+					System.out.println(string);
+				}
+				
+			}
+			// 所有的查询
+			c = db.query(false, Tao8DBHelper.DICTIONARY_TABLE_NAME, strings, "title LIKE ?",
+					new String[]{"%"+keyword+"%"}, null, null, null, start+","+length);
+			taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
+			while (c.moveToNext()) {
+				TaobaokeCouponItem taobaokeCouponItem = new TaobaokeCouponItem();
+				String[] columnNames = c.getColumnNames();
+				for (String string : columnNames) {
+					if (string.equalsIgnoreCase("serialVersionUID")) {
+						continue;
+					}
+					
+					Field declaredField = taobaokeCouponItem.getClass()
+							.getDeclaredField(string);
+					if (declaredField != null) {
+						declaredField.setAccessible(true);
+						declaredField.set(taobaokeCouponItem,
+								c.getString(c.getColumnIndex(string)));
+					}
+				}
+				taobaokeCouponItems.add(taobaokeCouponItem);
+			}
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalArgumentException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+			if (db != null && db.isOpen()) {
+				db.close();
+			}
+		}
+		return taobaokeCouponItems;
+	}
 
 	public ArrayList<TaobaokeCouponItem> queryPage(int pageNum, int capacity) {
 		// 开始索引

@@ -620,7 +620,9 @@ public class SeachFragment extends Fragment implements OnClickListener,
 	
 	@Override
 	public void onDestroy() {
-		taobaokeCouponItems.clear();
+		if (taobaokeCouponItems!=null) {
+			taobaokeCouponItems.clear();
+		}
 		taobaokeCouponItems = null;
 		super.onDestroy();
 	}

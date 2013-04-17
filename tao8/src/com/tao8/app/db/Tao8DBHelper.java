@@ -24,8 +24,8 @@ public class Tao8DBHelper extends SQLiteOpenHelper {
 		super(context, DB_NAME, null, DATABASE_VERSION);
 		DICTIONARY_TABLE_CREATE = generateTableSql(TaobaokeCouponItem.class);
 	}
-
-	private String generateTableSql(Class<TaobaokeCouponItem> clazz) {
+	
+	private String generateTableSql(Class<TaobaokeCouponItem> clazz ) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("create table IF NOT EXISTS ");
 		sb.append(DICTIONARY_TABLE_NAME);

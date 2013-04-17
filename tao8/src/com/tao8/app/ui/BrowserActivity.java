@@ -109,6 +109,7 @@ public class BrowserActivity extends BaseFragmentActivity implements
 
 				@Override
 				public void onPageFinished(WebView view, String url) {
+					pbIndicate.setProgress(100);
 					pbIndicate.setVisibility(View.GONE);
 					if (webview.canGoBack()) {
 						previewButton.setEnabled(true);

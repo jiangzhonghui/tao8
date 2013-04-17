@@ -410,9 +410,10 @@ public class CouponFragment extends Fragment implements OnClickListener,
 	@Override
 	public void onDestroy() {
 		imgsListView = null;
-		taobaokeCouponItems.clear();
+		if (taobaokeCouponItems!=null) {
+			taobaokeCouponItems.clear();
+		}
 		taobaokeCouponItems = null;
-
 		super.onDestroy();
 	}
 }

@@ -528,7 +528,9 @@ public class CouponEveryDayFragment extends Fragment implements
 	@Override
 	public void onDestroy() {
 		imgsListView = null;
-		taobaokeCouponItems.clear();
+		if (taobaokeCouponItems!=null) {
+			taobaokeCouponItems.clear();
+		}
 		taobaokeCouponItems = null;
 		super.onDestroy();
 	}
