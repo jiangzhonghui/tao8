@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:id="@+id/coupon_ll_fragment"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <include layout="@layout/head" />
+
+    <RadioGroup
+        android:id="@+id/coupon_rg_orderby"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/head_rl"
+        android:background="@drawable/bg_menu_lable"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <RadioButton
+            android:id="@+id/coupon_rbtn_orderby_attention"
+            style="@style/seachtext"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:checked="true"
+            android:text="人气" />
+
+        <RadioButton
+            android:id="@+id/coupon_rbtn_orderby_sells"
+            style="@style/seachtext"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:text="销量" />
+
+        <RadioButton
+            android:id="@+id/coupon_rbtn_orderby_price"
+            style="@style/seachtext"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:checked="true"
+            android:text="价格" />
+
+        <RadioButton
+            android:id="@+id/coupon_rbtn_orderby_credit"
+            style="@style/seachtext"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:text="信誉" />
+    </RadioGroup>
 
     <LinearLayout
         android:id="@+id/coupon_ll_top"
@@ -45,8 +86,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:visibility="gone" >
 
             <ImageView
                 android:layout_width="120dip"

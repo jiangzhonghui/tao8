@@ -27,34 +27,43 @@
                 android:textColor="#ffffff"
                 android:textSize="20sp" />
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="180dip"
                 android:layout_height="wrap_content"
-                android:focusableInTouchMode="true"
-                android:gravity="center_vertical" >
+                android:layout_marginBottom="5dip"
+                android:layout_marginLeft="5dip"
+                android:layout_marginRight="5dip"
+                android:layout_marginTop="5dip"
+                android:background="@drawable/search_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
 
                 <EditText
                     android:id="@+id/seach_head_actv_content"
-                    android:layout_width="160dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:lines="1" />
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="请输入搜索内容"
+                    android:lines="1"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/seach_iv_content_clear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignRight="@id/seach_head_actv_content"
-                    android:layout_centerVertical="true"
-                    android:padding="5dip"
-                    android:src="@drawable/icon_seach_del" />
-            </RelativeLayout>
+                    android:layout_width="20dip"
+                    android:layout_height="20dip"
+                    android:layout_marginRight="8dip"
+                    android:background="@drawable/icon_seach_del"
+                    android:visibility="invisible" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/seach_head_btn_seach"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"
+                android:layout_marginLeft="2dip"
                 android:text="搜索"
                 android:textSize="20sp" />
         </LinearLayout>

@@ -38,7 +38,7 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="5dip"
         android:background="@drawable/bg_head_more"
-        android:scaleType="center"
+        android:scaleType="center" 
          android:visibility="visible"
         android:src="@drawable/icon_head_more" />
 

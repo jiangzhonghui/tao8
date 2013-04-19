@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/catory_ll_web_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible" >
+
+        <RelativeLayout
+            android:id="@+id/catory_head_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_head" >
+
+            <TextView
+                android:id="@+id/catory_head_tv_go_menu"
+                android:layout_width="60dip"
+                android:layout_height="48dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dip"
+                android:background="@drawable/bg_head_more"
+                android:gravity="center"
+                android:text="菜单"
+                android:textColor="#ffffffff"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/catory_head_tv_lable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="类目浏览"
+                android:textColor="#ffffffff"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/catory_head_iv_more"
+                android:layout_width="60dip"
+                android:layout_height="40dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dip"
+                android:background="@drawable/bg_head_more"
+                android:scaleType="center"
+                android:src="@drawable/icon_head_more"
+                android:visibility="visible" />
+
+            <ProgressBar
+                android:id="@+id/catory_head_progressBar"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dip"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <WebView
+            android:id="@+id/catory_wv_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/catory_rl_seach_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <include layout="@layout/head" />
+
+        <RadioGroup
+            android:id="@+id/catory_rg_orderby"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/head_rl"
+            android:background="@drawable/bg_menu_lable"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="visible" >
+
+            <RadioButton
+                android:id="@+id/catory_rbtn_orderby_attention"
+                style="@style/seachtext"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:checked="true"
+                android:text="人气" />
+
+            <RadioButton
+                android:id="@+id/catory_rbtn_orderby_sells"
+                style="@style/seachtext"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:text="销量" />
+
+            <RadioButton
+                android:id="@+id/catory_rbtn_orderby_price"
+                style="@style/seachtext"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:checked="true"
+                android:text="价格" />
+
+            <RadioButton
+                android:id="@+id/catory_rbtn_orderby_credit"
+                style="@style/seachtext"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:text="信誉" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/catory_ll_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/catory_rg_orderby"
+            android:background="#80111111"
+            android:orientation="horizontal" >
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
+                android:text="数据正在疯狂加载中,请稍候......."
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/catory_fl_content_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/catory_ll_top" >
+
+            <ListView
+                android:id="@+id/catory_lv_content_imgs"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#D9D9D9"
+                android:cacheColorHint="#D9D9D9" />
+
+            <LinearLayout
+                android:id="@+id/catory_ll_to_refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:layout_width="120dip"
+                    android:layout_height="120dip"
+                    android:src="@drawable/refresh_button" >
+                </ImageView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="各种不给力,请刷新重试" />
+            </LinearLayout>
+        </FrameLayout>
+    </RelativeLayout>
+
+</ViewFlipper>

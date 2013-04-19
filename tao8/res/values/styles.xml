@@ -58,8 +58,18 @@
         <item name="android:background">@drawable/bg_product_lable_item</item>
         <item name="android:padding">8dip</item>
     </style>
-        <declare-styleable name="RoundAngleImageView">
+
+    <declare-styleable name="RoundAngleImageView">
         <attr name="roundWidth" format="dimension" />
         <attr name="roundHeight" format="dimension" />
     </declare-styleable>
+
+    <style name="seachtext">
+        <item name="android:textColor">@color/seach_text_color</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/coupon_everyday_tab</item>
+    </style>
+
 </resources>
