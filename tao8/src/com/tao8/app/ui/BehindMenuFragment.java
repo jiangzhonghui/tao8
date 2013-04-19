@@ -27,7 +27,6 @@ import com.tao8.app.util.CommonUtil;
 public class BehindMenuFragment extends Fragment implements OnClickListener {
 
 	private ImageView loginImageView;
-	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,22 +48,30 @@ public class BehindMenuFragment extends Fragment implements OnClickListener {
 				.findViewById(R.id.behind_menu_tv_feedback);
 		RelativeLayout wdtbRelativeLayout = (RelativeLayout) v
 				.findViewById(R.id.behind_menu_rl_wdtb);
-		/////////////////////////////
-			RelativeLayout containerRelativeLayout = (RelativeLayout) v.findViewById(R.id.behind_menu_rl_container);
-			// 互动广告调用方式
-//			DomobAdView mAdview320x50 = new DomobAdView(getActivity(), TopConfig.PUBLISHER_ID, DomobAdView.INLINE_SIZE_320X50);
-			//将广告View增加到视图中。
-//			containerRelativeLayout.addView(mAdview320x50);
-		/////////////////////////////
-			
-			//Banner广告---------------------------------------------------------------------------------------------------------------------------------			
-			// 显示推广条
-			
-			bannerView bannerView = BannerSDK.getInstance(getActivity()).getBanner();
-			containerRelativeLayout.addView(bannerView);
-			// 推广条轮转
-			BannerSDK.getInstance(getActivity()).showBanner(bannerView);
-	//Banner广告---------------------------------------------------------------------------------------------------------------------------------	
+		RelativeLayout tjbRelativeLayout = (RelativeLayout) v
+				.findViewById(R.id.behind_menu_rl_tjb);
+		RelativeLayout mzdjRelativeLayout = (RelativeLayout) v
+				.findViewById(R.id.behind_menu_rl_mzdj);
+		loginImageView = (ImageView) v.findViewById(R.id.behind_menu_iv_login);
+		// ///////////////////////////
+		RelativeLayout containerRelativeLayout = (RelativeLayout) v
+				.findViewById(R.id.behind_menu_rl_container);
+		// 互动广告调用方式
+		// DomobAdView mAdview320x50 = new DomobAdView(getActivity(),
+		// TopConfig.PUBLISHER_ID, DomobAdView.INLINE_SIZE_320X50);
+		// 将广告View增加到视图中。
+		// containerRelativeLayout.addView(mAdview320x50);
+		// ///////////////////////////
+
+		// Banner广告---------------------------------------------------------------------------------------------------------------------------------
+		// 显示推广条
+
+		bannerView bannerView = BannerSDK.getInstance(getActivity())
+				.getBanner();
+		containerRelativeLayout.addView(bannerView);
+		// 推广条轮转
+		BannerSDK.getInstance(getActivity()).showBanner(bannerView);
+		// Banner广告---------------------------------------------------------------------------------------------------------------------------------
 		lmllRelativeLayout.setOnClickListener(this);
 		czzxRelativeLayout.setOnClickListener(this);
 		tttjRelativeLayout.setOnClickListener(this);
@@ -72,7 +79,8 @@ public class BehindMenuFragment extends Fragment implements OnClickListener {
 		aboutTextView.setOnClickListener(this);
 		feedbackTextView.setOnClickListener(this);
 		wdtbRelativeLayout.setOnClickListener(this);
-		loginImageView = (ImageView) v.findViewById(R.id.behind_menu_iv_login);
+		tjbRelativeLayout.setOnClickListener(this);
+		mzdjRelativeLayout.setOnClickListener(this);
 		loginImageView.setOnClickListener(this);
 		sjfyRelativeLayout.setOnClickListener(this);
 		return v;
@@ -87,8 +95,9 @@ public class BehindMenuFragment extends Fragment implements OnClickListener {
 					ViewPagerActivity fca = (ViewPagerActivity) getActivity();
 					fca.client.authorize(fca);
 				}
-			}else {
-				v.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake));
+			} else {
+				v.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+						R.anim.shake));
 				Toast.makeText(getActivity(), "网络不给力,检查网络", 0).show();
 			}
 			break;
@@ -102,10 +111,7 @@ public class BehindMenuFragment extends Fragment implements OnClickListener {
 			if (BuildConfig.DEBUG) {
 				Toast.makeText(getActivity(), "类目浏览", 0).show();
 			}
-			// Intent intent = new Intent(getActivity(),
-			// PullToRefreshActivity.class);
-			// getActivity().startActivity(intent);
-			switchFragment(new SeachFragment());
+			switchFragment(new CatoryFragment());
 			break;
 		case R.id.behind_menu_rl_tttj:
 			if (BuildConfig.DEBUG) {
@@ -136,6 +142,18 @@ public class BehindMenuFragment extends Fragment implements OnClickListener {
 			}
 			switchFragment(new TryoutFragment());
 			break;
+		case R.id.behind_menu_rl_tjb:
+			if (BuildConfig.DEBUG) {
+				Toast.makeText(getActivity(), "淘金币", 0).show();
+			}
+			switchFragment(new GoldenFragment());
+			break;
+		case R.id.behind_menu_rl_mzdj:
+			if (BuildConfig.DEBUG) {
+				Toast.makeText(getActivity(), "拇指斗价", 0).show();
+			}
+			switchFragment(new SeachFragment());
+			break;
 		default:
 			break;
 		}
@@ -155,11 +173,12 @@ public class BehindMenuFragment extends Fragment implements OnClickListener {
 		 * ra.switchContent(fragment); }
 		 */
 	}
+
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		YjfSDK.getInstance(getActivity(), null).recordAppClose();
 		super.onDestroy();
 	}
-	
+
 }

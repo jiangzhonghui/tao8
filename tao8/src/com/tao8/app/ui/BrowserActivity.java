@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -38,7 +41,6 @@ public class BrowserActivity extends BaseFragmentActivity implements
 	private ImageView nextButton;
 	private ImageView previewButton;
 	private ImageView closeButton;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -126,7 +128,9 @@ public class BrowserActivity extends BaseFragmentActivity implements
 
 				@Override
 				public boolean shouldOverrideUrlLoading(WebView view, String url) {
-					System.out.println("url " + url);
+					if (BuildConfig.DEBUG) {
+						System.out.println("url " + url);
+					}
 					// Toast.makeText(getApplicationContext(), url+"",
 					// 0).show();
 					if (url.startsWith("com.tao8.app://authorize#")
@@ -184,6 +188,8 @@ public class BrowserActivity extends BaseFragmentActivity implements
 			}
 			break;
 		case R.id.browser_im_close:
+			// 获得控制键盘的类的对象  
+//			this.onKeyDown(KeyEvent.KEYCODE_BACK, null);
 			onBackPressed();
 			break;
 		default:

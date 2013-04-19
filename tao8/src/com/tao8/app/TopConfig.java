@@ -1,5 +1,6 @@
 package com.tao8.app;
 
+import com.tao8.app.ui.MyTaoBaoFragment;
 import com.taobao.top.android.TopAndroidClient;
 
 public class TopConfig {
@@ -14,6 +15,5 @@ public class TopConfig {
 	//public static Long getDataTime = 0l;
 	public static final String  PUBLISHER_ID = "56OJzRM4uNV1fROCmE";
 	public static final String WAPS_ID = "25e3c86c50858009aa5eadc7113be57e";
-
 
 }

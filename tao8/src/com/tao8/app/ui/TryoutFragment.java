@@ -71,7 +71,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 	private TryoutAdapter tryoutAdapter;
 	private SharedPreferences sharedPreferences;
 	private int pageSize = 100;
-	private PopupWindow popupWindow;
+	public PopupWindow popupWindow;
 	private LinearLayout topLayout;
 	private long getDataTime;
 	private DomobAdView mAdview320x50;

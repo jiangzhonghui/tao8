@@ -2,6 +2,8 @@ package com.tao8.app.ad;
 
 import com.tao8.app.AppManager;
 import com.tao8.app.TopConfig;
+import com.tao8.app.cache.util.ImageLoader;
+import com.tao8.app.util.CommonUtil;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -49,7 +51,7 @@ public class QuitPopAd {
 		}else{
 			view = getQuitView_Landscape(context, dialog);
 		}
-		if(view != null){
+		if(view != null&&CommonUtil.checkNetState(context)){
 			dialog.setContentView(view);
 			dialog.show();
 		}else{
@@ -62,6 +64,8 @@ public class QuitPopAd {
 					if(dialog != null){
 						dialog.cancel();
 					}
+					new ImageLoader(context).clearCache();
+					AppConnect.getInstance(context).finalize();
 					AppManager.getAppManager().AppExit(context);
 				}
 			})

@@ -16,7 +16,9 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +45,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,7 +68,7 @@ import com.taobao.top.android.api.ApiError;
 import com.taobao.top.android.auth.AccessToken;
 
 public class SeachFragment extends Fragment implements OnClickListener,
-		OnItemClickListener, OnCheckedChangeListener, OnScrollListener {
+		OnItemClickListener, OnCheckedChangeListener, OnScrollListener, TextWatcher {
 
 	public static final String REBATE_DETAIL_ACTION = "com.emar.egou.app.rebate_detail";
 	private static final String TAG = "SearchActivity";
@@ -77,7 +80,6 @@ public class SeachFragment extends Fragment implements OnClickListener,
 	private Button seachButton;
 	private SharedPreferences sharedPreferences;
 	private boolean flag;
-	private PopupWindow mPopupWindow = null;
 	private RadioButton classButton;
 	private RadioButton historyButton;
 	private SeachHistoryAdapter arrayAdapter;
@@ -101,6 +103,12 @@ public class SeachFragment extends Fragment implements OnClickListener,
 	private int visibleItemCount;
 	private int totalItemCount;
 	private int page_no = 1;
+	private RadioButton attentionRadioButton;
+	private RadioButton creditRadioButton;
+	private RadioButton priceraRadioButton;
+	private RadioButton sellsRadioButton;
+	private RadioGroup orderGroup;
+	private int i;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -116,6 +124,14 @@ public class SeachFragment extends Fragment implements OnClickListener,
 	private void setData() {
 		moreImageView.setVisibility(View.GONE);
 		goMenuTextView.setText("返回");
+		orderGroup.setVisibility(View.VISIBLE);
+		
+		
+		int width = CommonUtil.getScreenWidth(getActivity());
+		attentionRadioButton.setWidth(width / 4);
+		creditRadioButton.setWidth(width / 4);
+		priceraRadioButton.setWidth(width / 4);
+		sellsRadioButton.setWidth(width / 4);
 		// //////////////////
 		taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
 		if (couponAdapter == null) {
@@ -224,6 +240,14 @@ public class SeachFragment extends Fragment implements OnClickListener,
 		goMenuTextView.setOnClickListener(this);
 		imgsListView.setOnItemClickListener(this);
 		imgsListView.setOnScrollListener(this);
+		contentEditText.addTextChangedListener(this);
+		
+		/////
+		attentionRadioButton.setOnClickListener(this);
+		creditRadioButton.setOnClickListener(this);
+		priceraRadioButton.setOnClickListener(this);
+		sellsRadioButton.setOnClickListener(this);
+		
 	}
 
 	private void initData() {
@@ -275,6 +299,12 @@ public class SeachFragment extends Fragment implements OnClickListener,
 		toplLayout = (LinearLayout) view.findViewById(R.id.coupon_ll_top);
 		imgsListView = (ListView) view
 				.findViewById(R.id.coupon_lv_content_imgs);
+		attentionRadioButton = (RadioButton) view.findViewById(R.id.coupon_rbtn_orderby_attention);
+		creditRadioButton = (RadioButton) view.findViewById(R.id.coupon_rbtn_orderby_credit);
+		priceraRadioButton = (RadioButton) view.findViewById(R.id.coupon_rbtn_orderby_price);
+		sellsRadioButton = (RadioButton) view.findViewById(R.id.coupon_rbtn_orderby_sells);
+		orderGroup = (RadioGroup) view.findViewById(R.id.coupon_rg_orderby);
+		
 	}
 
 	@Override
@@ -323,6 +353,41 @@ public class SeachFragment extends Fragment implements OnClickListener,
 			}else {
 				seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, 1);
 			}
+			break;
+			
+		case R.id.catory_rbtn_orderby_attention:
+			if (sort.equalsIgnoreCase("commissionRate_desc")) {
+				break;
+			}
+			sort = "commissionRate_desc";//佣金
+			page_no = 1;
+			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no);
+			break;
+		case R.id.catory_rbtn_orderby_credit:
+			if (sort.equalsIgnoreCase("credit_desc")) {
+				break;
+			}
+			page_no = 1;
+			sort = "credit_desc";//信用等级从高到低
+			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no);
+			break;
+		case R.id.catory_rbtn_orderby_price:
+			if (i%2 == 0) {
+				sort = "price_asc";//折扣价格从低到高
+			}else {
+				sort = "price_desc";//折扣价格从高到低
+			}
+			i++;
+			page_no = 1;
+			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no);
+			break;
+		case R.id.catory_rbtn_orderby_sells:
+			if (sort.equalsIgnoreCase("volume_desc")) {
+				break;
+			}
+			sort = "volume_desc";//成交量
+			page_no = 1;
+			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no);
 			break;
 		case R.id.head_tv_go_menu:
 			view.showNext();
@@ -433,40 +498,6 @@ public class SeachFragment extends Fragment implements OnClickListener,
 		}
 	}
 
-	/*
-	 * @Override public void onFocusChange(View v, boolean hasFocus) {
-	 * 
-	 * if (hasFocus) { View view = View.inflate(getApplicationContext(),
-	 * R.layout.seach_popu_seach_history, null); ListView listView = (ListView)
-	 * view.findViewById(R.id.seach_popu_lv_history); int width =
-	 * contentEditText.getWidth(); if (mPopupWindow==null) { mPopupWindow = new
-	 * PopupWindow(view,width,width); }
-	 * mPopupWindow.setBackgroundDrawable(getResources
-	 * ().getDrawable(R.drawable.review_bg_blue)); listView.setAdapter(new
-	 * ArrayAdapter
-	 * <String>(getApplicationContext(),R.layout.seach_content_item_textview,
-	 * autoStrings)); mPopupWindow.showAsDropDown(contentEditText); }else { if
-	 * (mPopupWindow!=null&&mPopupWindow.isShowing()) { mPopupWindow.dismiss();
-	 * } }
-	 * 
-	 * }
-	 */
-
-	/*
-	 * @Override public void onItemClick(AdapterView<?> parent, View view, int
-	 * position, long id) { // TODO Auto-generated method stub RelativeLayout
-	 * itemsLayout = (RelativeLayout)
-	 * view.findViewById(R.id.seach_content_if_group_detail_items); ImageView
-	 * iconImageView = (ImageView)
-	 * view.findViewById(R.id.seach_content_iv_icon); if
-	 * (itemsLayout.getVisibility()==View.VISIBLE) {
-	 * iconImageView.setImageDrawable
-	 * (getResources().getDrawable(R.drawable.ic_seach_list_more));
-	 * itemsLayout.setVisibility(View.GONE); }else {
-	 * iconImageView.setImageDrawable
-	 * (getResources().getDrawable(R.drawable.ic_seach_list_nomore));
-	 * itemsLayout.setVisibility(View.VISIBLE); } }
-	 */
 
 	// 从下到上
 	private static AnimationSet outIn(Context context) {
@@ -625,5 +656,28 @@ public class SeachFragment extends Fragment implements OnClickListener,
 		}
 		taobaokeCouponItems = null;
 		super.onDestroy();
+	}
+
+	@Override
+	public void afterTextChanged(Editable arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		if (!TextUtils.isEmpty(contentEditText.getText().toString())) {
+			clearImageView.setVisibility(View.VISIBLE);
+		}else {
+			clearImageView.setVisibility(View.INVISIBLE);
+		}
+		
 	}
 }

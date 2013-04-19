@@ -22,18 +22,6 @@ public class SplashScreen extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
-		/////////////////////////////
-		// 初始化统计器，并通过代码设置WAPS_ID, WAPS_PID
-		AppConnect.getInstance(TopConfig.WAPS_ID, "WAPS", this);
-		 // 使用自定义的OffersWebView
-		AppConnect.getInstance(this).setAdViewClassName(this.getPackageName() + ".ad.MyAdView");
-		   // 初始化自定义广告数据
-    	AppConnect.getInstance(this).initAdInfo();
-    	// 初始化插屏广告数据
-    	AppConnect.getInstance(this).initPopAd(this);
-		////////////////////////////
-    	
-    	
 		splashAd = new DomobSplashAd(this,TopConfig.PUBLISHER_ID);
 		splashAd.setSplashAdListener(new DomobSplashAdListener() {
 			@Override
