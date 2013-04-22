@@ -1,5 +1,6 @@
 package com.tao8.app.ad;
 
+import com.emar.escore.sdk.YjfSDK;
 import com.tao8.app.AppManager;
 import com.tao8.app.TopConfig;
 import com.tao8.app.cache.util.ImageLoader;
@@ -64,6 +65,7 @@ public class QuitPopAd {
 					if(dialog != null){
 						dialog.cancel();
 					}
+					YjfSDK.getInstance(context, null).recordAppClose();
 					new ImageLoader(context).clearCache();
 					AppConnect.getInstance(context).finalize();
 					AppManager.getAppManager().AppExit(context);
