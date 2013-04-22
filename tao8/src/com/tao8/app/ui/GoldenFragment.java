@@ -48,6 +48,8 @@ import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,6 +76,12 @@ public class GoldenFragment extends Fragment implements OnClickListener,
 	private int firstVisibleItem;
 	private int visibleItemCount;
 	private int totalItemCount;
+	private int i;
+//	private RadioButton attentionRadioButton;
+//	private RadioButton creditRadioButton;
+//	private RadioButton priceraRadioButton;
+//	private RadioButton sellsRadioButton;
+//	private RadioGroup orderGroup;
 	private static final int CACHE_TIME = 60 * 1000 * 60 * 24;
 	protected static final String TAG = "GoldenFragment";
 	private static final String COIN_URL  = "http://i.m.taobao.com/coin/take_coin.htm";
@@ -94,11 +102,25 @@ public class GoldenFragment extends Fragment implements OnClickListener,
 		imgsListView.setOnItemClickListener(this);
 		toFreshLayout.setOnClickListener(this);
 		imgsListView.setOnScrollListener(this);
+		
+		////////////////
+//		attentionRadioButton.setOnClickListener(this);
+//		priceraRadioButton.setOnClickListener(this);
+//		sellsRadioButton.setOnClickListener(this);
+//		creditRadioButton.setOnClickListener(this);
 	}
 
 	private void setData() {
+//		int width = CommonUtil.getScreenWidth(getActivity());
+//		attentionRadioButton.setWidth(width / 4);
+//		creditRadioButton.setWidth(width / 4);
+//		priceraRadioButton.setWidth(width / 4);
+//		sellsRadioButton.setWidth(width / 4);
+		
+		
 		moreImageView.setImageResource(R.drawable.ic_taojb);
 		lableTextView.setText("淘金币");
+//		orderGroup.setVisibility(View.VISIBLE);
 		taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
 		if (tryoutAdapter == null) {
 			tryoutAdapter = new TryoutAdapter(getActivity(),
@@ -141,6 +163,14 @@ public class GoldenFragment extends Fragment implements OnClickListener,
 		toFreshLayout = (LinearLayout) view
 				.findViewById(R.id.golden_ll_to_refresh);
 		topLayout = (LinearLayout) view.findViewById(R.id.golden_ll_top);
+		
+		//////
+//		attentionRadioButton = (RadioButton) view.findViewById(R.id.coupon_rbtn_orderby_attention);
+//		creditRadioButton = (RadioButton) view.findViewById(R.id.coupon_rbtn_orderby_credit);
+//		priceraRadioButton = (RadioButton) view.findViewById(R.id.coupon_rbtn_orderby_price);
+//		sellsRadioButton = (RadioButton) view.findViewById(R.id.coupon_rbtn_orderby_sells);
+//		orderGroup = (RadioGroup) view.findViewById(R.id.coupon_rg_orderby);
+		////
 		
 	}
 
@@ -316,6 +346,42 @@ public class GoldenFragment extends Fragment implements OnClickListener,
 				seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no);
 			}
 			break;
+			
+			
+//		case R.id.coupon_rbtn_orderby_attention:
+//			if (sort.equalsIgnoreCase("commissionRate_desc")) {
+//				break;
+//			}
+//			sort = "commissionRate_desc";//佣金
+//			page_no = 1;
+//			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no);
+//			break;
+//		case R.id.coupon_rbtn_orderby_credit:
+//			if (sort.equalsIgnoreCase("credit_desc")) {
+//				break;
+//			}
+//			page_no = 1;
+//			sort = "credit_desc";//信用等级从高到低
+//			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no);
+//			break;
+//		case R.id.coupon_rbtn_orderby_price:
+//			if ( i%2 == 0) {
+//				sort = "price_asc";//折扣价格从低到高
+//			}else {
+//				sort = "price_desc";//折扣价格从高到低
+//			}
+//			i++;
+//			page_no = 1;
+//			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no);
+//			break;
+//		case R.id.coupon_rbtn_orderby_sells:
+//			if (sort.equalsIgnoreCase("volume_desc")) {
+//				break;
+//			}
+//			sort = "volume_desc";//成交量
+//			page_no = 1;
+//			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no);
+//			break;
 		default:
 			break;
 		}

@@ -203,12 +203,12 @@ public class CouponFragment extends Fragment implements OnClickListener,
 						toplLayout.setVisibility(View.GONE);
 						imgsListView.setVisibility(View.VISIBLE);
 						ArrayList<TaobaokeCouponItem> results = (ArrayList) result;
-						if (BuildConfig.DEBUG) {
-							Toast.makeText(getActivity(),
-									results.size() + "  总共", 1).show();
-						}
+					
 						if (results != null && results.size() > 0) {
-
+							if (BuildConfig.DEBUG) {
+								Toast.makeText(getActivity(),
+										results.size() + "  总共", 1).show();
+							}
 							if (page_no == 1) {
 								taobaokeCouponItems.clear();
 								taobaokeCouponItems.addAll(results);

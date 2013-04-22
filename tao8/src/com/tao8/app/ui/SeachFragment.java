@@ -355,7 +355,7 @@ public class SeachFragment extends Fragment implements OnClickListener,
 			}
 			break;
 			
-		case R.id.catory_rbtn_orderby_attention:
+		case R.id.coupon_rbtn_orderby_attention:
 			if (sort.equalsIgnoreCase("commissionRate_desc")) {
 				break;
 			}
@@ -363,7 +363,7 @@ public class SeachFragment extends Fragment implements OnClickListener,
 			page_no = 1;
 			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no);
 			break;
-		case R.id.catory_rbtn_orderby_credit:
+		case R.id.coupon_rbtn_orderby_credit:
 			if (sort.equalsIgnoreCase("credit_desc")) {
 				break;
 			}
@@ -371,7 +371,7 @@ public class SeachFragment extends Fragment implements OnClickListener,
 			sort = "credit_desc";//信用等级从高到低
 			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no);
 			break;
-		case R.id.catory_rbtn_orderby_price:
+		case R.id.coupon_rbtn_orderby_price:
 			if (i%2 == 0) {
 				sort = "price_asc";//折扣价格从低到高
 			}else {
@@ -381,7 +381,7 @@ public class SeachFragment extends Fragment implements OnClickListener,
 			page_no = 1;
 			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false, page_no);
 			break;
-		case R.id.catory_rbtn_orderby_sells:
+		case R.id.coupon_rbtn_orderby_sells:
 			if (sort.equalsIgnoreCase("volume_desc")) {
 				break;
 			}
@@ -577,11 +577,11 @@ public class SeachFragment extends Fragment implements OnClickListener,
 						imgsListView.setVisibility(View.VISIBLE);
 						pbHead.setVisibility(View.GONE);
 						ArrayList<TaobaokeCouponItem> results = (ArrayList) result;
-						if (BuildConfig.DEBUG) {
-							Toast.makeText(getActivity(),
-									results.size() + "  总共", 1).show();
-						}
 						if (results != null && results.size() > 0) {
+							if (BuildConfig.DEBUG) {
+								Toast.makeText(getActivity(),
+										results.size() + "  总共", 1).show();
+							}
 
 							if (page_no == 1) {
 								taobaokeCouponItems.clear();
@@ -631,6 +631,7 @@ public class SeachFragment extends Fragment implements OnClickListener,
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		if ((totalItemCount - firstVisibleItem) == visibleItemCount
 				&& scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+			 
 			page_no  = (taobaokeCouponItems.size() / pageSize) + 1;
 
 			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false,

@@ -166,7 +166,8 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 				TryoutFragment tryoutFragment = (TryoutFragment) item;
 				if (tryoutFragment.popupWindow!=null&&tryoutFragment.popupWindow.isShowing()) {
 					tryoutFragment.popupWindow.dismiss();
-				}
+				}else
+					QuitPopAd.getInstance().show(this);
 			}
 			else {
 				QuitPopAd.getInstance().show(this);

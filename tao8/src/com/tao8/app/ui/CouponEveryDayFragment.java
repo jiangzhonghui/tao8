@@ -260,11 +260,11 @@ public class CouponEveryDayFragment extends Fragment implements
 						topLayout.setVisibility(View.GONE);
 						pb.setVisibility(View.GONE);
 						final ArrayList<TaobaokeCouponItem> results = (ArrayList) result;
-						if (BuildConfig.DEBUG && results != null) {
-							Toast.makeText(getActivity(),
-									results.size() + "  总共", 1).show();
-						}
 						if (results != null && results.size() > 0) {
+							if (BuildConfig.DEBUG && results != null) {
+								Toast.makeText(getActivity(),
+										results.size() + "  总共", 1).show();
+							}
 							if (page_no == 1) {
 								taobaokeCouponItems.clear();
 								taobaokeCouponItems.addAll(results);
