@@ -6,6 +6,47 @@
 
     <include layout="@layout/head" />
 
+    <RadioGroup
+        android:id="@+id/coupon_rg_orderby"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/head_rl"
+        android:background="@drawable/bg_menu_lable"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <RadioButton
+            android:id="@+id/coupon_rbtn_orderby_attention"
+            style="@style/seachtext"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:checked="true"
+            android:text="人气" />
+
+        <RadioButton
+            android:id="@+id/coupon_rbtn_orderby_sells"
+            style="@style/seachtext"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:text="销量" />
+
+        <RadioButton
+            android:id="@+id/coupon_rbtn_orderby_price"
+            style="@style/seachtext"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:checked="true"
+            android:text="价格" />
+
+        <RadioButton
+            android:id="@+id/coupon_rbtn_orderby_credit"
+            style="@style/seachtext"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:text="信誉" />
+    </RadioGroup>
+
     <LinearLayout
         android:id="@+id/golden_ll_top"
         android:layout_width="match_parent"
@@ -47,6 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:visibility="gone"
             android:orientation="vertical" >
 
             <ImageView
