@@ -60,6 +60,7 @@
         </activity>
         <activity
             android:name=".ui.BrowserActivity"
+            android:windowSoftInputMode="adjustPan"
             android:configChanges="orientation|keyboardHidden|screenSize" >
             <intent-filter>
                 <action android:name="com.tao8.app" />
