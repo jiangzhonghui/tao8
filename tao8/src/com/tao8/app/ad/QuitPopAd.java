@@ -66,13 +66,9 @@ public class QuitPopAd {
 						dialog.cancel();
 					}
 					AppManager.getAppManager().AppExit(context);
-					new Thread(){
-						public void run() {
-							YjfSDK.getInstance(context, null).recordAppClose();
-							new ImageLoader(context).clearCache();
-							AppConnect.getInstance(context).finalize();
-						};
-					}.start();
+					YjfSDK.getInstance(context, null).recordAppClose();
+					new ImageLoader(context).clearCache();
+					AppConnect.getInstance(context).finalize();
 				}
 			})
 			.setNegativeButton("取消", new AlertDialog.OnClickListener(){
