@@ -246,20 +246,20 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 			Editor edit = sharedPreferences.edit();
 			edit.putString("phoneNum", phoneNum);
 			edit.commit();
-			if (resultMap != null) {
+			if (resultMap != null&&resultMap.get(q)!=null) {
 				SearchItem searchItem = resultMap.get(q);
 				if (searchItem != null) {
 					userId = sharedPreferences.getLong("userId", 0l);
 					AccessToken accessToken = TopConfig.client
 							.getAccessToken(userId);
-					String tql = "";
-					if (accessToken == null || userId == 0l) {
-						Toast t = Toast.makeText(getActivity(), "请先授权",
-								Toast.LENGTH_SHORT);
-						t.show();
-						TopConfig.client.authorize(getActivity());
-						return;
-					}
+//					String tql = "";
+//					if (accessToken == null || userId == 0l) {
+//						Toast t = Toast.makeText(getActivity(), "请先授权",
+//								Toast.LENGTH_SHORT);
+//						t.show();
+//						TopConfig.client.authorize(getActivity());
+//						return;
+//					}
 					Intent intent = new Intent();
 					if (searchItem.getClick_url() != null) {
 						String uri = CommonUtil.generateTopClickUri(
@@ -272,6 +272,8 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 						getActivity().startActivity(intent);
 					}
 				}
+			}else {
+				Toast.makeText(getActivity(), "正在获取价格信息, 请稍候...", 0).show();
 			}
 			break;
 		default:
@@ -509,26 +511,51 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 											.matcher(resultPrice);
 									if (matcher.find()) {
 										resultPrice = matcher.group();
-										if ((mon - Float
-												.parseFloat(resultPrice)) < 10) {
-											LogUtil.i(
-													TAG,
-													Float.parseFloat(resultPrice)
-															+ "  Float.parseFloat(resultPrice)");
-											LogUtil.i(
-													TAG,
-													mon
-															- Float.parseFloat(resultPrice)
-															+ "  mon-Float.parseFloat(resultPrice)");
-											Toast.makeText(getActivity(),
-													resultPrice, 1).show();
-											resultMap = new HashMap<String, SearchItem>();
-											resultMap.put(
-													RechargeFragment.this.q,
-													results.get(i));
-											priceTextView.setText(resultPrice
-													+ " 元");
-											break;
+										if (mon==30) {
+											if ((mon - Float
+													.parseFloat(resultPrice)) < 5) {
+												LogUtil.i(
+														TAG,
+														Float.parseFloat(resultPrice)
+														+ "  Float.parseFloat(resultPrice)");
+												LogUtil.i(
+														TAG,
+														mon
+														- Float.parseFloat(resultPrice)
+														+ "  mon-Float.parseFloat(resultPrice)");
+												Toast.makeText(getActivity(),
+														resultPrice, 1).show();
+												resultMap = new HashMap<String, SearchItem>();
+												resultMap.put(
+														RechargeFragment.this.q,
+														results.get(i));
+												priceTextView.setText(resultPrice
+														+ " 元");
+												break;
+											}
+										}else {
+											if ((mon - Float
+													.parseFloat(resultPrice)) < 10) {
+												LogUtil.i(
+														TAG,
+														Float.parseFloat(resultPrice)
+														+ "  Float.parseFloat(resultPrice)");
+												LogUtil.i(
+														TAG,
+														mon
+														- Float.parseFloat(resultPrice)
+														+ "  mon-Float.parseFloat(resultPrice)");
+												Toast.makeText(getActivity(),
+														resultPrice, 1).show();
+												resultMap = new HashMap<String, SearchItem>();
+												resultMap.put(
+														RechargeFragment.this.q,
+														results.get(i));
+												priceTextView.setText(resultPrice
+														+ " 元");
+												break;
+											}
+											
 										}
 									}
 								}

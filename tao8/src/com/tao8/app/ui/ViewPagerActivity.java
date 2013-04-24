@@ -33,6 +33,7 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 
 		super.onCreate(savedInstanceState);
 		try {
+			System.out.println("ViewPager ..........................onCreate");
 			if (vp == null) {
 				vp = new ViewPager(this);
 			}
@@ -116,8 +117,8 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 			 * for (int color : COLORS) mFragments.add(new
 			 * ColorFragment(color)); }
 			 */
-			mFragments.add(new TryoutFragment());
 			mFragments.add(new RechargeFragment());
+			mFragments.add(new TryoutFragment());
 			mFragments.add(new CouponEveryDayFragment());
 			mFragments.add(new CouponFragment());
 			mFragments.add(new SeachFragment());
@@ -153,23 +154,25 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 				} else {
 					QuitPopAd.getInstance().show(this);
 				}
-			} else if (item.getClass().getName().equalsIgnoreCase(CatoryFragment.class.getName())) {
+			} else if (item.getClass().getName()
+					.equalsIgnoreCase(CatoryFragment.class.getName())) {
 				CatoryFragment catoryFragment = (CatoryFragment) item;
 				View currentView = catoryFragment.mView.getCurrentView();
-				if (currentView.getId()==R.id.catory_rl_seach_detail) {
+				if (currentView.getId() == R.id.catory_rl_seach_detail) {
 					catoryFragment.mView.showNext();
 					return true;
-				}else {
+				} else {
 					QuitPopAd.getInstance().show(this);
 				}
-			}else if (item.getClass().getName().equalsIgnoreCase(TryoutFragment.class.getName())) {
+			} else if (item.getClass().getName()
+					.equalsIgnoreCase(TryoutFragment.class.getName())) {
 				TryoutFragment tryoutFragment = (TryoutFragment) item;
-				if (tryoutFragment.popupWindow!=null&&tryoutFragment.popupWindow.isShowing()) {
+				if (tryoutFragment.popupWindow != null
+						&& tryoutFragment.popupWindow.isShowing()) {
 					tryoutFragment.popupWindow.dismiss();
-				}else
+				} else
 					QuitPopAd.getInstance().show(this);
-			}
-			else {
+			} else {
 				QuitPopAd.getInstance().show(this);
 			}
 		}
@@ -183,18 +186,20 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 		vp = null;
 		// AppConnect.getInstance(this).finalize();
 	}
+
 	@Override
 	protected void onStart() {
-		/////////////////////////////
+		super.onStart();
+		// ///////////////////////////
 		// 初始化统计器，并通过代码设置WAPS_ID, WAPS_PID
 		AppConnect.getInstance(TopConfig.WAPS_ID, "WAPS", this);
-		 // 使用自定义的OffersWebView
-		AppConnect.getInstance(this).setAdViewClassName(this.getPackageName() + ".ad.MyAdView");
-		   // 初始化自定义广告数据
-    	AppConnect.getInstance(this).initAdInfo();
-    	// 初始化插屏广告数据
-    	AppConnect.getInstance(this).initPopAd(this);
-		////////////////////////////
-		super.onStart();
+		// 使用自定义的OffersWebView
+		AppConnect.getInstance(this).setAdViewClassName(
+				this.getPackageName() + ".ad.MyAdView");
+		// 初始化自定义广告数据
+		AppConnect.getInstance(this).initAdInfo();
+		// 初始化插屏广告数据
+		AppConnect.getInstance(this).initPopAd(this);
+		// //////////////////////////
 	}
 }
