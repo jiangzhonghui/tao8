@@ -23,6 +23,7 @@ import com.tao8.app.util.LogUtil;
 public class ViewPagerActivity extends BaseFragmentActivity {
 
 	public static ViewPager vp;
+	private ArrayList<Fragment> mFragments;
 
 	/*
 	 * public ViewPagerActivity() { //super(R.string.viewpager); }
@@ -32,12 +33,25 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
+		
+		mFragments = new ArrayList<Fragment>();
+		/*
+		 * for (int color : COLORS) mFragments.add(new
+		 * ColorFragment(color)); }
+		 */
+		mFragments.add(new RechargeFragment());
+		mFragments.add(new TryoutFragment());
+		mFragments.add(new CouponEveryDayFragment());
+		mFragments.add(new CouponFragment());
+		mFragments.add(new SeachFragment());
+		mFragments.add(new MyTaoBaoFragment());
+		mFragments.add(new GoldenFragment());
+		mFragments.add(new CatoryFragment());
+		
 		try {
 			System.out.println("ViewPager ..........................onCreate");
-			if (vp == null) {
-				vp = new ViewPager(this);
-			}
-			vp.setAdapter(new ColorPagerAdapter(getSupportFragmentManager()));
+			vp = new ViewPager(this);
+			vp.setAdapter(new ColorPagerAdapter(getSupportFragmentManager(),mFragments));
 			vp.setId("VP".hashCode());
 			setContentView(vp);
 		} catch (Exception e) {
@@ -110,21 +124,10 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 
 		private ArrayList<Fragment> mFragments;
 
-		public ColorPagerAdapter(FragmentManager fm) {
+		public ColorPagerAdapter(FragmentManager fm,ArrayList<Fragment> mFragments) {
 			super(fm);
-			mFragments = new ArrayList<Fragment>();
-			/*
-			 * for (int color : COLORS) mFragments.add(new
-			 * ColorFragment(color)); }
-			 */
-			mFragments.add(new RechargeFragment());
-			mFragments.add(new TryoutFragment());
-			mFragments.add(new CouponEveryDayFragment());
-			mFragments.add(new CouponFragment());
-			mFragments.add(new SeachFragment());
-			mFragments.add(new MyTaoBaoFragment());
-			mFragments.add(new GoldenFragment());
-			mFragments.add(new CatoryFragment());
+			this.mFragments = mFragments;
+		
 		}
 
 		@Override
@@ -187,19 +190,33 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 		// AppConnect.getInstance(this).finalize();
 	}
 
+	
+//	@Override
+//	protected void onRestart() {
+//		Intent intent = getIntent();
+//		if (intent != null) {
+//			Uri data = intent.getData();
+//			if (data != null && data.getScheme().contains("com.tao8.app")) {
+//				switchContent(new MyTaoBaoFragment());
+//				return;
+//			}
+//		}
+//		super.onRestart();
+//	}
+	
 	@Override
-	protected void onStart() {
-		super.onStart();
+	protected void onResume() {
 		// ///////////////////////////
-		// 初始化统计器，并通过代码设置WAPS_ID, WAPS_PID
-		AppConnect.getInstance(TopConfig.WAPS_ID, "WAPS", this);
-		// 使用自定义的OffersWebView
-		AppConnect.getInstance(this).setAdViewClassName(
-				this.getPackageName() + ".ad.MyAdView");
-		// 初始化自定义广告数据
-		AppConnect.getInstance(this).initAdInfo();
-		// 初始化插屏广告数据
-		AppConnect.getInstance(this).initPopAd(this);
-		// //////////////////////////
+				// 初始化统计器，并通过代码设置WAPS_ID, WAPS_PID
+				AppConnect.getInstance(TopConfig.WAPS_ID, "WAPS", this);
+				// 使用自定义的OffersWebView
+				AppConnect.getInstance(this).setAdViewClassName(
+						this.getPackageName() + ".ad.MyAdView");
+				// 初始化自定义广告数据
+				AppConnect.getInstance(this).initAdInfo();
+				// 初始化插屏广告数据
+				AppConnect.getInstance(this).initPopAd(this);
+				// //////////////////////////
+		super.onResume();
 	}
 }
