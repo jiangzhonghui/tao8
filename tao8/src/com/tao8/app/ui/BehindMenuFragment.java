@@ -65,7 +65,8 @@ public class BehindMenuFragment extends Fragment implements OnClickListener {
 
 		// Banner广告---------------------------------------------------------------------------------------------------------------------------------
 		// 显示推广条
-
+		// 初始化,当Activity第一次创建时调用,此方法需继承接口UpdateScordNotifier
+		YjfSDK.getInstance(getActivity(), null).initInstance("","","","");
 		bannerView bannerView = BannerSDK.getInstance(getActivity())
 				.getBanner();
 		containerRelativeLayout.addView(bannerView);
