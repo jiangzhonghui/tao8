@@ -9,6 +9,7 @@ import com.tao8.app.AppException;
 import com.tao8.app.BuildConfig;
 import com.tao8.app.R;
 import com.tao8.app.TopConfig;
+import com.tao8.app.adapter.CouponAdapter;
 import com.tao8.app.adapter.TryoutAdapter;
 import com.tao8.app.api.GetTopData;
 import com.tao8.app.api.MyTqlListener;
@@ -234,10 +235,14 @@ public class GoldenFragment extends Fragment implements OnClickListener,
 
 							if (page_no == 1) {
 								taobaokeCouponItems.clear();
-							}
-							taobaokeCouponItems.addAll(results);
-							if (imgsListView.getAdapter() == null) {
+								taobaokeCouponItems.addAll(results);
+								imgsListView.setAdapter(new TryoutAdapter(
+										getActivity(), results));
+							} else {
 								imgsListView.setAdapter(tryoutAdapter);
+								taobaokeCouponItems.addAll(results);
+								tryoutAdapter.notifyDataSetChanged();
+								imgsListView.setSelection(taobaokeCouponItems.size()-results.size());
 							}
 							tryoutAdapter.notifyDataSetChanged();
 							toFreshLayout.setVisibility(View.GONE);
