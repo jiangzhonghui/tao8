@@ -173,12 +173,4 @@ public class BehindMenuFragment extends Fragment implements OnClickListener {
 		 * ra.switchContent(fragment); }
 		 */
 	}
-
-	@Override
-	public void onDestroy() {
-		// TODO Auto-generated method stub
-		YjfSDK.getInstance(getActivity(), null).recordAppClose();
-		super.onDestroy();
-	}
-
 }
