@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.slidingmenu.lib.SlidingMenu;
 import com.tao8.app.BuildConfig;
 import com.tao8.app.R;
 import com.tao8.app.util.CommonUtil;
@@ -47,7 +48,11 @@ public class BrowserActivity extends BaseFragmentActivity implements
 		// requestWindowFeature(Window.FEATURE_PROGRESS);// 让进度条显示在标题栏上
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
+		////////////////防止左滑出菜单
+		getSlidingMenu().setTouchModeAbove(
+				SlidingMenu.TOUCHMODE_MARGIN);
 		setContentView(R.layout.browser);
+		///////////////
 		// 找到view
 		lableTextView = (TextView) findViewById(R.id.head_tv_lable);
 		// //////
