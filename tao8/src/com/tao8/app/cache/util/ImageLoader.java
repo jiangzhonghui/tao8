@@ -99,8 +99,10 @@ public class ImageLoader {
 			InputStream is = conn.getInputStream();
 			OutputStream os = new FileOutputStream(f);
 			CopyStream(is, os);
-			os.close();
 			bitmap = decodeFile(f);
+//			bitmap = BitmapFactory.decodeStream(is);
+			os.close();
+			is.close();
 			return bitmap;
 		} catch (Exception ex) {
 			time++;

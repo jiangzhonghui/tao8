@@ -512,7 +512,9 @@ public class CouponEveryDayFragment extends Fragment implements
 			seachTaobaokeCouponFromKeyWord(keyword, sort, false, false,
 					page_no, null);
 			if (BuildConfig.DEBUG) {
-				Toast.makeText(getActivity(), "滑倒底部了", 1).show();
+				
+				Toast.makeText(getActivity(), "滑倒底部了", 0).show();
+				Toast.makeText(getActivity(), keyword, 1).show();
 			}
 		}
 	}

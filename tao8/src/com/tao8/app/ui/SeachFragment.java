@@ -212,6 +212,8 @@ public class SeachFragment extends Fragment implements OnClickListener,
 					keyword = ((TextView) v).getText().toString();
 					lableTextView.setText(keyword);
 					view.showNext();
+					sellsRadioButton.setChecked(true);
+					sort = "volume_desc";//初始化状态
 					seachTaobaokeCouponFromKeyWord(keyword, sort, false, false,
 							1);
 					break;
@@ -591,6 +593,10 @@ public class SeachFragment extends Fragment implements OnClickListener,
 								imgsListView.setAdapter(couponAdapter);
 								taobaokeCouponItems.addAll(results);
 								couponAdapter.notifyDataSetChanged();
+								if (BuildConfig.DEBUG) {
+									Toast.makeText(getActivity(),
+											taobaokeCouponItems.size() + "  总共", 1).show();
+								}
 								imgsListView.setSelection(taobaokeCouponItems.size()-results.size());
 							}
 							toFreshLayout.setVisibility(View.GONE);

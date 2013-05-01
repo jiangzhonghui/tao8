@@ -429,8 +429,11 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 											resultMap.put(
 													RechargeFragment.this.q,
 													results.get(i));
+											java.text.DecimalFormat   df=new   java.text.DecimalFormat("#0.00"); 
+											float cheap = (mon-Float.parseFloat(resultPrice))/mon;
+											df.format(cheap); 
 											priceTextView.setText(resultPrice
-													+ " 元");
+													+ " 元"+ "  为您节省"+cheap+"%");
 											break;
 										}
 									}
@@ -529,8 +532,10 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 												resultMap.put(
 														RechargeFragment.this.q,
 														results.get(i));
+												Float cheap = (mon-Float.parseFloat(resultPrice))/mon;
+											     String cheapString = String.format("%.5f",cheap);
 												priceTextView.setText(resultPrice
-														+ " 元");
+														+ " 元"+ " 为您节省"+cheapString+"%");
 												break;
 											}
 										}else {
@@ -551,8 +556,10 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 												resultMap.put(
 														RechargeFragment.this.q,
 														results.get(i));
+												Float cheap = (mon-Float.parseFloat(resultPrice))/mon;
+												     String cheapString = String.format("%.5f",cheap);
 												priceTextView.setText(resultPrice
-														+ " 元");
+														+ " 元"+ " 为您节省"+cheapString+"%");
 												break;
 											}
 											
