@@ -36,6 +36,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.tao8.app.BuildConfig;
 import com.tao8.app.TopConfig;
 import com.tao8.app.ui.BrowserActivity;
 import com.taobao.top.android.api.ApiError;
@@ -444,7 +445,9 @@ public class TopAndroidClient {
 					this.generateApiParams(params, token),
 					this.getProtocolParams(), params.getAttachments(),
 					connectTimeout, readTimeout);
-			Log.d(LOG_TAG, jsonStr);
+			if (BuildConfig.DEBUG) {
+				Log.d(LOG_TAG, jsonStr);
+			}
 			handleApiResponse(listener, jsonStr);
 		} catch (Exception e) {
 			Log.e(LOG_TAG, e.getMessage(), e);

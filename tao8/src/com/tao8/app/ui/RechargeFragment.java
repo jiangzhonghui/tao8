@@ -198,7 +198,17 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 		// q = 归属地 +card；
 
 		String subaddress = address.substring(0, 3);
-		q = subaddress + "充值" + " " + card;
+		String mobile ="";
+		if (address.contains("电信")) {
+			mobile = "电信";
+		}
+		if (address.contains("移动")) {
+			mobile = "移动";
+		}
+		if (address.contains("联通")) {
+			mobile = "联通";
+		}
+		q = subaddress +mobile+ " 充值" + " " + card;
 		String sort = "price_asc";
 		if (resultMap == null || resultMap.get(q) == null) {
 			seachTaobaokeFromKeyWord(q, sort, true, false, 1);
