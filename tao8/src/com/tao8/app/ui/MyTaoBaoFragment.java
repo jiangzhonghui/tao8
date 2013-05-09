@@ -1,5 +1,7 @@
 package com.tao8.app.ui;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,7 @@ import cn.waps.AdInfo;
 import cn.waps.AppConnect;
 import cn.waps.SDKUtils;
 
+import com.tao8.app.BuildConfig;
 import com.tao8.app.R;
 import com.tao8.app.TopConfig;
 import com.tao8.app.ad.AppDetail;
@@ -278,6 +281,9 @@ private class GetDiyAdTask extends AsyncTask<Void, Void, Boolean>{
 							
 							@Override
 							public void run() {
+								if (BuildConfig.DEBUG) {
+									System.out.println(list.size());
+								}
 								listView.setAdapter(new MyAdapter(context, list));
 								setListViewHeightBasedOnChildren(recommondListView);
 							}
@@ -347,6 +353,30 @@ private class MyAdapter extends BaseAdapter{
 			@Override
 			public void onClick(View v) {
 				AppConnect.getInstance(context).downloadAd(adInfo.getAdId());
+				//AppConnect.getInstance(context).a(adInfo.getAdPackage(), 0);
+				AppConnect instance = AppConnect.getInstance(context);
+				try {
+//					System.out.println(adInfo.getAction());
+//					System.out.println(adInfo.getAdId());
+					//instance.clickAd(adInfo.getAdId());
+					
+					//instance.downloadAd(adInfo.getAdId());
+					Method declaredMethod = instance.getClass().getDeclaredMethod("a", String.class,int.class);
+					declaredMethod.setAccessible(true);
+					declaredMethod.invoke(instance, adInfo.getAdPackage(),0);
+				} catch (NoSuchMethodException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		ImageView iconImageView = (ImageView) view.findViewById(R.id.ad_im_icon);

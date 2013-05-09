@@ -3,24 +3,41 @@ package com.tao8.app.ui;
 import java.util.ArrayList;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Process;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.LinearLayout.LayoutParams;
 import cn.waps.AppConnect;
 
 import com.slidingmenu.lib.SlidingMenu;
+import com.tao8.app.BuildConfig;
 import com.tao8.app.R;
 import com.tao8.app.TopConfig;
+import com.tao8.app.ad.CustomListViewActivity;
 import com.tao8.app.ad.QuitPopAd;
+import com.tao8.app.ad.RecommendListViewActivity;
+import com.tao8.app.util.CommonUtil;
 import com.tao8.app.util.LogUtil;
 
-public class ViewPagerActivity extends BaseFragmentActivity {
+public class ViewPagerActivity extends BaseFragmentActivity implements OnClickListener {
 
 	public static ViewPager vp;
 	private ArrayList<Fragment> mFragments;
@@ -179,6 +196,23 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 				QuitPopAd.getInstance().show(this);
 			}
 		}
+		if (keyCode==KeyEvent.KEYCODE_MENU) {
+			if (BuildConfig.DEBUG) {
+				Toast.makeText(getApplicationContext(), "menu", 0).show();
+			}
+			View view  = View.inflate(this, R.layout.menu, null);
+			TextView textView1 = (TextView) view.findViewById(R.id.menu_tv_1);
+			TextView textView2 = (TextView)view.findViewById(R.id.menu_tv_2);
+			TextView abouTextView = (TextView)view.findViewById(R.id.menu_tv_about);
+			TextView exitTextView  = (TextView)view.findViewById(R.id.menu_tv_exit);
+			textView1.setOnClickListener(this);
+			textView2.setOnClickListener(this);
+			abouTextView.setOnClickListener(this);
+			exitTextView.setOnClickListener(this);
+			PopupWindow popupWindow = new PopupWindow(view, CommonUtil.getScreenWidth(this), CommonUtil.dip2px(this, 104), true);
+			popupWindow.setBackgroundDrawable(new ColorDrawable(new Color().argb(150, 0, 0, 0)));
+			popupWindow.showAtLocation(vp, Gravity.BOTTOM, CommonUtil.getScreenHeight(this), 0);
+		}
 		return true;
 	}
 
@@ -218,5 +252,64 @@ public class ViewPagerActivity extends BaseFragmentActivity {
 				AppConnect.getInstance(this).initPopAd(this);
 				// //////////////////////////
 		super.onResume();
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(Menu.NONE, 1, Menu.NONE, "精品软件推荐1");
+		menu.add(Menu.NONE, 2, Menu.NONE, "精品软件推荐2");
+		menu.add(Menu.NONE, 3, Menu.NONE, "退出");
+		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.add(Menu.NONE, 1, Menu.NONE, "精品软件推荐1");
+		menu.add(Menu.NONE, 2, Menu.NONE, "精品软件推荐2");
+		menu.add(Menu.NONE, 3, Menu.NONE, "退出");
+		return super.onPrepareOptionsMenu(menu);
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case 1:
+			startActivity(new Intent(getApplicationContext(), CustomListViewActivity.class));
+			break;
+		case 2:
+			startActivity(new Intent(getApplicationContext(), RecommendListViewActivity.class));
+			break;
+		case 3:
+//			int pid = android.os.Process.myPid();
+//			android.os.Process.killProcess(android.os.Process.myPid());
+//			其中android.os.Process.killProcess（）为杀死指定进程！
+//			android.os.Process.myPid()为获得当前应用进程id。
+			Process.killProcess(Process.myPid());
+			break;
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.menu_tv_1:
+			startActivity(new Intent(getApplicationContext(), CustomListViewActivity.class));
+			break;
+		case R.id.menu_tv_2:
+			startActivity(new Intent(getApplicationContext(), RecommendListViewActivity.class));
+			break;
+		case R.id.menu_tv_about:
+			startActivity(new Intent(getApplicationContext(), AboutActivity.class));
+			break;
+		case R.id.menu_tv_exit:
+			Process.killProcess(Process.myPid());
+			break;
+
+		default:
+			break;
+		}
+		
 	}
 }
