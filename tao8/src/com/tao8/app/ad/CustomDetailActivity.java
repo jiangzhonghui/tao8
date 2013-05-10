@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -81,7 +82,7 @@ public class CustomDetailActivity extends Activity {
 		setContentView(R.layout.custom_detail);
 		context = this;
 		wallInfo = (WallInfo)getIntent().getSerializableExtra("wallInfo");
-		mImageLoader = new AsyncImageLoader();
+		mImageLoader = AsyncImageLoader.getInstance();
 		bar = new CustomProgressBar(context, null, 0);
 		mFrameLayout = (FrameLayout)findViewById(R.id.frameLayout);
 		mFrameLayout.addView(bar);
@@ -116,12 +117,12 @@ public class CustomDetailActivity extends Activity {
 	
 	
 	private void initData(){
-		mImageLoader.loadDrawable(detailInfo.detail_icon_Url, new AsyncImageLoader.ImageCallback() {
+		mImageLoader.loadBitmap(detailInfo.detail_icon_Url, new AsyncImageLoader.ImageCallback() {
 			
 			@Override
-			public void imageLoad(Drawable drawable, String url) {
+			public void imageLoad(Bitmap drawable, String url) {
 				// TODO Auto-generated method stub
-				detailImage.setImageDrawable(drawable);
+				detailImage.setImageBitmap(drawable);
 			}
 		});
 		
@@ -130,21 +131,21 @@ public class CustomDetailActivity extends Activity {
 			for (int i = 0; i < list.size(); i++) {
 				if(list.size() >= 1){
 					if(i == 0){
-						mImageLoader.loadDrawable(list.get(0), new AsyncImageLoader.ImageCallback() {
+						mImageLoader.loadBitmap(list.get(0), new AsyncImageLoader.ImageCallback() {
 							
 							@Override
-							public void imageLoad(Drawable drawable, String url) {
+							public void imageLoad(Bitmap drawable, String url) {
 								// TODO Auto-generated method stub
-								detailImage1.setImageDrawable(drawable);
+								detailImage1.setImageBitmap(drawable);
 							}
 						});
 					}else if(i == 1){
-							mImageLoader.loadDrawable(list.get(1), new AsyncImageLoader.ImageCallback() {
+							mImageLoader.loadBitmap(list.get(1), new AsyncImageLoader.ImageCallback() {
 							
 							@Override
-							public void imageLoad(Drawable drawable, String url) {
+							public void imageLoad(Bitmap drawable, String url) {
 								// TODO Auto-generated method stub
-								detailImage2.setImageDrawable(drawable);
+								detailImage2.setImageBitmap(drawable);
 							}
 						});
 					}

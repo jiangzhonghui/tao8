@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -13,6 +14,7 @@ import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -207,7 +209,7 @@ public class CustomListViewActivity extends Activity{
 			this.mLists = list;
 			this.listView = listView;
 			inflater = LayoutInflater.from(context);
-			imageLoader = new AsyncImageLoader();
+			imageLoader = AsyncImageLoader.getInstance();
 		}
 		
 		@Override
@@ -251,19 +253,19 @@ public class CustomListViewActivity extends Activity{
 			ImageView imageView = holder.imageView;
 			imageView.setTag(imageUrl);
 			if(imageUrl != null && !imageUrl.equals("")){
-				Drawable drawable = imageLoader.loadDrawable(imageUrl, new AsyncImageLoader.ImageCallback() {
+				Bitmap drawable = imageLoader.loadBitmap(imageUrl, new AsyncImageLoader.ImageCallback() {
 					
 					@Override
-					public void imageLoad(Drawable drawable, String url) {
+					public void imageLoad(Bitmap drawable, String url) {
 						ImageView imageViewByTag = (ImageView) listView.findViewWithTag(imageUrl);
 						 if (imageViewByTag != null) {  
-		                        imageViewByTag.setImageDrawable(drawable);  
+		                        imageViewByTag.setImageBitmap(drawable);  
 		                 }  
 					}
 				});
 				
 				if(drawable != null){
-					imageView.setImageDrawable(drawable);
+					imageView.setImageBitmap(drawable);
 				}
 			}
 			holder.titleView.setText(info.title);
@@ -281,6 +283,14 @@ public class CustomListViewActivity extends Activity{
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					ScoreAdListSDK.getInstance(context).downloadAd(info);
+					new Thread(){
+						@Override
+						public void run() {
+							SystemClock.sleep(1000);
+							h.a(context, 0, info.id, info.page_type);
+							super.run();
+						}
+					}.start();
 				}
 			});
 			

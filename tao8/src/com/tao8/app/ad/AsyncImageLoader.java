@@ -2,14 +2,17 @@ package com.tao8.app.ad;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -20,24 +23,28 @@ import android.util.Log;
  *
  */
 public class AsyncImageLoader {
-	private HashMap<String, SoftReference<Drawable>> imageCache;
-	private ExecutorService threadPool = Executors.newFixedThreadPool(2);
-	public AsyncImageLoader(){
-		imageCache = new HashMap<String, SoftReference<Drawable>>();
+	private static final AsyncImageLoader asyncImageLoader  = new AsyncImageLoader();;
+	private static Map<String, SoftReference<Bitmap>> imageCache ;
+	private static final ExecutorService threadPool = Executors.newFixedThreadPool(2);
+	private  AsyncImageLoader(){
+		imageCache = new HashMap<String, SoftReference<Bitmap>>();
+	}
+	public static AsyncImageLoader getInstance(){
+		return asyncImageLoader;
 	}
 	
-	public Drawable loadDrawable(final String imageUrl,final ImageCallback imageCallback){
+	public Bitmap loadBitmap(final String imageUrl,final ImageCallback imageCallback){
 		if(imageCache.containsKey(imageUrl)){
-			SoftReference<Drawable> softDrawable = imageCache.get(imageUrl);
-			Drawable drawable = softDrawable.get();
-			if(drawable != null){
-				return drawable;
+			SoftReference<Bitmap> softBitmap = imageCache.get(imageUrl);
+			Bitmap Bitmap = softBitmap.get();
+			if(Bitmap != null){
+				return Bitmap;
 			}
 		}
 		final Handler handler = new Handler(){
 			@Override
 			public void handleMessage(Message msg) {
-				imageCallback.imageLoad((Drawable)msg.obj, imageUrl);
+				imageCallback.imageLoad((Bitmap)msg.obj, imageUrl);
 			}
 		};
 		
@@ -45,9 +52,9 @@ public class AsyncImageLoader {
 			
 			@Override
 			public void run() {
-				Drawable drawable = loadImageFormUrl(imageUrl);
-				imageCache.put(imageUrl, new SoftReference<Drawable>(drawable));
-				Message message = handler.obtainMessage(0, drawable);
+				Bitmap Bitmap = loadImageFormUrl(imageUrl);
+				imageCache.put(imageUrl, new SoftReference<Bitmap>(Bitmap));
+				Message message = handler.obtainMessage(0, Bitmap);
 				handler.sendMessage(message);
 			}
 		};
@@ -56,23 +63,31 @@ public class AsyncImageLoader {
 	}
 	
 	
-	private static Drawable loadImageFormUrl(String imageUrl){
+	private static Bitmap loadImageFormUrl(String imageUrl){
 		URL url;
 		InputStream is = null;
-		Drawable drawable = null;
+		Bitmap bitmap = null;
 		try{
 			url = new URL(imageUrl);
 			is = (InputStream)url.getContent();
-			drawable = Drawable.createFromStream(is, "src");
+			bitmap = BitmapFactory.decodeStream(is);
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally{
+			try {
+				is.close();
+				is = null;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			url = null;
 		}
-		return drawable;
+		return bitmap;
 	}
 	
 	
 	public interface ImageCallback{
-		public void imageLoad(Drawable drawable,String url);
+		public void imageLoad(Bitmap Bitmap,String url);
 	}
 	
 	

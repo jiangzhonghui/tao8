@@ -259,12 +259,10 @@ private class GetDiyAdTask extends AsyncTask<Void, Void, Boolean>{
 		@SuppressWarnings("unchecked")
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			
 			try {
 				while(true){
 					if(!new SDKUtils(context).isConnect()){
 						mHandler.post(new Runnable(){
-							
 							@Override
 							public void run() {
 								Toast.makeText(context, "数据获取失败,请检查网络重新加载", Toast.LENGTH_LONG).show();
@@ -276,13 +274,11 @@ private class GetDiyAdTask extends AsyncTask<Void, Void, Boolean>{
 					}
 					list = AppConnect.getInstance(context).getAdInfoList();
 					if(list != null){
-						
 						mHandler.post(new Runnable(){
-							
 							@Override
 							public void run() {
 								if (BuildConfig.DEBUG) {
-									System.out.println(list.size());
+									System.out.println("广告数量..................."+list.size());
 								}
 								listView.setAdapter(new MyAdapter(context, list));
 								setListViewHeightBasedOnChildren(recommondListView);
