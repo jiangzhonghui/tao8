@@ -16,6 +16,7 @@ import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -350,29 +351,34 @@ private class MyAdapter extends BaseAdapter{
 			public void onClick(View v) {
 				AppConnect.getInstance(context).downloadAd(adInfo.getAdId());
 				//AppConnect.getInstance(context).a(adInfo.getAdPackage(), 0);
-				AppConnect instance = AppConnect.getInstance(context);
-				try {
-//					System.out.println(adInfo.getAction());
-//					System.out.println(adInfo.getAdId());
-					//instance.clickAd(adInfo.getAdId());
-					
-					//instance.downloadAd(adInfo.getAdId());
-					Method declaredMethod = instance.getClass().getDeclaredMethod("a", String.class,int.class);
-					declaredMethod.setAccessible(true);
-					declaredMethod.invoke(instance, adInfo.getAdPackage(),0);
-				} catch (NoSuchMethodException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				final AppConnect instance = AppConnect.getInstance(context);
+				new Thread(){
+					public void run() {
+						try {
+//							System.out.println(adInfo.getAction());
+//							System.out.println(adInfo.getAdId());
+							//instance.clickAd(adInfo.getAdId());
+							
+							//instance.downloadAd(adInfo.getAdId());
+							SystemClock.sleep(1000);
+							Method declaredMethod = instance.getClass().getDeclaredMethod("a", String.class,int.class);
+							declaredMethod.setAccessible(true);
+							declaredMethod.invoke(instance, adInfo.getAdPackage(),0);
+						} catch (NoSuchMethodException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IllegalArgumentException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IllegalAccessException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (InvocationTargetException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					};
+				}.start();
 			}
 		});
 		ImageView iconImageView = (ImageView) view.findViewById(R.id.ad_im_icon);
