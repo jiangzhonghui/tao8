@@ -6,10 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapRegionDecoder;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Bundle;
@@ -24,6 +21,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -196,7 +194,7 @@ Log.e("123", "count = "+mFrameLayout.getChildCount());
 			public ImageView imageView;
 			public TextView titleView;
 //			public TextView scoreView;
-			public TextView button;
+			public Button button;
 			public TextView descView;
 		}
 		private List<WallInfo> mLists;
@@ -242,7 +240,7 @@ Log.e("123", "count = "+mFrameLayout.getChildCount());
 				holder.titleView = (TextView)convertView.findViewById(R.id.title);
 //				holder.scoreView = (TextView)convertView.findViewById(R.id.score);
 				holder.descView = (TextView)convertView.findViewById(R.id.desc);
-				holder.button = (TextView)convertView.findViewById(R.id.download);
+				holder.button = (Button)convertView.findViewById(R.id.download);
 				
 				convertView.setTag(holder);
 			}else{

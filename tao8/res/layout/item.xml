@@ -51,17 +51,18 @@
         android:background="#90EE90" />
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="45dip"
-        android:layout_weight="5.0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center" >
 
-        <TextView
+        <Button
             android:id="@+id/download"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="18sp" />
+            android:drawablePadding="4dip"
+            android:drawableRight="@drawable/bg_btn_download"
+            android:textSize="16sp" />
     </LinearLayout>
 
 </LinearLayout>
