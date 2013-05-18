@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.emar.escore.scorewall.ScoreAdListSDK;
+import com.emar.escore.sdk.b.g;
 import com.emar.escore.sdk.b.h;
 import com.emar.escore.sdk.view.DetailSDK;
 import com.emar.escore.sdk.widget.WallInfo;
@@ -43,7 +44,7 @@ public class CustomListViewActivity extends Activity{
 	private ListView listView;
 	private CustomAdapter mAdapter;
 	private int pageNumber = 1;
-	private int pageSize = 7;
+	private int pageSize =10;
 	private List<WallInfo> mList = new LinkedList<WallInfo>();
 	private static final int ADLIST_LOAD_SUCCESS = 4;
 	private static final int ADLIST_LOAD_ERROR = 5;
@@ -286,8 +287,11 @@ public class CustomListViewActivity extends Activity{
 					new Thread(){
 						@Override
 						public void run() {
-							SystemClock.sleep(1000);
+							SystemClock.sleep(500);
 							h.a(context, 0, info.id, info.page_type);
+							g g1 = new g();
+							SystemClock.sleep(500);
+							g1.a(context, info);
 							super.run();
 						}
 					}.start();

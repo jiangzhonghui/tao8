@@ -43,7 +43,7 @@ public class RecommendListViewActivity extends Activity{
 	private ListView listView;
 	private CustomAdapter mAdapter;
 	private int pageNumber = 1;
-	private int pageSize = 8;
+	private int pageSize = 10;
 	private List<WallInfo> mList = new LinkedList<WallInfo>();
 	private static final int ADLIST_LOAD_SUCCESS = 4;
 	private static final int ADLIST_LOAD_ERROR = 5;
