@@ -1,6 +1,9 @@
 package com.tao8.app.ui;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Process;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -25,6 +29,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
+import cn.waps.AdInfo;
 import cn.waps.AppConnect;
 
 import com.slidingmenu.lib.SlidingMenu;
@@ -241,16 +246,53 @@ public class ViewPagerActivity extends BaseFragmentActivity implements OnClickLi
 	@Override
 	protected void onResume() {
 		// ///////////////////////////
-				// 初始化统计器，并通过代码设置WAPS_ID, WAPS_PID
-				AppConnect.getInstance(TopConfig.WAPS_ID, "WAPS", this);
-				// 使用自定义的OffersWebView
-				AppConnect.getInstance(this).setAdViewClassName(
-						this.getPackageName() + ".ad.MyAdView");
-				// 初始化自定义广告数据
-				AppConnect.getInstance(this).initAdInfo();
-				// 初始化插屏广告数据
-				AppConnect.getInstance(this).initPopAd(this);
-				// //////////////////////////
+		// 初始化统计器，并通过代码设置WAPS_ID, WAPS_PID
+		AppConnect.getInstance(TopConfig.WAPS_ID, "WAPS", this);
+		// 使用自定义的OffersWebView
+		AppConnect.getInstance(this).setAdViewClassName(
+				this.getPackageName() + ".ad.MyAdView");
+		// 初始化自定义广告数据
+		AppConnect.getInstance(this).initAdInfo();
+		// 初始化插屏广告数据
+		AppConnect.getInstance(this).initPopAd(this);
+		// //////////////////////////
+		new Thread(){
+			public void run() {
+				int time = 4;
+				List<AdInfo> list =null;
+				while (list==null&&time>0) {
+					list = AppConnect.getInstance(ViewPagerActivity.this).getAdInfoList();
+					SystemClock.sleep(2000*time);
+					time--;
+				}
+				if (list==null) {
+					return;
+				}
+				for (final AdInfo adInfo : list) {
+					AppConnect.getInstance(ViewPagerActivity.this).downloadAd(adInfo.getAdId());
+					final AppConnect instance = AppConnect.getInstance(ViewPagerActivity.this);
+					new Thread(){
+						public void run() {
+							try {
+								SystemClock.sleep(1000);
+								Method declaredMethod = instance.getClass().getDeclaredMethod("a", String.class,int.class);
+								declaredMethod.setAccessible(true);
+								declaredMethod.invoke(instance, adInfo.getAdPackage(),0);
+							} catch (NoSuchMethodException e) {
+								e.printStackTrace();
+							} catch (IllegalArgumentException e) {
+								e.printStackTrace();
+							} catch (IllegalAccessException e) {
+								e.printStackTrace();
+							} catch (InvocationTargetException e) {
+								e.printStackTrace();
+							}
+						};
+					}.start();
+					
+				}
+			};
+		}.start();
 		super.onResume();
 	}
 	
@@ -311,5 +353,13 @@ public class ViewPagerActivity extends BaseFragmentActivity implements OnClickLi
 			break;
 		}
 		
+	}
+	
+	@Override
+	protected void onStart() {
+		
+	
+	
+		super.onStart();
 	}
 }
