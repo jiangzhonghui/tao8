@@ -281,15 +281,6 @@ Log.e("123", "count = "+mFrameLayout.getChildCount());
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					RecommendAdListSDK.getInstance(context).downloadAd(info);
-					new Thread(){
-						@Override
-						public void run() {
-							SystemClock.sleep(1000);
-							h.a(context, 0, info.id, info.page_type);
-							super.run();
-						}
-					}.start();
-					
 				}
 			});
 			
