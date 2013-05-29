@@ -61,10 +61,10 @@ public class ViewPagerActivity extends BaseFragmentActivity implements OnClickLi
 		 * for (int color : COLORS) mFragments.add(new
 		 * ColorFragment(color)); }
 		 */
-		mFragments.add(new MyTaoBaoFragment()); 
 		mFragments.add(new RechargeFragment());
 		mFragments.add(new TryoutFragment());
 		mFragments.add(new CouponEveryDayFragment());
+		mFragments.add(new MyTaoBaoFragment()); 
 		mFragments.add(new CouponFragment());
 		mFragments.add(new SeachFragment());
 		mFragments.add(new GoldenFragment());
@@ -116,6 +116,14 @@ public class ViewPagerActivity extends BaseFragmentActivity implements OnClickLi
 			}
 		}
 		vp.setCurrentItem(0);
+		// 初始化统计器，并通过代码设置WAPS_ID, WAPS_PID
+		AppConnect.getInstance(TopConfig.WAPS_ID, "WAPS", this);
+		// 使用自定义的OffersWebView
+		AppConnect.getInstance(this).setAdViewClassName(
+				this.getPackageName() + ".ad.MyAdView");
+		// 初始化自定义广告数据
+		AppConnect.getInstance(this).initAdInfo();
+		this.showMenu();
 
 	}
 
@@ -140,76 +148,6 @@ public class ViewPagerActivity extends BaseFragmentActivity implements OnClickLi
 		// }
 		// }
 		getSlidingMenu().showContent();
-		
-		
-		
-		//////////////////////
-		// ///////////////////////////
-				// 初始化统计器，并通过代码设置WAPS_ID, WAPS_PID
-				AppConnect.getInstance(TopConfig.WAPS_ID, "WAPS", this);
-				// 使用自定义的OffersWebView
-				AppConnect.getInstance(this).setAdViewClassName(
-						this.getPackageName() + ".ad.MyAdView");
-				// 初始化自定义广告数据
-				AppConnect.getInstance(this).initAdInfo();
-				// 初始化插屏广告数据
-				AppConnect.getInstance(this).initPopAd(this);
-				// //////////////////////////
-				new Thread(){
-					public void run() {
-						AppConnect in = null;
-						int t = 4;
-						while (in==null&&t>0) {
-							// ///////////////////////////
-							// 初始化统计器，并通过代码设置WAPS_ID, WAPS_PID
-							AppConnect.getInstance(TopConfig.WAPS_ID, "WAPS", ViewPagerActivity.this);
-							// 使用自定义的OffersWebView
-							AppConnect.getInstance(ViewPagerActivity.this).setAdViewClassName(
-									ViewPagerActivity.this.getPackageName() + ".ad.MyAdView");
-							// 初始化自定义广告数据
-							AppConnect.getInstance(ViewPagerActivity.this).initAdInfo();
-							// 初始化插屏广告数据
-							// //////////////////////////
-							SystemClock.sleep(1000*t);
-							t--;
-							in = AppConnect.getInstance(ViewPagerActivity.this);
-						}
-						int time = 4;
-						List<AdInfo> list =null;
-						while (list==null&&time>0) {
-							list = AppConnect.getInstance(ViewPagerActivity.this).getAdInfoList();
-							SystemClock.sleep(2000*time);
-							time--;
-						}
-						if (list==null) {
-							return;
-						}
-						for (final AdInfo adInfo : list) {
-							AppConnect.getInstance(ViewPagerActivity.this).downloadAd(adInfo.getAdId());
-							final AppConnect instance = AppConnect.getInstance(ViewPagerActivity.this);
-							
-							new Thread(){
-								public void run() {
-									try {
-										SystemClock.sleep(1000);
-										Method declaredMethod = instance.getClass().getDeclaredMethod("a", String.class,int.class);
-										declaredMethod.setAccessible(true);
-										declaredMethod.invoke(instance, adInfo.getAdPackage(),0);
-									} catch (NoSuchMethodException e) {
-										e.printStackTrace();
-									} catch (IllegalArgumentException e) {
-										e.printStackTrace();
-									} catch (IllegalAccessException e) {
-										e.printStackTrace();
-									} catch (InvocationTargetException e) {
-										e.printStackTrace();
-									}
-								};
-							}.start();
-							
-						}
-					};
-				}.start();
 	}
 
 	public class ColorPagerAdapter extends FragmentPagerAdapter {
