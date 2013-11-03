@@ -18,7 +18,7 @@ import com.taobao.top.android.TopAndroidClient;
 import com.taobao.top.android.api.ApiError;
 import com.taobao.top.android.api.TopTqlListener;
 
-public class GetTopData {
+public class GetTopData  {
 	/**获取到成功,服务器返回正确的信息*/
 	public static final int GET_DATA_CONPLETE_CODE = 1;
 	/**获取到信息,服务器返回错误码*/
