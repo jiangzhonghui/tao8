@@ -8,10 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import cn.waps.AdInfo;
-
 import com.tao8.app.R;
-import com.tao8.app.ad.AppItemView;
 import com.tao8.app.domain.AccountDetail;
 
 public class AccountDetailAdapter extends BaseAdapter{

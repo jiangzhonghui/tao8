@@ -35,7 +35,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.domob.android.ads.DomobAdView;
+//import cn.domob.android.ads.DomobAdView;
 
 import com.tao8.app.AppException;
 import com.tao8.app.BuildConfig;
@@ -101,7 +101,7 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 	private long userId;
 	private ImageView moreImageView;
 	private ProgressBar headProgressBar;
-	private DomobAdView mAdview320x50;
+//	private DomobAdView mAdview320x50;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -133,11 +133,11 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 		RelativeLayout adRelativeLayout = (RelativeLayout) view
 				.findViewById(R.id.recharge_rl_ad);
 
-		mAdview320x50 = new DomobAdView(getActivity(), TopConfig.PUBLISHER_ID,
-				DomobAdView.INLINE_SIZE_320X50);
-		// 将广告View增加到视图中。
-		adRelativeLayout.removeAllViews();
-		adRelativeLayout.addView(mAdview320x50);
+//		mAdview320x50 = new DomobAdView(getActivity(), TopConfig.PUBLISHER_ID,
+//				DomobAdView.INLINE_SIZE_320X50);
+//		// 将广告View增加到视图中。
+//		adRelativeLayout.removeAllViews();
+//		adRelativeLayout.addView(mAdview320x50);
 
 		// /////
 
@@ -271,13 +271,13 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 //						return;
 //					}
 					Intent intent = new Intent();
-					if (searchItem.getClick_url() != null) {
+					if (searchItem.num_iid != null) {
 						String uri = CommonUtil.generateTopClickUri(
 								searchItem.getClick_url(), getActivity(),
 								accessToken);
 						LogUtil.i(TAG, uri);
-						intent.putExtra(BrowserActivity.BROWSERACTIVITY_URI,
-								uri);
+						intent.putExtra(BrowserActivity.BROWSERACTIVITY_NUM_IID,
+								searchItem.num_iid);
 						intent.setAction(BrowserActivity.BROWSERACTIVITY_ACTION);
 						getActivity().startActivity(intent);
 					}
@@ -606,7 +606,7 @@ public class RechargeFragment extends Fragment implements OnItemClickListener,
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
-		mAdview320x50 = null;
+//		mAdview320x50 = null;
 		super.onDestroy();
 	}
 }

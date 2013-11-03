@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.R.integer;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,16 +12,14 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.EventLog.Event;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Adapter;
@@ -31,10 +27,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,8 +41,8 @@ import com.tao8.app.TopConfig;
 import com.tao8.app.adapter.CouponAdapter;
 import com.tao8.app.api.GetTopData;
 import com.tao8.app.api.MyTqlListener;
-import com.tao8.app.domain.TaobaokeCouponItem;
-import com.tao8.app.parser.TaoBaoKeCouponItemParser;
+import com.tao8.app.domain.SearchItem;
+import com.tao8.app.parser.SearchItemParser;
 import com.tao8.app.util.CommonUtil;
 import com.tao8.app.util.TqlHelper;
 import com.taobao.top.android.api.ApiError;
@@ -68,7 +62,7 @@ public class CouponFragment extends Fragment implements OnClickListener,
 	private int page_no = 1;
 	private String sort = "volume_desc";// 成交量从高到低
 	private ListView imgsListView;
-	private List<TaobaokeCouponItem> taobaokeCouponItems;
+	private List<SearchItem> taobaokeCouponItems;
 	private CouponAdapter couponAdapter;
 	private TextView lableTextView;
 	private String keyword = "0";
@@ -118,7 +112,7 @@ public class CouponFragment extends Fragment implements OnClickListener,
 		popupWindow = createPopuWindow();
 		keyword = "0";
 		seachTaobaokeCouponFromKeyWord(keyword, sort, false, true, 1);
-		taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
+		taobaokeCouponItems = new ArrayList<SearchItem>();
 		if (couponAdapter == null) {
 			couponAdapter = new CouponAdapter(getActivity(),
 					taobaokeCouponItems);
@@ -189,20 +183,20 @@ public class CouponFragment extends Fragment implements OnClickListener,
 		params.put("page_no", Integer.toString(page_no));// 最多10页
 		params.put("mall_item", isFromTmall + "");
 		params.put("sort", sort);
-		tql = TqlHelper.generateTaoBaoKeCouponTql(TaobaokeCouponItem.class,
+		tql = TqlHelper.generateTaoBaoKeTql(SearchItem.class,
 				params);
 		if (BuildConfig.DEBUG) {
 			System.out.println(tql); 
 		}
 		toplLayout.setVisibility(View.VISIBLE);
-		GetTopData.getDataFromTop(tql, new TaoBaoKeCouponItemParser(), userId,
+		GetTopData.getDataFromTop(tql, new SearchItemParser(), userId,
 				new MyTqlListener() {
 					@Override
 					public void onComplete(Object result) {
 						toFreshLayout.setVisibility(View.GONE);
 						toplLayout.setVisibility(View.GONE);
 						imgsListView.setVisibility(View.VISIBLE);
-						ArrayList<TaobaokeCouponItem> results = (ArrayList) result;
+						ArrayList<SearchItem> results = (ArrayList) result;
 					
 						if (results != null && results.size() > 0) {
 							if (BuildConfig.DEBUG) {
@@ -386,7 +380,7 @@ public class CouponFragment extends Fragment implements OnClickListener,
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		Adapter adapter = parent.getAdapter();
-		TaobaokeCouponItem item = (TaobaokeCouponItem) adapter
+		SearchItem item = (SearchItem) adapter
 				.getItem(position);
 		if (item != null) {
 			Intent intent = new Intent();
@@ -397,9 +391,7 @@ public class CouponFragment extends Fragment implements OnClickListener,
 			}
 			long userId = sharedPreferences.getLong("userId", 10000);
 			AccessToken accessToken = TopConfig.client.getAccessToken(userId);
-			String uri = CommonUtil.generateTopClickUri(item.getClick_url(),
-					getActivity(), accessToken);
-			intent.putExtra(BrowserActivity.BROWSERACTIVITY_URI, uri);
+			intent.putExtra(BrowserActivity.BROWSERACTIVITY_NUM_IID, item.num_iid);
 			intent.putExtra(BrowserActivity.BROWSERACTIVITY_TITLE,
 					item.getTitle());
 			getActivity().startActivity(intent);

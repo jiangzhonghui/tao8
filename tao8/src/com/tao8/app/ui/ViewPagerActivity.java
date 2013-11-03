@@ -1,17 +1,12 @@
 package com.tao8.app.ui;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.List;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Process;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,30 +14,19 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.LinearLayout.LayoutParams;
-import cn.waps.AdInfo;
-import cn.waps.AppConnect;
 
 import com.slidingmenu.lib.SlidingMenu;
 import com.tao8.app.BuildConfig;
 import com.tao8.app.R;
-import com.tao8.app.TopConfig;
-import com.tao8.app.ad.CustomListViewActivity;
 import com.tao8.app.ad.QuitPopAd;
-import com.tao8.app.ad.RecommendListViewActivity;
 import com.tao8.app.util.CommonUtil;
 import com.tao8.app.util.LogUtil;
 
-public class ViewPagerActivity extends BaseFragmentActivity implements OnClickListener {
+public class ViewPagerActivity extends BaseFragmentActivity /*implements OnClickListener */{
 
 	public static ViewPager vp;
 	private ArrayList<Fragment> mFragments;
@@ -116,13 +100,6 @@ public class ViewPagerActivity extends BaseFragmentActivity implements OnClickLi
 			}
 		}
 		vp.setCurrentItem(0);
-		// 初始化统计器，并通过代码设置WAPS_ID, WAPS_PID
-		AppConnect.getInstance(TopConfig.WAPS_ID, "WAPS", this);
-		// 使用自定义的OffersWebView
-		AppConnect.getInstance(this).setAdViewClassName(
-				this.getPackageName() + ".ad.MyAdView");
-		// 初始化自定义广告数据
-		AppConnect.getInstance(this).initAdInfo();
 		this.showMenu();
 
 	}
@@ -218,10 +195,10 @@ public class ViewPagerActivity extends BaseFragmentActivity implements OnClickLi
 			TextView textView2 = (TextView)view.findViewById(R.id.menu_tv_2);
 			TextView abouTextView = (TextView)view.findViewById(R.id.menu_tv_about);
 			TextView exitTextView  = (TextView)view.findViewById(R.id.menu_tv_exit);
-			textView1.setOnClickListener(this);
-			textView2.setOnClickListener(this);
-			abouTextView.setOnClickListener(this);
-			exitTextView.setOnClickListener(this);
+//			textView1.setOnClickListener(this);
+//			textView2.setOnClickListener(this);
+//			abouTextView.setOnClickListener(this);
+//			exitTextView.setOnClickListener(this);
 			PopupWindow popupWindow = new PopupWindow(view, CommonUtil.getScreenWidth(this), CommonUtil.dip2px(this, 104), true);
 			popupWindow.setBackgroundDrawable(new ColorDrawable(new Color().argb(150, 0, 0, 0)));
 			popupWindow.showAtLocation(vp, Gravity.BOTTOM, CommonUtil.getScreenHeight(this), 0);
@@ -259,27 +236,27 @@ public class ViewPagerActivity extends BaseFragmentActivity implements OnClickLi
 	
 
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.menu_tv_1:
-			startActivity(new Intent(getApplicationContext(), CustomListViewActivity.class));
-			break;
-		case R.id.menu_tv_2:
-			startActivity(new Intent(getApplicationContext(), RecommendListViewActivity.class));
-			break;
-		case R.id.menu_tv_about:
-			startActivity(new Intent(getApplicationContext(), AboutActivity.class));
-			break;
-		case R.id.menu_tv_exit:
-			Process.killProcess(Process.myPid());
-			break;
-
-		default:
-			break;
-		}
-		
-	}
+//	@Override
+//	public void onClick(View v) {
+//		switch (v.getId()) {
+//		case R.id.menu_tv_1:
+//			startActivity(new Intent(getApplicationContext(), CustomListViewActivity.class));
+//			break;
+//		case R.id.menu_tv_2:
+//			startActivity(new Intent(getApplicationContext(), RecommendListViewActivity.class));
+//			break;
+//		case R.id.menu_tv_about:
+//			startActivity(new Intent(getApplicationContext(), AboutActivity.class));
+//			break;
+//		case R.id.menu_tv_exit:
+//			Process.killProcess(Process.myPid());
+//			break;
+//
+//		default:
+//			break;
+//		}
+//		
+//	}
 	
 	@Override
 	protected void onStart() {

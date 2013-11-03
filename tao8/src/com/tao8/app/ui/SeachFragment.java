@@ -24,25 +24,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -60,8 +57,8 @@ import com.tao8.app.adapter.SeachContentAdapter;
 import com.tao8.app.adapter.SeachHistoryAdapter;
 import com.tao8.app.api.GetTopData;
 import com.tao8.app.api.MyTqlListener;
-import com.tao8.app.domain.TaobaokeCouponItem;
-import com.tao8.app.parser.TaoBaoKeCouponItemParser;
+import com.tao8.app.domain.SearchItem;
+import com.tao8.app.parser.SearchItemParser;
 import com.tao8.app.util.CommonUtil;
 import com.tao8.app.util.TqlHelper;
 import com.taobao.top.android.api.ApiError;
@@ -89,7 +86,7 @@ public class SeachFragment extends Fragment implements OnClickListener,
 	private static RelativeLayout seachRelativeLayout;
 	private ImageView moreImageView;
 	private ProgressBar pbHead;
-	private List<TaobaokeCouponItem> taobaokeCouponItems;
+	private List<SearchItem> taobaokeCouponItems;
 	private TextView goMenuTextView;
 	private TextView lableTextView;
 	private String keyword;
@@ -133,7 +130,7 @@ public class SeachFragment extends Fragment implements OnClickListener,
 		priceraRadioButton.setWidth(width / 4);
 		sellsRadioButton.setWidth(width / 4);
 		// //////////////////
-		taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
+		taobaokeCouponItems = new ArrayList<SearchItem>();
 		if (couponAdapter == null) {
 			couponAdapter = new CouponAdapter(getActivity(),
 					taobaokeCouponItems);
@@ -475,7 +472,7 @@ public class SeachFragment extends Fragment implements OnClickListener,
 			break;
 		case R.id.coupon_lv_content_imgs:
 			Adapter adapter = parent.getAdapter();
-			TaobaokeCouponItem item = (TaobaokeCouponItem) adapter
+			SearchItem item = (SearchItem) adapter
 					.getItem(position);
 			if (item != null) {
 				Intent intent = new Intent();
@@ -489,7 +486,7 @@ public class SeachFragment extends Fragment implements OnClickListener,
 						.getAccessToken(userId);
 				String uri = CommonUtil.generateTopClickUri(
 						item.getClick_url(), getActivity(), accessToken);
-				intent.putExtra(BrowserActivity.BROWSERACTIVITY_URI, uri);
+				intent.putExtra(BrowserActivity.BROWSERACTIVITY_NUM_IID, item.num_iid);
 				intent.putExtra(BrowserActivity.BROWSERACTIVITY_TITLE,
 						item.getTitle());
 				getActivity().startActivity(intent);
@@ -563,14 +560,14 @@ public class SeachFragment extends Fragment implements OnClickListener,
 		params.put("page_no", Integer.toString(page_no));// 最多10页
 		params.put("mall_item", isFromTmall + "");
 		params.put("sort", sort);
-		tql = TqlHelper.generateTaoBaoKeCouponTql(TaobaokeCouponItem.class,
+		tql = TqlHelper.generateTaoBaoKeTql(SearchItem.class,
 				params);
 		if (BuildConfig.DEBUG) {
 			System.out.println(tql);
 		}
 		toplLayout.setVisibility(View.VISIBLE);
 		pbHead.setVisibility(View.VISIBLE);
-		GetTopData.getDataFromTop(tql, new TaoBaoKeCouponItemParser(), userId,
+		GetTopData.getDataFromTop(tql, new SearchItemParser(), userId,
 				new MyTqlListener() {
 					@Override
 					public void onComplete(Object result) {
@@ -578,7 +575,7 @@ public class SeachFragment extends Fragment implements OnClickListener,
 						toplLayout.setVisibility(View.GONE);
 						imgsListView.setVisibility(View.VISIBLE);
 						pbHead.setVisibility(View.GONE);
-						ArrayList<TaobaokeCouponItem> results = (ArrayList) result;
+						ArrayList<SearchItem> results = (ArrayList) result;
 						if (results != null && results.size() > 0) {
 							if (BuildConfig.DEBUG) {
 								Toast.makeText(getActivity(),

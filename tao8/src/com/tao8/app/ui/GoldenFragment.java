@@ -1,59 +1,50 @@
 package com.tao8.app.ui;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.tao8.app.AppException;
-import com.tao8.app.BuildConfig;
-import com.tao8.app.R;
-import com.tao8.app.TopConfig;
-import com.tao8.app.adapter.CouponAdapter;
-import com.tao8.app.adapter.TryoutAdapter;
-import com.tao8.app.api.GetTopData;
-import com.tao8.app.api.MyTqlListener;
-import com.tao8.app.db.dao.TaoBaokeCouponDao;
-import com.tao8.app.domain.TaobaokeCouponItem;
-import com.tao8.app.parser.TaoBaoKeCouponItemParser;
-import com.tao8.app.util.CommonUtil;
-import com.tao8.app.util.LogUtil;
-import com.tao8.app.util.TqlHelper;
-import com.tao8.app.widget.PullToRefreshListView;
-import com.taobao.top.android.api.ApiError;
-import com.taobao.top.android.auth.AccessToken;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.StaticLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AbsListView;
-import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.tao8.app.AppException;
+import com.tao8.app.BuildConfig;
+import com.tao8.app.R;
+import com.tao8.app.TopConfig;
+import com.tao8.app.adapter.TryoutAdapter;
+import com.tao8.app.api.GetTopData;
+import com.tao8.app.api.MyTqlListener;
+import com.tao8.app.domain.SearchItem;
+import com.tao8.app.parser.SearchItemParser;
+import com.tao8.app.util.CommonUtil;
+import com.tao8.app.util.Config;
+import com.tao8.app.util.TqlHelper;
+import com.taobao.top.android.api.ApiError;
+import com.taobao.top.android.auth.AccessToken;
 
 public class GoldenFragment extends Fragment implements OnClickListener,
 		OnItemClickListener, OnScrollListener {
@@ -67,7 +58,7 @@ public class GoldenFragment extends Fragment implements OnClickListener,
 	private LinearLayout toFreshLayout;
 	private LinearLayout topLayout;
 	private long getDataTime;
-	private ArrayList<TaobaokeCouponItem> taobaokeCouponItems;
+	private ArrayList<SearchItem> taobaokeCouponItems;
 	private TryoutAdapter tryoutAdapter;
 	private String keyword = "淘金币";
 	private String sort = "";//"volume_desc";
@@ -85,7 +76,6 @@ public class GoldenFragment extends Fragment implements OnClickListener,
 //	private RadioGroup orderGroup;
 	private static final int CACHE_TIME = 60 * 1000 * 60 * 24;
 	protected static final String TAG = "GoldenFragment";
-	private static final String COIN_URL  = "http://i.m.taobao.com/coin/take_coin.htm";
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -122,7 +112,7 @@ public class GoldenFragment extends Fragment implements OnClickListener,
 		moreImageView.setImageResource(R.drawable.ic_taojb);
 		lableTextView.setText("淘金币");
 //		orderGroup.setVisibility(View.VISIBLE);
-		taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
+		taobaokeCouponItems = new ArrayList<SearchItem>();
 		if (tryoutAdapter == null) {
 			tryoutAdapter = new TryoutAdapter(getActivity(),
 					taobaokeCouponItems);
@@ -214,19 +204,19 @@ public class GoldenFragment extends Fragment implements OnClickListener,
 		params.put("page_no", Integer.toString(page_no));// 最多10页
 		params.put("mall_item", isFromTmall + "");
 		params.put("sort", sort);
-		tql = TqlHelper.generateTaoBaoKeCouponTql(TaobaokeCouponItem.class,
+		tql = TqlHelper.generateTaoBaoKeTql(SearchItem.class,
 				params);
 		if (BuildConfig.DEBUG) {
 			System.out.println(tql);
 		}
 		topLayout.setVisibility(View.VISIBLE);
-		GetTopData.getDataFromTop(tql, new TaoBaoKeCouponItemParser(), userId,
+		GetTopData.getDataFromTop(tql, new SearchItemParser(), userId,
 				new MyTqlListener() {
 					@Override
 					public void onComplete(Object result) {
 						toFreshLayout.setVisibility(View.GONE);
 						topLayout.setVisibility(View.GONE);
-						final ArrayList<TaobaokeCouponItem> results = (ArrayList) result;
+						final ArrayList<SearchItem> results = (ArrayList) result;
 						if (BuildConfig.DEBUG && result != null) {
 							Toast.makeText(getActivity(),
 									results.size() + "  总共", 1).show();
@@ -303,7 +293,7 @@ public class GoldenFragment extends Fragment implements OnClickListener,
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Adapter adapter = parent.getAdapter();
-		TaobaokeCouponItem item = (TaobaokeCouponItem) adapter
+		SearchItem item = (SearchItem) adapter
 				.getItem(position);
 		if (item != null) {
 			Intent intent = new Intent();
@@ -314,9 +304,7 @@ public class GoldenFragment extends Fragment implements OnClickListener,
 			}
 			long userId = sharedPreferences.getLong("userId", 0L);
 			AccessToken accessToken = TopConfig.client.getAccessToken(userId);
-			String uri = CommonUtil.generateTopClickUri(item.getClick_url(),
-					getActivity(), accessToken);
-			intent.putExtra(BrowserActivity.BROWSERACTIVITY_URI, uri);
+			intent.putExtra(BrowserActivity.BROWSERACTIVITY_NUM_IID, item.num_iid);
 			intent.putExtra(BrowserActivity.BROWSERACTIVITY_TITLE,
 					item.getTitle());
 			getActivity().startActivity(intent);
@@ -330,7 +318,7 @@ public class GoldenFragment extends Fragment implements OnClickListener,
 		case R.id.head_iv_more:
 				Intent intent = new Intent();
 				intent.setAction(BrowserActivity.BROWSERACTIVITY_ACTION);
-				intent.putExtra(BrowserActivity.BROWSERACTIVITY_URI, COIN_URL);
+				intent.putExtra(BrowserActivity.BROWSERACTIVITY_NUM_IID, Config.COIN_URL);
 				intent.putExtra(BrowserActivity.BROWSERACTIVITY_TITLE,
 						"领取淘金币");
 				getActivity().startActivity(intent);

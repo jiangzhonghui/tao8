@@ -2,7 +2,7 @@ package com.tao8.app.db;
 
 import java.lang.reflect.Field;
 
-import com.tao8.app.domain.TaobaokeCouponItem;
+import com.tao8.app.domain.SearchItem;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -22,10 +22,10 @@ public class Tao8DBHelper extends SQLiteOpenHelper {
 
 	public Tao8DBHelper(Context context) {
 		super(context, DB_NAME, null, DATABASE_VERSION);
-		DICTIONARY_TABLE_CREATE = generateTableSql(TaobaokeCouponItem.class);
+		DICTIONARY_TABLE_CREATE = generateTableSql(SearchItem.class);
 	}
 	
-	private String generateTableSql(Class<TaobaokeCouponItem> clazz ) {
+	private String generateTableSql(Class<SearchItem> clazz ) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("create table IF NOT EXISTS ");
 		sb.append(DICTIONARY_TABLE_NAME);

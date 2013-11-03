@@ -1,22 +1,14 @@
 package com.tao8.app.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.waps.AppConnect;
 
-import com.baidu.sharesdk.BaiduShareException;
-import com.baidu.sharesdk.BaiduSocialShare;
-import com.baidu.sharesdk.ShareContent;
-import com.baidu.sharesdk.ShareListener;
-import com.baidu.sharesdk.Utility;
 import com.tao8.app.BuildConfig;
 import com.tao8.app.R;
-import com.tao8.app.TopConfig;
 
 public class AboutActivity extends BaseFragmentActivity implements OnClickListener{
 
@@ -53,11 +45,9 @@ public class AboutActivity extends BaseFragmentActivity implements OnClickListen
 				Toast.makeText(this, "升级", 0).show();
 			}
 			//手动检查新版本
-			AppConnect.getInstance(this).checkUpdate(this);
 			break;
 		case R.id.about_tv_weibo:
 			//用户反馈
-			AppConnect.getInstance(this).showFeedback();
 			break;
 //		case R.id.about_tv_share:
 //			ShareContent content = new ShareContent();

@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.text.Html;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -20,18 +19,18 @@ import com.tao8.app.cache.util.ImageLoader;
 import com.tao8.app.cache.util.ImageLoader.BitmapDisplayer;
 import com.tao8.app.cache.util.ImageLoader.ImageLoaderCallBack;
 import com.tao8.app.cache.util.ImageLoader.PhotoToLoad;
-import com.tao8.app.domain.TaobaokeCouponItem;
+import com.tao8.app.domain.SearchItem;
 import com.tao8.app.util.AsyncImageLoader;
 import com.tao8.app.util.LogUtil;
 
 public class TryoutAdapter extends BaseAdapter {
 
 	private Context context;
-	private List<TaobaokeCouponItem> searchItems;
+	private List<SearchItem> searchItems;
 	private AsyncImageLoader asyncImageLoader;
 	private ImageLoader mImageLoader;
 
-	public TryoutAdapter(Context context, List<TaobaokeCouponItem> searchItems) {
+	public TryoutAdapter(Context context, List<SearchItem> searchItems) {
 		this.context = context;
 		this.searchItems = searchItems;
 		asyncImageLoader = new AsyncImageLoader();
@@ -88,22 +87,23 @@ public class TryoutAdapter extends BaseAdapter {
 		}
 		holder = (ViewHolder) view.getTag();
 
-		TaobaokeCouponItem item = (TaobaokeCouponItem) getItem(position);
+		SearchItem item = (SearchItem) getItem(position);
 		if (BuildConfig.DEBUG) {
 			System.out.println(item);
 			System.out.println(position);
 		}
 		try {holder.proNameTextView.setText(Html.fromHtml(item.getTitle()==null?"":item.getTitle()));
-		holder.priceTextView.setText("￥" + item.getCoupon_price());
+		holder.priceTextView.setText("￥" + item.price);
 		TextPaint paint = holder.originalPriceTextView.getPaint();
 		paint.setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 		holder.originalPriceTextView.setText("￥" + item.getPrice());
 		
 			
 		
-		holder.couponTextView.setText(String.format("%.1f",
-				(Float.parseFloat(item.getCoupon_rate()) / 1000))
-				+ "折");// 折扣
+//		holder.couponTextView.setText(String.format("%.1f",
+//				(Float.parseFloat(item.getCoupon_rate()) / 1000))
+//				+ "折");// 折扣
+		holder.couponTextView.setVisibility(View.GONE);
 		holder.hasSellTextView.setText("最近售出:" + item.getVolume() + "件");
 		holder.proPicImageView.setTag(item.getPic_url() + "_80x80.jpg");
 		Bitmap cachedImage = mImageLoader.DisplayImage(item.getPic_url()

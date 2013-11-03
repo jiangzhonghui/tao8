@@ -1,7 +1,5 @@
 package com.tao8.app.ui;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,12 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.waps.AppConnect;
 
-import com.emar.escore.banner.BannerSDK;
-import com.emar.escore.recommendwall.RecommendSDK;
-import com.emar.escore.sdk.YjfSDK;
-import com.emar.escore.sdk.view.bannerView;
 import com.tao8.app.BuildConfig;
 import com.tao8.app.R;
 import com.tao8.app.util.CommonUtil;
@@ -53,26 +46,7 @@ public class BehindMenuFragment extends Fragment implements OnClickListener {
 		RelativeLayout mzdjRelativeLayout = (RelativeLayout) v
 				.findViewById(R.id.behind_menu_rl_mzdj);
 		loginImageView = (ImageView) v.findViewById(R.id.behind_menu_iv_login);
-		// ///////////////////////////
-		RelativeLayout containerRelativeLayout = (RelativeLayout) v
-				.findViewById(R.id.behind_menu_rl_container);
-		// 互动广告调用方式
-		// DomobAdView mAdview320x50 = new DomobAdView(getActivity(),
-		// TopConfig.PUBLISHER_ID, DomobAdView.INLINE_SIZE_320X50);
-		// 将广告View增加到视图中。
-		// containerRelativeLayout.addView(mAdview320x50);
-		// ///////////////////////////
-
-		// Banner广告---------------------------------------------------------------------------------------------------------------------------------
-		// 显示推广条
-		// 初始化,当Activity第一次创建时调用,此方法需继承接口UpdateScordNotifier
-		YjfSDK.getInstance(getActivity(), null).initInstance("","","","");
-		bannerView bannerView = BannerSDK.getInstance(getActivity())
-				.getBanner();
-		containerRelativeLayout.addView(bannerView);
-		// 推广条轮转
-		BannerSDK.getInstance(getActivity()).showBanner(bannerView);
-		// Banner广告---------------------------------------------------------------------------------------------------------------------------------
+		
 		lmllRelativeLayout.setOnClickListener(this);
 		czzxRelativeLayout.setOnClickListener(this);
 		tttjRelativeLayout.setOnClickListener(this);
@@ -121,7 +95,7 @@ public class BehindMenuFragment extends Fragment implements OnClickListener {
 			switchFragment(new CouponEveryDayFragment());
 			break;
 		case R.id.behind_menu_rl_rjtj:
-			RecommendSDK.getInstance(getActivity()).showAdlist();
+			
 			break;
 		case R.id.behind_menu_tv_about:
 			Intent intent = new Intent(getActivity(), AboutActivity.class);
@@ -129,7 +103,6 @@ public class BehindMenuFragment extends Fragment implements OnClickListener {
 			break;
 		case R.id.behind_menu_tv_feedback:
 			// 用户反馈
-			AppConnect.getInstance(getActivity()).showFeedback();
 			break;
 		case R.id.behind_menu_rl_wdtb:
 			if (BuildConfig.DEBUG) {

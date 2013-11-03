@@ -217,7 +217,7 @@ public class TopAndroidClient {
 		it.setAction(BrowserActivity.BROWSERACTIVITY_ACTION);
 		//it.setData(uri);
 		it.putExtra("title", "淘宝第三方认证，购物更放心....");
-		it.putExtra("uri", str);
+		it.putExtra(BrowserActivity.BROWSERACTIVITY_NUM_IID, str);
 		activity.startActivity(it);
 		
 /*		Intent it = new Intent(Intent.ACTION_VIEW, uri);

@@ -4,27 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tao8.app.AppException;
-import com.tao8.app.BuildConfig;
-import com.tao8.app.R;
-import com.tao8.app.TopConfig;
-import com.tao8.app.adapter.CouponAdapter;
-import com.tao8.app.api.GetTopData;
-import com.tao8.app.api.MyTqlListener;
-import com.tao8.app.domain.TaobaokeCouponItem;
-import com.tao8.app.parser.TaoBaoKeCouponItemParser;
-import com.tao8.app.util.CommonUtil;
-import com.tao8.app.util.LogUtil;
-import com.tao8.app.util.TqlHelper;
-import com.taobao.top.android.api.ApiError;
-import com.taobao.top.android.auth.AccessToken;
-
-import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +16,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -47,9 +29,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -57,6 +39,22 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
+
+import com.actionbarsherlock.internal.view.menu.MenuView.ItemView;
+import com.tao8.app.AppException;
+import com.tao8.app.BuildConfig;
+import com.tao8.app.R;
+import com.tao8.app.TopConfig;
+import com.tao8.app.adapter.CouponAdapter;
+import com.tao8.app.api.GetTopData;
+import com.tao8.app.api.MyTqlListener;
+import com.tao8.app.domain.SearchItem;
+import com.tao8.app.parser.SearchItemParser;
+import com.tao8.app.util.CommonUtil;
+import com.tao8.app.util.LogUtil;
+import com.tao8.app.util.TqlHelper;
+import com.taobao.top.android.api.ApiError;
+import com.taobao.top.android.auth.AccessToken;
 
 public class CatoryFragment extends Fragment implements OnClickListener, OnScrollListener, OnItemClickListener {
 	protected static final String TAG = "CatoryFragment";
@@ -67,7 +65,7 @@ public class CatoryFragment extends Fragment implements OnClickListener, OnScrol
 	private boolean isFromTmall;
 	private String sort = "volume_desc";
 	private SharedPreferences sharedPreferences;
-	private ArrayList<TaobaokeCouponItem> taobaokeCouponItems;
+	private ArrayList<SearchItem> taobaokeCouponItems;
 	private CouponAdapter couponAdapter;
 	private ListView imgsListView;
 	private LinearLayout toFreshLayout;
@@ -124,7 +122,7 @@ public class CatoryFragment extends Fragment implements OnClickListener, OnScrol
 		sellsButton.setWidth(width / 4);
 
 		// ////
-		taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
+		taobaokeCouponItems = new ArrayList<SearchItem>();
 		if (couponAdapter == null) {
 			couponAdapter = new CouponAdapter(getActivity(),taobaokeCouponItems);
 		}
@@ -281,20 +279,20 @@ public class CatoryFragment extends Fragment implements OnClickListener, OnScrol
 		params.put("page_no", Integer.toString(page_no));// 最多10页
 		params.put("mall_item", isFromTmall + "");
 		params.put("sort", sort);
-		tql = TqlHelper.generateTaoBaoKeCouponTql(TaobaokeCouponItem.class,
+		tql = TqlHelper.generateTaoBaoKeTql(SearchItem.class,
 				params);
 		if (BuildConfig.DEBUG) {
 			System.out.println(tql);
 		}
 		toplLayout.setVisibility(View.VISIBLE);
-		GetTopData.getDataFromTop(tql, new TaoBaoKeCouponItemParser(), userId,
+		GetTopData.getDataFromTop(tql, new SearchItemParser(), userId,
 				new MyTqlListener() {
 					@Override
 					public void onComplete(Object result) {
 						toFreshLayout.setVisibility(View.GONE);
 						toplLayout.setVisibility(View.GONE);
 						imgsListView.setVisibility(View.VISIBLE);
-						ArrayList<TaobaokeCouponItem> results = (ArrayList) result;
+						ArrayList<SearchItem> results = (ArrayList) result;
 
 						if (results != null && results.size() > 0) {
 
@@ -428,7 +426,7 @@ public class CatoryFragment extends Fragment implements OnClickListener, OnScrol
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Adapter adapter = parent.getAdapter();
-		TaobaokeCouponItem item = (TaobaokeCouponItem) adapter
+		SearchItem item = (SearchItem) adapter
 				.getItem(position);
 		if (item != null) {
 			Intent intent = new Intent();
@@ -439,9 +437,8 @@ public class CatoryFragment extends Fragment implements OnClickListener, OnScrol
 			}
 			long userId = sharedPreferences.getLong("userId", 10000);
 			AccessToken accessToken = TopConfig.client.getAccessToken(userId);
-			String uri = CommonUtil.generateTopClickUri(item.getClick_url(),
-					getActivity(), accessToken);
-			intent.putExtra(BrowserActivity.BROWSERACTIVITY_URI, uri);
+			
+			intent.putExtra(BrowserActivity.BROWSERACTIVITY_NUM_IID, item.num_iid);
 			intent.putExtra(BrowserActivity.BROWSERACTIVITY_TITLE,
 					item.getTitle());
 			getActivity().startActivity(intent);

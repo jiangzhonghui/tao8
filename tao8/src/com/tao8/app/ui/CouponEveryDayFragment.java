@@ -3,10 +3,8 @@ package com.tao8.app.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
-import android.R.integer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,13 +20,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Adapter;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -52,12 +50,9 @@ import com.tao8.app.adapter.CouponEveryGridViewAdapter;
 import com.tao8.app.adapter.TryoutAdapter;
 import com.tao8.app.api.GetTopData;
 import com.tao8.app.api.MyTqlListener;
-import com.tao8.app.db.Tao8DBHelper;
-import com.tao8.app.db.dao.TaoBaokeCouponDao;
-import com.tao8.app.domain.TaobaokeCouponItem;
-import com.tao8.app.parser.TaoBaoKeCouponItemParser;
+import com.tao8.app.domain.SearchItem;
+import com.tao8.app.parser.SearchItemParser;
 import com.tao8.app.util.CommonUtil;
-import com.tao8.app.util.LogUtil;
 import com.tao8.app.util.TqlHelper;
 import com.taobao.top.android.api.ApiError;
 import com.taobao.top.android.auth.AccessToken;
@@ -74,7 +69,7 @@ public class CouponEveryDayFragment extends Fragment implements
 	private LinearLayout toFreshLayout;
 	private static final String BASEKEYWORD_STRING = "天天特价";
 	private String keyword = "天天特价";
-	private ArrayList<TaobaokeCouponItem> taobaokeCouponItems;
+	private ArrayList<SearchItem> taobaokeCouponItems;
 	private String sort = "volume_desc";// 成交量从高到低
 	private TryoutAdapter tryoutAdapter;
 	private SharedPreferences sharedPreferences;
@@ -134,7 +129,7 @@ public class CouponEveryDayFragment extends Fragment implements
 
 	private void setData() {
 		topLayout.setVisibility(View.VISIBLE);
-		taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
+		taobaokeCouponItems = new ArrayList<SearchItem>();
 		if (tryoutAdapter == null) {
 			tryoutAdapter = new TryoutAdapter(getActivity(),
 					taobaokeCouponItems);
@@ -245,21 +240,21 @@ public class CouponEveryDayFragment extends Fragment implements
 		params.put("page_no", Integer.toString(page_no));// 最多10页
 		params.put("mall_item", isFromTmall + "");
 		params.put("sort", sort);
-		tql = TqlHelper.generateTaoBaoKeCouponTql(TaobaokeCouponItem.class,
+		tql = TqlHelper.generateTaoBaoKeTql(SearchItem.class,
 				params);
 		if (BuildConfig.DEBUG) {
 			System.out.println(tql);
 		}
 		topLayout.setVisibility(View.VISIBLE);
 		pb.setVisibility(View.VISIBLE);
-		GetTopData.getDataFromTop(tql, new TaoBaoKeCouponItemParser(), userId,
+		GetTopData.getDataFromTop(tql, new SearchItemParser(), userId,
 				new MyTqlListener() {
 					@Override
 					public void onComplete(Object result) {
 						toFreshLayout.setVisibility(View.GONE);
 						topLayout.setVisibility(View.GONE);
 						pb.setVisibility(View.GONE);
-						final ArrayList<TaobaokeCouponItem> results = (ArrayList) result;
+						final ArrayList<SearchItem> results = (ArrayList) result;
 						if (results != null && results.size() > 0) {
 							if (BuildConfig.DEBUG && results != null) {
 								Toast.makeText(getActivity(),
@@ -478,7 +473,7 @@ public class CouponEveryDayFragment extends Fragment implements
 			break;
 		case R.id.coupon_everyday_lv_content_imgs:
 			Adapter adapter = parent.getAdapter();
-			TaobaokeCouponItem item = (TaobaokeCouponItem) adapter
+			SearchItem item = (SearchItem) adapter
 					.getItem(position);
 			if (item != null) {
 				Intent intent = new Intent();
@@ -490,9 +485,7 @@ public class CouponEveryDayFragment extends Fragment implements
 				long userId = sharedPreferences.getLong("userId", 0L);
 				AccessToken accessToken = TopConfig.client
 						.getAccessToken(userId);
-				String uri = CommonUtil.generateTopClickUri(
-						item.getClick_url(), getActivity(), accessToken);
-				intent.putExtra(BrowserActivity.BROWSERACTIVITY_URI, uri);
+				intent.putExtra(BrowserActivity.BROWSERACTIVITY_NUM_IID, item.num_iid);
 				intent.putExtra(BrowserActivity.BROWSERACTIVITY_TITLE,
 						item.getTitle());
 				getActivity().startActivity(intent);

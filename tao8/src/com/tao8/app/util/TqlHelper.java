@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.tao8.app.domain.SearchItem;
-import com.tao8.app.domain.TaobaokeCouponItem;
 import com.tao8.app.domain.TmallSearchItem;
 
 public class TqlHelper {
@@ -53,25 +52,25 @@ public class TqlHelper {
 		}
 		return tql;
 	}
-	/**
-	 * 查询淘客折扣商品的tql。
-	 * @param fields
-	 * @param params
-	 * @return
-	 */
-	public static String generateTaoBaoKeCouponTql(List<String> fields,Map<String,String> params){
-		return generateTql(fields, Config.TAOBAOKE_ITEMS_COUPON, params);
-	}
-	public static String generateTaoBaoKeCouponTql(Class<TaobaokeCouponItem> clazz,Map<String, String> params){
-		List<String> fields = new ArrayList<String>();
-		Field[] declaredFields = clazz.getDeclaredFields();
-		for (Field field : declaredFields) {
-			fields.add(field.getName());
-		}
-		return generateTaoBaoKeCouponTql(fields, params);
-	}
+//	/**
+//	 * 查询淘客折扣商品的tql。
+//	 * @param fields
+//	 * @param params
+//	 * @return
+//	 */
+//	public static String generateTaoBaoKeCouponTql(List<String> fields,Map<String,String> params){
+//		return generateTql(fields, Config.TAOBAOKE_ITEMS_COUPON, params);
+//	}
+//	public static String generateTaoBaoKeCouponTql(Class<TaobaokeCouponItem> clazz,Map<String, String> params){
+//		List<String> fields = new ArrayList<String>();
+//		Field[] declaredFields = clazz.getDeclaredFields();
+//		for (Field field : declaredFields) {
+//			fields.add(field.getName());
+//		}
+//		return generateTaoBaoKeCouponTql(fields, params);
+//	}
 	public static String generateTaoBaoKeTql(List<String> fields,Map<String,String> params){
-		return generateTql(fields, "taobaoke.items", params);
+		return generateTql(fields,Config.TAOBAOKE_ITEMS, params);
 	}
 	public static String generateTaoBaoKeTql(Class<SearchItem> clazz,Map<String, String> params) {
 		List<String> fields = new ArrayList<String>();

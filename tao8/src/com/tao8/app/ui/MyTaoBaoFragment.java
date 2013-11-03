@@ -1,7 +1,5 @@
 package com.tao8.app.ui;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,14 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,19 +20,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.waps.AdInfo;
-import cn.waps.AppConnect;
-import cn.waps.SDKUtils;
 
-import com.tao8.app.BuildConfig;
 import com.tao8.app.R;
 import com.tao8.app.TopConfig;
-import com.tao8.app.ad.AppDetail;
 import com.tao8.app.adapter.AccountDetailAdapter;
 import com.tao8.app.cache.util.ImageLoader;
 import com.tao8.app.cache.util.ImageLoader.BitmapDisplayer;
@@ -183,7 +170,7 @@ public class MyTaoBaoFragment extends Fragment implements OnClickListener, OnIte
 		accountDetails = new ArrayList<AccountDetail>();
 		AccountDetail tPaymentDetail = new AccountDetail();
 		tPaymentDetail.setAction(BrowserActivity.BROWSERACTIVITY_ACTION);
-		tPaymentDetail.setItemName("待付款订单");
+		tPaymentDetail.setItemName("我的淘宝");
 		tPaymentDetail.setUri(Config.TAO_ORDER.concat(sid));
 		accountDetails.add(tPaymentDetail);
 		AccountDetail tCollectionDetail = new AccountDetail();
@@ -201,6 +188,12 @@ public class MyTaoBaoFragment extends Fragment implements OnClickListener, OnIte
 		tLogisticsDetail.setItemName("查看物流");
 		tLogisticsDetail.setUri(Config.TAO_LOGISTICS.concat(sid));
 		accountDetails.add(tLogisticsDetail);
+		AccountDetail tShopCollection = new AccountDetail();
+		tShopCollection.setAction(BrowserActivity.BROWSERACTIVITY_ACTION);
+		tShopCollection.setItemName("店铺收藏");
+		String urlString = Config.TAO_MYCOLLECTION_SHOP.concat(sid);
+		tShopCollection.setUri(urlString.concat("#!shop/queryColShop-1"));
+		accountDetails.add(tShopCollection);
 		AccountDetail checkUpdate = new AccountDetail();
 		checkUpdate.setAction("checkUpdate");
 		checkUpdate.setItemName("检查更新");
@@ -213,11 +206,11 @@ public class MyTaoBaoFragment extends Fragment implements OnClickListener, OnIte
 	public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 		switch (parent.getId()) {
 		case R.id.mytaobao_lv_ad_recommond:
-			AppDetail.getInstanct().showAdDetail(getActivity(),(AdInfo)view.getTag());
+//			AppDetail.getInstanct().showAdDetail(getActivity(),(AdInfo)view.getTag());
 			break;
 		case R.id.mytaobao_lv_taobao_detail:
 			if ("checkUpdate".equals(accountDetails.get(position).getAction())) {
-				AppConnect.getInstance(getActivity()).checkUpdate(getActivity());
+//				AppConnect.getInstance(getActivity()).checkUpdate(getActivity());
 				break;
 			}
 			if (!CommonUtil.checkNetState(getActivity())) {
@@ -235,7 +228,7 @@ public class MyTaoBaoFragment extends Fragment implements OnClickListener, OnIte
 					AccountDetail accountDetail = accountDetails.get(position);
 					intent.setAction(accountDetail.getAction());
 					intent.putExtra(BrowserActivity.BROWSERACTIVITY_TITLE, ((TextView)view.findViewById(R.id.account_list_item_tv_name)).getText().toString().trim());
-					intent.putExtra(BrowserActivity.BROWSERACTIVITY_URI, accountDetail.getUri());
+					intent.putExtra(BrowserActivity.BROWSERACTIVITY_NUM_IID, accountDetail.getUri());
 					startActivity(intent);
 				}
 			}
@@ -250,7 +243,7 @@ private class GetDiyAdTask extends AsyncTask<Void, Void, Boolean>{
 		
 		Context context;
 		ListView listView;
-		List<AdInfo> list;
+//		List<AdInfo> list;
 		
 		GetDiyAdTask(Context context, ListView listView){
 			this.context = context;
@@ -262,32 +255,32 @@ private class GetDiyAdTask extends AsyncTask<Void, Void, Boolean>{
 		protected Boolean doInBackground(Void... params) {
 			try {
 				while(true){
-					if(!new SDKUtils(context).isConnect()){
-						mHandler.post(new Runnable(){
-							@Override
-							public void run() {
-								Toast.makeText(context, "数据获取失败,请检查网络重新加载", Toast.LENGTH_LONG).show();
-								//((Activity)context).finish();
-							}
-						});	
-						
-						break;
-					}
-					list = AppConnect.getInstance(context).getAdInfoList();
-					if(list != null){
-						mHandler.post(new Runnable(){
-							@Override
-							public void run() {
-								if (BuildConfig.DEBUG) {
-									System.out.println("广告数量..................."+list.size());
-								}
-								listView.setAdapter(new MyAdapter(context, list));
-								setListViewHeightBasedOnChildren(recommondListView);
-							}
-						});	
-						
-						break;
-					}
+//					if(!new SDKUtils(context).isConnect()){
+//						mHandler.post(new Runnable(){
+//							@Override
+//							public void run() {
+//								Toast.makeText(context, "数据获取失败,请检查网络重新加载", Toast.LENGTH_LONG).show();
+//								//((Activity)context).finish();
+//							}
+//						});	
+//						
+//						break;
+//					}
+//					list = AppConnect.getInstance(context).getAdInfoList();
+//					if(list != null){
+//						mHandler.post(new Runnable(){
+//							@Override
+//							public void run() {
+//								if (BuildConfig.DEBUG) {
+//									System.out.println("广告数量..................."+list.size());
+//								}
+//								listView.setAdapter(new MyAdapter(context, list));
+//								setListViewHeightBasedOnChildren(recommondListView);
+//							}
+//						});	
+//						
+//						break;
+//					}
 					
 					try {
 						Thread.sleep(500); 
@@ -301,98 +294,98 @@ private class GetDiyAdTask extends AsyncTask<Void, Void, Boolean>{
 			return null;
 		}
 	}
-private class MyAdapter extends BaseAdapter{
-	Context context;
-	List<AdInfo> list;
-	public MyAdapter(Context context, List<AdInfo> list){
-		this.context = context;
-		this.list = list;
-	}
-	@Override
-	public int getCount() {
-		return list.size();
-	}
-	@Override
-	public Object getItem(int position) {
-		return list.get(position);
-	}
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-//		final AdInfo adInfo = list.get(position);
+//private class MyAdapter extends BaseAdapter{
+//	Context context;
+//	List<AdInfo> list;
+//	public MyAdapter(Context context, List<AdInfo> list){
+//		this.context = context;
+//		this.list = list;
+//	}
+//	@Override
+//	public int getCount() {
+//		return list.size();
+//	}
+//	@Override
+//	public Object getItem(int position) {
+//		return list.get(position);
+//	}
+//	@Override
+//	public long getItemId(int position) {
+//		return position;
+//	}
+//	@Override
+//	public View getView(int position, View convertView, ViewGroup parent) {
+////		final AdInfo adInfo = list.get(position);
+////		
+////		View adatperView = null;
+////		
+////		try {
+////			adatperView = AppItemView.getInstance().getAdapterView(context, adInfo, 0, 0);
+////				
+////			convertView = adatperView;
+////			convertView.setTag(adatperView);
+////		} catch (Exception e) {
+////			e.printStackTrace();
+////		}
+////		
+////        return adatperView;
 //		
-//		View adatperView = null;
 //		
-//		try {
-//			adatperView = AppItemView.getInstance().getAdapterView(context, adInfo, 0, 0);
-//				
-//			convertView = adatperView;
-//			convertView.setTag(adatperView);
-//		} catch (Exception e) {
-//			e.printStackTrace();
+//		View view = null;
+//		if (convertView==null) {
+//			view = View.inflate(context, R.layout.ad_waps_item, null);
+//		}else {
+//			convertView = view;
 //		}
-//		
-//        return adatperView;
-		
-		
-		View view = null;
-		if (convertView==null) {
-			view = View.inflate(context, R.layout.ad_waps_item, null);
-		}else {
-			convertView = view;
-		}
-		final AdInfo adInfo = list.get(position);
-		ImageView downLoadImageView = (ImageView) view.findViewById(R.id.ad_im_download);
-		downLoadImageView.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				AppConnect.getInstance(context).downloadAd(adInfo.getAdId());
-				//AppConnect.getInstance(context).a(adInfo.getAdPackage(), 0);
-				final AppConnect instance = AppConnect.getInstance(context);
-				new Thread(){
-					public void run() {
-						try {
-//							System.out.println(adInfo.getAction());
-//							System.out.println(adInfo.getAdId());
-							//instance.clickAd(adInfo.getAdId());
-							
-							//instance.downloadAd(adInfo.getAdId());
-							SystemClock.sleep(1000);
-							Method declaredMethod = instance.getClass().getDeclaredMethod("a", String.class,int.class);
-							declaredMethod.setAccessible(true);
-							declaredMethod.invoke(instance, adInfo.getAdPackage(),0);
-						} catch (NoSuchMethodException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IllegalArgumentException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IllegalAccessException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (InvocationTargetException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					};
-				}.start();
-			}
-		});
-		ImageView iconImageView = (ImageView) view.findViewById(R.id.ad_im_icon);
-		iconImageView.setImageDrawable(new BitmapDrawable(adInfo.getAdIcon())); 
-		TextView descriptTextView = (TextView) view.findViewById(R.id.ad_tv_descript);
-		descriptTextView.setText(adInfo.getAdText());
-		TextView titleTextView = (TextView) view.findViewById(R.id.ad_tv_title);
-		titleTextView.setText(adInfo.getAdName());
-		TextView sizeTextView = (TextView) view.findViewById(R.id.ad_tv_size);
-		sizeTextView.setText(adInfo.getFilesize() + "M");
-		view.setTag(adInfo);
-		return view;
-	}
-}
+//		final AdInfo adInfo = list.get(position);
+//		ImageView downLoadImageView = (ImageView) view.findViewById(R.id.ad_im_download);
+//		downLoadImageView.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				AppConnect.getInstance(context).downloadAd(adInfo.getAdId());
+//				//AppConnect.getInstance(context).a(adInfo.getAdPackage(), 0);
+//				final AppConnect instance = AppConnect.getInstance(context);
+//				new Thread(){
+//					public void run() {
+//						try {
+////							System.out.println(adInfo.getAction());
+////							System.out.println(adInfo.getAdId());
+//							//instance.clickAd(adInfo.getAdId());
+//							
+//							//instance.downloadAd(adInfo.getAdId());
+//							SystemClock.sleep(1000);
+//							Method declaredMethod = instance.getClass().getDeclaredMethod("a", String.class,int.class);
+//							declaredMethod.setAccessible(true);
+//							declaredMethod.invoke(instance, adInfo.getAdPackage(),0);
+//						} catch (NoSuchMethodException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						} catch (IllegalArgumentException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						} catch (IllegalAccessException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						} catch (InvocationTargetException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//					};
+//				}.start();
+//			}
+//		});
+//		ImageView iconImageView = (ImageView) view.findViewById(R.id.ad_im_icon);
+//		iconImageView.setImageDrawable(new BitmapDrawable(adInfo.getAdIcon())); 
+//		TextView descriptTextView = (TextView) view.findViewById(R.id.ad_tv_descript);
+//		descriptTextView.setText(adInfo.getAdText());
+//		TextView titleTextView = (TextView) view.findViewById(R.id.ad_tv_title);
+//		titleTextView.setText(adInfo.getAdName());
+//		TextView sizeTextView = (TextView) view.findViewById(R.id.ad_tv_size);
+//		sizeTextView.setText(adInfo.getFilesize() + "M");
+//		view.setTag(adInfo);
+//		return view;
+//	}
+//}
 public void setListViewHeightBasedOnChildren(ListView listView) {  
     Adapter listAdapter = listView.getAdapter();   
     if (listAdapter == null) {  

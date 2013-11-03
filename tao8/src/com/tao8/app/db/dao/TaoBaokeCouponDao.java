@@ -1,9 +1,7 @@
 package com.tao8.app.db.dao;
 
 import java.lang.reflect.Field;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,7 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.tao8.app.BuildConfig;
 import com.tao8.app.db.Tao8DBHelper;
-import com.tao8.app.domain.TaobaokeCouponItem;
+import com.tao8.app.domain.SearchItem;
 import com.tao8.app.util.LogUtil;
 
 public class TaoBaokeCouponDao {
@@ -23,7 +21,7 @@ public class TaoBaokeCouponDao {
 		helper = new Tao8DBHelper(context);
 	}
 
-	public void insert(TaobaokeCouponItem taobaokeCouponItem) {
+	public void insert(SearchItem taobaokeCouponItem) {
 		SQLiteDatabase db = null;
 		try {
 			// 准备数据
@@ -96,7 +94,7 @@ public class TaoBaokeCouponDao {
 		return query(num_iid) != null;
 	}
 
-	public void update(TaobaokeCouponItem taobaokeCouponItem) {
+	public void update(SearchItem taobaokeCouponItem) {
 		SQLiteDatabase db = null;
 		try {
 			db = helper.getWritableDatabase();
@@ -123,15 +121,15 @@ public class TaoBaokeCouponDao {
 		}
 	}
 
-	public TaobaokeCouponItem query(String num_iid) {
+	public SearchItem query(String num_iid) {
 		SQLiteDatabase db = null;
-		TaobaokeCouponItem taobaokeCouponItem = null;
+		SearchItem taobaokeCouponItem = null;
 		Cursor c = null;
 		try {
 			db = helper.getWritableDatabase();
 			// 执行查询: 不去重复, 表是xx, 查询aa和bb两列, Where条件是"id=?", 占位符是id, 不分组,
 			// 没有having, 不排序, 没有分页
-			Field[] declaredFields = TaobaokeCouponItem.class
+			Field[] declaredFields = SearchItem.class
 					.getDeclaredFields();
 			String[] strings = new String[declaredFields.length - 1];
 			int j = 0;
@@ -150,7 +148,7 @@ public class TaoBaokeCouponDao {
 			// 判断Cursor是否有下一条记录
 			if (c.moveToNext()) {
 				// 从Cursor中获取数据, 创建Person对象
-				taobaokeCouponItem = new TaobaokeCouponItem();
+				taobaokeCouponItem = new SearchItem();
 				String[] columnNames = c.getColumnNames();
 				for (String string : columnNames) {
 					if (string.equalsIgnoreCase("serialVersionUID")) {
@@ -204,13 +202,13 @@ public class TaoBaokeCouponDao {
 		return count;
 	}
 
-	public ArrayList<TaobaokeCouponItem> queryAll() {
+	public ArrayList<SearchItem> queryAll() {
 		SQLiteDatabase db = null;
 		Cursor c = null;
-		ArrayList<TaobaokeCouponItem> taobaokeCouponItems = null;
+		ArrayList<SearchItem> taobaokeCouponItems = null;
 		try {
 			db = helper.getReadableDatabase();
-			Field[] declaredFields = TaobaokeCouponItem.class
+			Field[] declaredFields = SearchItem.class
 					.getDeclaredFields();
 			String[] strings = new String[declaredFields.length - 1];
 			int j = 0;
@@ -228,9 +226,9 @@ public class TaoBaokeCouponDao {
 			// 翻页查询
 			c = db.query(false, helper.DICTIONARY_TABLE_NAME, strings, null,
 					null, null, null, null, null);
-			taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
+			taobaokeCouponItems = new ArrayList<SearchItem>();
 			while (c.moveToNext()) {
-				TaobaokeCouponItem taobaokeCouponItem = new TaobaokeCouponItem();
+				SearchItem taobaokeCouponItem = new SearchItem();
 				String[] columnNames = c.getColumnNames();
 				for (String string : columnNames) {
 					if (string.equalsIgnoreCase("serialVersionUID")) {
@@ -263,13 +261,13 @@ public class TaoBaokeCouponDao {
 		}
 		return taobaokeCouponItems;
 	}
-	public ArrayList<TaobaokeCouponItem> queryAllByKeyword(String keyword) {
+	public ArrayList<SearchItem> queryAllByKeyword(String keyword) {
 		SQLiteDatabase db = null;
 		Cursor c = null;
-		ArrayList<TaobaokeCouponItem> taobaokeCouponItems = null;
+		ArrayList<SearchItem> taobaokeCouponItems = null;
 		try {
 			db = helper.getReadableDatabase();
-			Field[] declaredFields = TaobaokeCouponItem.class
+			Field[] declaredFields = SearchItem.class
 					.getDeclaredFields();
 			String[] strings = new String[declaredFields.length - 1];
 			int j = 0;
@@ -290,9 +288,9 @@ public class TaoBaokeCouponDao {
 			// 所有的查询
 			c = db.query(false, Tao8DBHelper.DICTIONARY_TABLE_NAME, strings, "title LIKE ?",
 					new String[]{"%"+keyword+"%"}, null, null, null, null);
-			taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
+			taobaokeCouponItems = new ArrayList<SearchItem>();
 			while (c.moveToNext()) {
-				TaobaokeCouponItem taobaokeCouponItem = new TaobaokeCouponItem();
+				SearchItem taobaokeCouponItem = new SearchItem();
 				String[] columnNames = c.getColumnNames();
 				for (String string : columnNames) {
 					if (string.equalsIgnoreCase("serialVersionUID")) {
@@ -325,17 +323,17 @@ public class TaoBaokeCouponDao {
 		}
 		return taobaokeCouponItems;
 	}
-	public ArrayList<TaobaokeCouponItem> queryAllByKeywordFromTo(String keyword,int pageNo,int pageSize) {
+	public ArrayList<SearchItem> queryAllByKeywordFromTo(String keyword,int pageNo,int pageSize) {
 		SQLiteDatabase db = null;
 		Cursor c = null;
 		// 开始索引
 		String start = String.valueOf((pageNo - 1) * pageSize);
 				// 查询的个数
 		String length = String.valueOf(pageSize);
-		ArrayList<TaobaokeCouponItem> taobaokeCouponItems = null;
+		ArrayList<SearchItem> taobaokeCouponItems = null;
 		try {
 			db = helper.getReadableDatabase();
-			Field[] declaredFields = TaobaokeCouponItem.class
+			Field[] declaredFields = SearchItem.class
 					.getDeclaredFields();
 			String[] strings = new String[declaredFields.length - 1];
 			int j = 0;
@@ -356,9 +354,9 @@ public class TaoBaokeCouponDao {
 			// 所有的查询
 			c = db.query(false, Tao8DBHelper.DICTIONARY_TABLE_NAME, strings, "title LIKE ?",
 					new String[]{"%"+keyword+"%"}, null, null, null, start+","+length);
-			taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
+			taobaokeCouponItems = new ArrayList<SearchItem>();
 			while (c.moveToNext()) {
-				TaobaokeCouponItem taobaokeCouponItem = new TaobaokeCouponItem();
+				SearchItem taobaokeCouponItem = new SearchItem();
 				String[] columnNames = c.getColumnNames();
 				for (String string : columnNames) {
 					if (string.equalsIgnoreCase("serialVersionUID")) {
@@ -392,17 +390,17 @@ public class TaoBaokeCouponDao {
 		return taobaokeCouponItems;
 	}
 
-	public ArrayList<TaobaokeCouponItem> queryPage(int pageNum, int capacity) {
+	public ArrayList<SearchItem> queryPage(int pageNum, int capacity) {
 		// 开始索引
 		String start = String.valueOf((pageNum - 1) * capacity);
 		// 查询的个数
 		String length = String.valueOf(capacity);
 		SQLiteDatabase db = null;
 		Cursor c = null;
-		ArrayList<TaobaokeCouponItem> taobaokeCouponItems = null;
+		ArrayList<SearchItem> taobaokeCouponItems = null;
 		try {
 			db = helper.getReadableDatabase();
-			Field[] declaredFields = TaobaokeCouponItem.class
+			Field[] declaredFields = SearchItem.class
 					.getDeclaredFields();
 			String[] strings = new String[declaredFields.length - 1];
 			int j = 0;
@@ -418,9 +416,9 @@ public class TaoBaokeCouponDao {
 			c = db.query(false, helper.DICTIONARY_TABLE_NAME, strings, null,
 					null, null, null, null, start + "," + length);
 
-			taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
+			taobaokeCouponItems = new ArrayList<SearchItem>();
 			while (c.moveToNext()) {
-				TaobaokeCouponItem taobaokeCouponItem = new TaobaokeCouponItem();
+				SearchItem taobaokeCouponItem = new SearchItem();
 				String[] columnNames = c.getColumnNames();
 				for (String string : columnNames) {
 					if (string.equalsIgnoreCase("serialVersionUID")) {

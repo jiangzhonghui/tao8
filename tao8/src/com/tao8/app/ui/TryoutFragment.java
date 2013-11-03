@@ -23,17 +23,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.domob.android.ads.DomobAdView;
-import cn.waps.AdView;
 
 import com.tao8.app.AppException;
 import com.tao8.app.BuildConfig;
@@ -43,8 +41,8 @@ import com.tao8.app.adapter.TryoutAdapter;
 import com.tao8.app.api.GetTopData;
 import com.tao8.app.api.MyTqlListener;
 import com.tao8.app.db.dao.TaoBaokeCouponDao;
-import com.tao8.app.domain.TaobaokeCouponItem;
-import com.tao8.app.parser.TaoBaoKeCouponItemParser;
+import com.tao8.app.domain.SearchItem;
+import com.tao8.app.parser.SearchItemParser;
 import com.tao8.app.util.CommonUtil;
 import com.tao8.app.util.LogUtil;
 import com.tao8.app.util.TqlHelper;
@@ -66,7 +64,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 	private LinearLayout toFreshLayout;
 	private String keyword = "手机付邮";
 	// private long getDataTime=0l;
-	private ArrayList<TaobaokeCouponItem> taobaokeCouponItems;
+	private ArrayList<SearchItem> taobaokeCouponItems;
 	private String sort = "volume_desc";// 成交量从高到低
 	private TryoutAdapter tryoutAdapter;
 	private SharedPreferences sharedPreferences;
@@ -74,7 +72,6 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 	public PopupWindow popupWindow;
 	private LinearLayout topLayout;
 	private long getDataTime;
-	private DomobAdView mAdview320x50;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -125,7 +122,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 
 		moreImageView.setImageResource(R.drawable.icon_notice);
 
-		taobaokeCouponItems = new ArrayList<TaobaokeCouponItem>();
+		taobaokeCouponItems = new ArrayList<SearchItem>();
 		if (tryoutAdapter == null) {
 			tryoutAdapter = new TryoutAdapter(getActivity(),
 					taobaokeCouponItems);
@@ -198,19 +195,19 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 		params.put("page_no", Integer.toString(page_no));// 最多10页
 		params.put("mall_item", isFromTmall + "");
 		params.put("sort", sort);
-		tql = TqlHelper.generateTaoBaoKeCouponTql(TaobaokeCouponItem.class,
+		tql = TqlHelper.generateTaoBaoKeTql(SearchItem.class,
 				params);
 		if (BuildConfig.DEBUG) {
 			System.out.println(tql);
 		}
 		topLayout.setVisibility(View.VISIBLE);
-		GetTopData.getDataFromTop(tql, new TaoBaoKeCouponItemParser(), userId,
+		GetTopData.getDataFromTop(tql, new SearchItemParser(), userId,
 				new MyTqlListener() {
 					@Override
 					public void onComplete(Object result) {
 						toFreshLayout.setVisibility(View.GONE);
 						topLayout.setVisibility(View.GONE);
-						final ArrayList<TaobaokeCouponItem> results = (ArrayList) result;
+						final ArrayList<SearchItem> results = (ArrayList) result;
 						if (BuildConfig.DEBUG && result != null) {
 							Toast.makeText(getActivity(),
 									results.size() + "  总共", 1).show();
@@ -243,7 +240,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 									return;
 								}
 								dao.delAll();
-								for (TaobaokeCouponItem taobaokeCouponItem : results) {
+								for (SearchItem taobaokeCouponItem : results) {
 									dao.insert(taobaokeCouponItem);
 									System.out.println("添加成功");
 								}
@@ -296,10 +293,6 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 			// 互动广告调用方式
 			RelativeLayout container = (RelativeLayout) view
 					.findViewById(R.id.tryout_popu_ll_ad_container);
-				mAdview320x50 = new DomobAdView(getActivity(),
-						TopConfig.PUBLISHER_ID, DomobAdView.INLINE_SIZE_320X50);
-			container.removeAllViews();
-			container.addView(mAdview320x50);
 			
 			// 将广告View增加到视图中。
 			// ///////////////////
@@ -353,7 +346,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 	}
 
 	private final class CouponBDTask extends
-			AsyncTask<Void, Void, ArrayList<TaobaokeCouponItem>> {
+			AsyncTask<Void, Void, ArrayList<SearchItem>> {
 		@Override
 		protected void onPreExecute() {
 			topLayout.setVisibility(View.VISIBLE);
@@ -364,9 +357,9 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 		}
 
 		@Override
-		protected ArrayList<TaobaokeCouponItem> doInBackground(Void... params) {
+		protected ArrayList<SearchItem> doInBackground(Void... params) {
 			TaoBaokeCouponDao couponDao = new TaoBaokeCouponDao(getActivity());
-			ArrayList<TaobaokeCouponItem> taobaokeCouponItems = couponDao
+			ArrayList<SearchItem> taobaokeCouponItems = couponDao
 					.queryAll();
 			if (taobaokeCouponItems != null && taobaokeCouponItems.size() > 0) {
 				return taobaokeCouponItems;
@@ -376,7 +369,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<TaobaokeCouponItem> result) {
+		protected void onPostExecute(ArrayList<SearchItem> result) {
 			imgsListView.onRefreshComplete();
 			if (result != null) {
 				if (BuildConfig.DEBUG) {
@@ -419,7 +412,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		Adapter adapter = parent.getAdapter();
-		TaobaokeCouponItem item = (TaobaokeCouponItem) adapter
+		SearchItem item = (SearchItem) adapter
 				.getItem(position);
 		if (item != null) {
 			Intent intent = new Intent();
@@ -432,7 +425,7 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 			AccessToken accessToken = TopConfig.client.getAccessToken(userId);
 			String uri = CommonUtil.generateTopClickUri(item.getClick_url(),
 					getActivity(), accessToken);
-			intent.putExtra(BrowserActivity.BROWSERACTIVITY_URI, uri);
+			intent.putExtra(BrowserActivity.BROWSERACTIVITY_NUM_IID, item.num_iid);
 			intent.putExtra(BrowserActivity.BROWSERACTIVITY_TITLE,
 					item.getTitle());
 			getActivity().startActivity(intent);
@@ -442,7 +435,6 @@ public class TryoutFragment extends Fragment implements OnClickListener,
 	
 	@Override
 	public void onDestroy() {
-		mAdview320x50 = null;
 		super.onDestroy();
 	}
 }
